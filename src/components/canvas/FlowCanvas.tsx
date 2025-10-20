@@ -18,6 +18,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { FunnelNode } from './FunnelNode';
 import { NodeToolbar } from './NodeToolbar';
+import { CustomEdge } from './EdgeLabel';
 
 const nodeTypes = {
   traffic: FunnelNode,
@@ -26,6 +27,10 @@ const nodeTypes = {
   checkout: FunnelNode,
   thankyou: FunnelNode,
   condition: FunnelNode,
+};
+
+const edgeTypes = {
+  default: CustomEdge,
 };
 
 interface FlowCanvasProps {
@@ -105,6 +110,7 @@ export function FlowCanvas({
         onNodeClick={handleNodeClickCallback}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         deleteKeyCode={null}
         className="bg-background"

@@ -15,6 +15,7 @@ export interface NodeData extends NodeMetrics {
   notes?: string;
   tags?: string[];
   customFields?: Record<string, any>;
+  [key: string]: any;
 }
 
 export interface FlowNode {

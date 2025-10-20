@@ -7,11 +7,13 @@ import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { TemplateDialog } from '@/components/canvas/TemplateDialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2 } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, BarChart3, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Node, Edge } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
 import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
+import { AnalyticsDashboard } from '@/components/canvas/AnalyticsDashboard';
+import { ExportDialog } from '@/components/canvas/ExportDialog';
 
 export default function Canvas() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -25,6 +27,8 @@ export default function Canvas() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showInspector, setShowInspector] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(true);
+  const [showExport, setShowExport] = useState(false);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -314,6 +318,23 @@ export default function Canvas() {
 
         <div className="flex items-center gap-2">
           <Button
+            variant={showAnalytics ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setShowAnalytics(!showAnalytics)}
+          >
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Analytics
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowExport(true)}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+          <div className="h-6 w-px bg-border" />
+          <Button
             variant="outline"
             size="sm"
             onClick={() => setShowTemplates(true)}
@@ -347,6 +368,8 @@ export default function Canvas() {
           </Button>
         </div>
       </header>
+
+      {showAnalytics && <AnalyticsDashboard nodes={nodes} />}
 
       <div className="flex flex-1 overflow-hidden">
         <div 
@@ -382,6 +405,14 @@ export default function Canvas() {
         open={showTemplates}
         onOpenChange={setShowTemplates}
         onSelectTemplate={handleSelectTemplate}
+      />
+
+      <ExportDialog
+        open={showExport}
+        onOpenChange={setShowExport}
+        nodes={nodes}
+        edges={edges}
+        projectName={project?.name}
       />
     </div>
   );
