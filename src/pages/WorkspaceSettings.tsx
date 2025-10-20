@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, ArrowLeft, UserPlus, Trash2, Mail, Shield } from 'lucide-react';
+import { Loader2, ArrowLeft, UserPlus, Trash2, Mail, Shield, Copy, Link as LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -106,60 +106,55 @@ export default function WorkspaceSettings() {
 
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!workspaceId) return;
+    if (!workspaceId || !user) return;
 
-    // Find user by email
-    const { data: profileData, error: profileError } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', inviteEmail)
-      .single();
+    // Generate unique token
+    const token = crypto.randomUUID();
 
-    if (profileError || !profileData) {
-      toast({
-        variant: 'destructive',
-        title: 'User not found',
-        description: 'No user with this email address exists. They need to sign up first.',
-      });
-      return;
-    }
-
-    // Check if already a member
-    const existingMember = members.find(m => m.user_id === profileData.id);
-    if (existingMember) {
-      toast({
-        variant: 'destructive',
-        title: 'Already a member',
-        description: 'This user is already a member of this workspace.',
-      });
-      return;
-    }
-
-    // Add member
-    const { error } = await supabase
-      .from('workspace_members')
+    // Create invitation
+    const { data, error } = await supabase
+      .from('workspace_invitations')
       .insert({
         workspace_id: workspaceId,
-        user_id: profileData.id,
+        email: inviteEmail,
         role: inviteRole,
-      });
+        token: token,
+        invited_by: user.id,
+      })
+      .select()
+      .single();
 
     if (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error adding member',
-        description: error.message,
-      });
-    } else {
-      toast({
-        title: 'Member added',
-        description: `${inviteEmail} has been added to the workspace.`,
-      });
-      await loadMembers();
-      setInviteEmail('');
-      setInviteRole('viewer');
-      setInviteOpen(false);
+      if (error.code === '23505') {
+        toast({
+          variant: 'destructive',
+          title: 'Már meghívott',
+          description: 'Ez az email cím már meg van hívva ebbe a workspace-be.',
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Hiba',
+          description: error.message,
+        });
+      }
+      return;
     }
+
+    // Generate invitation link
+    const inviteUrl = `${window.location.origin}/accept-invitation?token=${token}`;
+
+    // Copy to clipboard
+    await navigator.clipboard.writeText(inviteUrl);
+
+    toast({
+      title: 'Meghívó létrehozva!',
+      description: 'A meghívó link a vágólapra másolva. Küldd el email-ben a meghívottnak!',
+    });
+
+    setInviteEmail('');
+    setInviteRole('viewer');
+    setInviteOpen(false);
   };
 
   const handleUpdateRole = async (userId: string, newRole: 'viewer' | 'editor' | 'admin' | 'owner') => {
@@ -272,22 +267,26 @@ export default function WorkspaceSettings() {
                   <DialogContent>
                     <form onSubmit={handleInviteMember}>
                       <DialogHeader>
-                        <DialogTitle>Invite Team Member</DialogTitle>
+                        <DialogTitle>Tag meghívása</DialogTitle>
                         <DialogDescription>
-                          Add a new member to this workspace. They must have an existing account.
+                          Adj meg egy email címet és generálj egy meghívó linket. A meghívott regisztrálhat vagy bejelentkezhet a link megnyitásakor.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
                         <div>
-                          <Label htmlFor="email">Email Address</Label>
+                          <Label htmlFor="email">Email cím</Label>
                           <Input
                             id="email"
                             type="email"
                             value={inviteEmail}
                             onChange={(e) => setInviteEmail(e.target.value)}
-                            placeholder="user@example.com"
+                            placeholder="pelda@email.com"
                             required
                           />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            <LinkIcon className="h-3 w-3 inline mr-1" />
+                            Egy egyedi meghívó linket fogsz kapni, amit elküldhetsz neki
+                          </p>
                         </div>
                         <div>
                           <Label htmlFor="role">Role</Label>
@@ -304,7 +303,10 @@ export default function WorkspaceSettings() {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button type="submit">Send Invitation</Button>
+                        <Button type="submit">
+                          <Copy className="mr-2 h-4 w-4" />
+                          Link generálása
+                        </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
