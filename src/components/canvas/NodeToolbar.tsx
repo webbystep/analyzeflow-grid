@@ -62,6 +62,24 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
   const handleDragStart = (event: React.DragEvent, nodeType: NodeType, label: string) => {
     event.dataTransfer.setData('application/reactflow', JSON.stringify({ type: nodeType, label }));
     event.dataTransfer.effectAllowed = 'move';
+    
+    // Create custom drag preview
+    const dragPreview = document.createElement('div');
+    dragPreview.className = 'px-4 py-3 rounded-lg border-2 bg-card shadow-lg min-w-[180px]';
+    dragPreview.style.borderColor = `hsl(var(--node-${nodeType}))`;
+    dragPreview.innerHTML = `
+      <div class="flex items-center gap-2">
+        <div class="p-1.5 rounded" style="background-color: hsl(var(--node-${nodeType}) / 0.2)">
+          <div class="w-4 h-4"></div>
+        </div>
+        <div class="font-semibold text-sm">${label}</div>
+      </div>
+    `;
+    
+    document.body.appendChild(dragPreview);
+    event.dataTransfer.setDragImage(dragPreview, 90, 40);
+    
+    setTimeout(() => document.body.removeChild(dragPreview), 0);
   };
 
   return (

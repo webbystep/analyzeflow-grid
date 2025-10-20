@@ -392,9 +392,11 @@ export default function Canvas() {
       if (!type) return;
 
       const { type: nodeType, label } = JSON.parse(type);
+      
+      // Calculate exact position where mouse is
       const position = {
-        x: event.clientX - reactFlowBounds.left - 100,
-        y: event.clientY - reactFlowBounds.top - 50,
+        x: event.clientX - reactFlowBounds.left - 90, // Node width/2
+        y: event.clientY - reactFlowBounds.top - 40,   // Node height/2
       };
 
       const newNode: Node = {
@@ -521,10 +523,7 @@ export default function Canvas() {
 
       <div className="flex flex-1 overflow-hidden">
         <CanvasContextMenu
-          onAddNode={handleAddNodeFromContext}
-          onAlignNodes={handleAlignNodes}
           onClearCanvas={handleClearCanvas}
-          onTakeScreenshot={() => setShowExport(true)}
           hasNodes={nodes.length > 0}
         >
           <div 

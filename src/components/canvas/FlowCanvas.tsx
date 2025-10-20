@@ -116,6 +116,13 @@ export function FlowCanvas({
         nodesDraggable={!readonly}
         nodesConnectable={!readonly}
         elementsSelectable={!readonly}
+        connectionRadius={20}
+        snapToGrid={true}
+        snapGrid={[15, 15]}
+        connectionLineStyle={{ 
+          stroke: 'hsl(var(--primary))', 
+          strokeWidth: 2 
+        }}
         fitView
         deleteKeyCode={null}
         className="bg-background"

@@ -45,7 +45,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         borderColor: selected ? `hsl(var(--primary))` : `hsl(var(--node-${nodeType}))`,
       }}
     >
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+      />
+      <Handle 
+        type="target" 
+        position={Position.Left} 
+        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+      />
       
       <div className="flex items-center gap-2 mb-2">
         <div
@@ -86,7 +95,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         </div>
       )}
       
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+      />
+      <Handle 
+        type="source" 
+        position={Position.Right} 
+        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+      />
     </div>
   );
 });
