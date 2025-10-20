@@ -265,7 +265,7 @@ export default function Canvas() {
       };
 
       const newNode: Node = {
-        id: `${nodeType}-${Date.now()}`,
+        id: crypto.randomUUID(),
         type: nodeType,
         position,
         data: { label, visits: 1000, conversionRate: 10 },

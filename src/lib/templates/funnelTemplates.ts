@@ -202,7 +202,7 @@ export const funnelTemplates: FunnelTemplate[] = [
 
 export function createNodesFromTemplate(template: FunnelTemplate): { nodes: Node[]; edges: Edge[] } {
   const nodes = template.nodes.map((node, index) => ({
-    id: `node-${Date.now()}-${index}`,
+    id: crypto.randomUUID(),
     type: node.type,
     position: node.position,
     data: {
@@ -219,7 +219,7 @@ export function createNodesFromTemplate(template: FunnelTemplate): { nodes: Node
   }));
 
   const edges = template.edges.map((edge, index) => ({
-    id: `edge-${Date.now()}-${index}`,
+    id: crypto.randomUUID(),
     source: nodes[parseInt(edge.source)].id,
     target: nodes[parseInt(edge.target)].id,
     type: 'smoothstep',
