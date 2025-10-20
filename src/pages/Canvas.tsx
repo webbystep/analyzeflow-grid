@@ -8,13 +8,15 @@ import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { TemplateDialog } from '@/components/canvas/TemplateDialog';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, BarChart3, Download, Share2 } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, Download, Share2, Undo2, Redo2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Node, Edge } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
 import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
 import { ExportDialog } from '@/components/canvas/ExportDialog';
 import { ShareDialog } from '@/components/canvas/ShareDialog';
+import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
+import { useHistory } from '@/hooks/useHistory';
 
 export default function Canvas() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -34,7 +36,7 @@ export default function Canvas() {
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
+  const { pushHistory, undo, redo, canUndo, canRedo } = useHistory([], []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -179,11 +181,13 @@ export default function Canvas() {
 
   const handleNodesChange = useCallback((newNodes: Node[]) => {
     setNodes(newNodes);
-  }, []);
+    pushHistory(newNodes, edges);
+  }, [pushHistory, edges]);
 
   const handleEdgesChange = useCallback((newEdges: Edge[]) => {
     setEdges(newEdges);
-  }, []);
+    pushHistory(nodes, newEdges);
+  }, [pushHistory, nodes]);
 
   const handleNodeClick = useCallback((node: Node) => {
     setSelectedNode(node);
@@ -245,9 +249,127 @@ export default function Canvas() {
     }
   }, [selectedNode, nodes, edges, toast]);
 
+  const handleUndo = useCallback(() => {
+    const state = undo();
+    if (state) {
+      setNodes(state.nodes);
+      setEdges(state.edges);
+      toast({
+        title: 'Visszavonva',
+        description: 'Az előző műveletet visszavontad.',
+      });
+    }
+  }, [undo, toast]);
+
+  const handleRedo = useCallback(() => {
+    const state = redo();
+    if (state) {
+      setNodes(state.nodes);
+      setEdges(state.edges);
+      toast({
+        title: 'Újra',
+        description: 'A művelet újra alkalmazva.',
+      });
+    }
+  }, [redo, toast]);
+
+  const handleDuplicateNode = useCallback((node: Node) => {
+    const newNode: Node = {
+      ...node,
+      id: crypto.randomUUID(),
+      position: {
+        x: node.position.x + 20,
+        y: node.position.y + 20,
+      },
+    };
+    setNodes((nds) => [...nds, newNode]);
+    toast({
+      title: 'Node másolva',
+      description: 'Az új node 20px-el lejjebb és jobbra került.',
+    });
+  }, [toast]);
+
+  const handleAddNodeFromContext = useCallback((type: string, x = 100, y = 100) => {
+    const labels: Record<string, string> = {
+      traffic: 'Traffic Source',
+      email: 'Email Campaign',
+      landing: 'Landing Page',
+      checkout: 'Checkout',
+      thankyou: 'Thank You',
+      condition: 'Condition',
+    };
+
+    const newNode: Node = {
+      id: crypto.randomUUID(),
+      type,
+      position: { x, y },
+      data: { label: labels[type] || 'New Node', visits: 1000, conversionRate: 10 },
+    };
+    setNodes((nds) => [...nds, newNode]);
+  }, []);
+
+  const handleAlignNodes = useCallback((direction: 'left' | 'right' | 'center' | 'vertical') => {
+    if (nodes.length === 0) return;
+
+    const positions = nodes.map(n => n.position.x);
+    let targetX: number;
+
+    switch (direction) {
+      case 'left':
+        targetX = Math.min(...positions);
+        break;
+      case 'right':
+        targetX = Math.max(...positions);
+        break;
+      case 'center':
+        targetX = (Math.min(...positions) + Math.max(...positions)) / 2;
+        break;
+      default:
+        return;
+    }
+
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        position: { ...node.position, x: targetX },
+      }))
+    );
+
+    toast({
+      title: 'Node-ok igazítva',
+      description: `A node-ok ${direction === 'left' ? 'balra' : direction === 'right' ? 'jobbra' : 'középre'} lettek igazítva.`,
+    });
+  }, [nodes, toast]);
+
+  const handleClearCanvas = useCallback(() => {
+    if (confirm('Biztosan törölni szeretnéd az összes node-ot?')) {
+      setNodes([]);
+      setEdges([]);
+      toast({
+        title: 'Canvas törölve',
+        description: 'Az összes node és kapcsolat el lett távolítva.',
+      });
+    }
+  }, [toast]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Undo
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+      // Redo
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+        e.preventDefault();
+        handleRedo();
+      }
+      // Duplicate
+      if ((e.ctrlKey || e.metaKey) && e.key === 'd' && selectedNode) {
+        e.preventDefault();
+        handleDuplicateNode(selectedNode);
+      }
       // Delete selected node
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNode) {
         e.preventDefault();
@@ -257,13 +379,13 @@ export default function Canvas() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedNode, handleDeleteSelected]);
+  }, [selectedNode, handleDeleteSelected, handleUndo, handleRedo, handleDuplicateNode]);
 
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
 
-      const reactFlowBounds = dropRef.current?.getBoundingClientRect();
+      const reactFlowBounds = canvasRef.current?.getBoundingClientRect();
       if (!reactFlowBounds) return;
 
       const type = event.dataTransfer.getData('application/reactflow');
@@ -328,6 +450,25 @@ export default function Canvas() {
           <Button
             variant="outline"
             size="sm"
+            onClick={handleUndo}
+            disabled={!canUndo}
+          >
+            <Undo2 className="h-4 w-4 mr-2" />
+            Undo
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRedo}
+            disabled={!canRedo}
+          >
+            <Redo2 className="h-4 w-4 mr-2" />
+            Redo
+          </Button>
+          <div className="h-6 w-px bg-border" />
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setShowShare(true)}
           >
             <Share2 className="h-4 w-4 mr-2" />
@@ -379,21 +520,29 @@ export default function Canvas() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <div 
-          ref={canvasRef}
-          className="flex-1"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
+        <CanvasContextMenu
+          onAddNode={handleAddNodeFromContext}
+          onAlignNodes={handleAlignNodes}
+          onClearCanvas={handleClearCanvas}
+          onTakeScreenshot={() => setShowExport(true)}
+          hasNodes={nodes.length > 0}
         >
-          <FlowCanvas
-            projectId={projectId!}
-            initialNodes={nodes}
-            initialEdges={edges}
-            onNodesChange={handleNodesChange}
-            onEdgesChange={handleEdgesChange}
-            onNodeClick={handleNodeClick}
-          />
-        </div>
+          <div 
+            ref={canvasRef}
+            className="flex-1"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
+            <FlowCanvas
+              projectId={projectId!}
+              initialNodes={nodes}
+              initialEdges={edges}
+              onNodesChange={handleNodesChange}
+              onEdgesChange={handleEdgesChange}
+              onNodeClick={handleNodeClick}
+            />
+          </div>
+        </CanvasContextMenu>
 
         {showInspector && (
           <div className="border-l">
