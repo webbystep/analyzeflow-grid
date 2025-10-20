@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   ReactFlow,
   Node,
@@ -12,6 +12,8 @@ import {
   addEdge,
   Connection,
   BackgroundVariant,
+  applyNodeChanges,
+  applyEdgeChanges,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FunnelNode } from './FunnelNode';
@@ -43,8 +45,17 @@ export function FlowCanvas({
   onEdgesChange,
   onNodeClick,
 }: FlowCanvasProps) {
-  const [nodes, setNodes, handleNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, handleEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes] = useNodesState(initialNodes);
+  const [edges, setEdges] = useEdgesState(initialEdges);
+
+  // Sync internal state when parent props change
+  useEffect(() => {
+    setNodes(initialNodes);
+  }, [initialNodes, setNodes]);
+
+  useEffect(() => {
+    setEdges(initialEdges);
+  }, [initialEdges, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -55,15 +66,26 @@ export function FlowCanvas({
     [edges, setEdges, onEdgesChange]
   );
 
-  const handleNodesChangeCallback = useCallback(
+  const onNodesChangeInternal = useCallback(
     (changes: any) => {
-      handleNodesChange(changes);
-      // Delay to ensure state is updated
-      setTimeout(() => {
-        onNodesChange(nodes);
-      }, 0);
+      setNodes((nds) => {
+        const next = applyNodeChanges(changes, nds);
+        onNodesChange(next);
+        return next;
+      });
     },
-    [handleNodesChange, nodes, onNodesChange]
+    [onNodesChange, setNodes]
+  );
+
+  const onEdgesChangeInternal = useCallback(
+    (changes: any) => {
+      setEdges((eds) => {
+        const next = applyEdgeChanges(changes, eds);
+        onEdgesChange(next);
+        return next;
+      });
+    },
+    [onEdgesChange, setEdges]
   );
 
   const handleNodeClickCallback = useCallback(
@@ -78,8 +100,8 @@ export function FlowCanvas({
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={handleNodesChangeCallback}
-        onEdgesChange={handleEdgesChange}
+        onNodesChange={onNodesChangeInternal}
+        onEdgesChange={onEdgesChangeInternal}
         onNodeClick={handleNodeClickCallback}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
