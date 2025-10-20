@@ -224,15 +224,20 @@ export default function Canvas() {
 
   const handleDeleteSelected = useCallback(() => {
     if (selectedNode) {
-      setNodes((nds) => nds.filter((n) => n.id !== selectedNode.id));
-      setEdges((eds) => eds.filter((e) => e.source !== selectedNode.id && e.target !== selectedNode.id));
+      const updatedNodes = nodes.filter((n) => n.id !== selectedNode.id);
+      const updatedEdges = edges.filter((e) => e.source !== selectedNode.id && e.target !== selectedNode.id);
+      
+      setNodes(updatedNodes);
+      setEdges(updatedEdges);
       setSelectedNode(null);
+      setShowInspector(false);
+      
       toast({
-        title: 'Node deleted',
-        description: 'The selected node has been removed.',
+        title: 'Node törölve',
+        description: 'A kiválasztott node el lett távolítva.',
       });
     }
-  }, [selectedNode, toast]);
+  }, [selectedNode, nodes, edges, toast]);
 
   // Keyboard shortcuts
   useEffect(() => {

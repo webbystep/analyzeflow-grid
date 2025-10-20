@@ -106,6 +106,7 @@ export function FlowCanvas({
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
+        deleteKeyCode={null}
         className="bg-background"
       >
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
