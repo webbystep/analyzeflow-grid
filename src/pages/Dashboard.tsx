@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, Plus, Workflow, LogOut, FolderKanban, Calendar } from 'lucide-react';
+import { Loader2, Plus, Workflow, LogOut, FolderKanban, Calendar, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 
@@ -302,14 +302,25 @@ export default function Dashboard() {
             <Label className="mb-2 block">Workspace</Label>
             <div className="flex gap-2 flex-wrap">
               {workspaces.map((workspace) => (
-                <Button
-                  key={workspace.id}
-                  variant={selectedWorkspace === workspace.id ? 'default' : 'outline'}
-                  onClick={() => setSelectedWorkspace(workspace.id)}
-                >
-                  <FolderKanban className="mr-2 h-4 w-4" />
-                  {workspace.name}
-                </Button>
+                <div key={workspace.id} className="flex gap-1">
+                  <Button
+                    variant={selectedWorkspace === workspace.id ? 'default' : 'outline'}
+                    onClick={() => setSelectedWorkspace(workspace.id)}
+                  >
+                    <FolderKanban className="mr-2 h-4 w-4" />
+                    {workspace.name}
+                  </Button>
+                  {selectedWorkspace === workspace.id && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => navigate(`/workspace/${workspace.id}/settings`)}
+                      title="Workspace Settings"
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               ))}
             </div>
           </div>
