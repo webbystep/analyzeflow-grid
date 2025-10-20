@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
+import { motion } from 'framer-motion';
 import {
   TrendingUp,
   Mail,
@@ -38,7 +39,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
   const nodeType = type as keyof typeof nodeIcons;
   
   return (
-    <div 
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ 
+        duration: 0.3, 
+        ease: 'easeOut',
+        type: 'spring',
+        stiffness: 200,
+        damping: 20
+      }}
       className={`px-4 py-3 rounded-lg border-2 bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl ${
         selected ? 'ring-2 ring-primary ring-offset-2' : ''
       }`}
@@ -84,7 +94,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         position={Position.Right} 
         className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
       />
-    </div>
+    </motion.div>
   );
 });
 

@@ -18,6 +18,7 @@ import { ShareDialog } from '@/components/canvas/ShareDialog';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
 import { useHistory } from '@/hooks/useHistory';
 import { useMetricsFlow } from '@/lib/hooks/useMetricsFlow';
+import { InsertNodeDialog, NodeType } from '@/components/canvas/InsertNodeDialog';
 
 export default function Canvas() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -33,6 +34,11 @@ export default function Canvas() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [showInsertDialog, setShowInsertDialog] = useState(false);
+  const [pendingInsertData, setPendingInsertData] = useState<{
+    edgeId: string;
+    position: { x: number; y: number };
+  } | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
@@ -368,19 +374,27 @@ export default function Canvas() {
   }, [toast]);
 
   const handleInsertNodeBetweenEdges = useCallback((edgeId: string, position: { x: number; y: number }) => {
+    setPendingInsertData({ edgeId, position });
+    setShowInsertDialog(true);
+  }, []);
+
+  const handleNodeTypeSelected = useCallback((type: NodeType) => {
+    if (!pendingInsertData) return;
+
+    const { edgeId, position } = pendingInsertData;
     const edge = edges.find(e => e.id === edgeId);
     if (!edge) return;
 
     // Create new node at edge midpoint
     const newNode: Node = {
       id: crypto.randomUUID(),
-      type: 'landing',
+      type,
       position: {
         x: position.x - 90, // Node width / 2
         y: position.y - 40, // Node height / 2
       },
       data: { 
-        label: 'New Node',
+        label: `New ${type.charAt(0).toUpperCase() + type.slice(1)}`,
         visits: 1000,
         conversionRate: 10,
       },
@@ -405,11 +419,13 @@ export default function Canvas() {
     setEdges(newEdges);
     pushHistory([...nodes, newNode], newEdges);
 
+    setPendingInsertData(null);
+
     toast({
       title: 'Node beszúrva',
       description: 'Új node sikeresen hozzáadva az edge közepére.',
     });
-  }, [edges, nodes, pushHistory, toast]);
+  }, [edges, nodes, pushHistory, toast, pendingInsertData]);
 
   const handleDeleteEdge = useCallback((edgeId: string) => {
     const updatedEdges = edges.filter(e => e.id !== edgeId);
@@ -652,6 +668,15 @@ export default function Canvas() {
           projectName={project.name}
         />
       )}
+
+      <InsertNodeDialog
+        open={showInsertDialog}
+        onClose={() => {
+          setShowInsertDialog(false);
+          setPendingInsertData(null);
+        }}
+        onSelectType={handleNodeTypeSelected}
+      />
     </div>
   );
 }
