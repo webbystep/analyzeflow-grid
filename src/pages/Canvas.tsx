@@ -8,12 +8,13 @@ import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { TemplateDialog } from '@/components/canvas/TemplateDialog';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, BarChart3, Download } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, BarChart3, Download, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Node, Edge } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
 import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
 import { ExportDialog } from '@/components/canvas/ExportDialog';
+import { ShareDialog } from '@/components/canvas/ShareDialog';
 
 export default function Canvas() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -28,6 +29,7 @@ export default function Canvas() {
   const [showInspector, setShowInspector] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
@@ -326,6 +328,15 @@ export default function Canvas() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setShowShare(true)}
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Share
+          </Button>
+          <div className="h-6 w-px bg-border" />
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setShowExport(true)}
           >
             <Download className="h-4 w-4 mr-2" />
@@ -411,6 +422,16 @@ export default function Canvas() {
         projectName={project?.name}
         canvasRef={canvasRef}
       />
+
+      {project && (
+        <ShareDialog
+          open={showShare}
+          onOpenChange={setShowShare}
+          workspaceId={project.workspace_id}
+          projectId={projectId!}
+          projectName={project.name}
+        />
+      )}
     </div>
   );
 }

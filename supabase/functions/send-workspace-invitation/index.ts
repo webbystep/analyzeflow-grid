@@ -119,7 +119,7 @@ serve(async (req) => {
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'Workspace <onboarding@resend.dev>',
+      from: 'Kővár Magyarország <no-reply@webbystep.hu>',
       to: [email],
       subject,
       html,
