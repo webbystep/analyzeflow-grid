@@ -39,6 +39,7 @@ export default function WorkspaceSettings() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'viewer' | 'editor' | 'admin'>('viewer');
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [invitationLink, setInvitationLink] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
