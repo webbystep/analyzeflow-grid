@@ -117,7 +117,7 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
       token = crypto.randomUUID();
     }
 
-    const link = `${window.location.origin}/guest/${projectId}/${token}`;
+    const link = `${window.location.origin}/canvas/${projectId}/guest?token=${token}`;
     setGuestLink(link);
   };
 
