@@ -32,6 +32,7 @@ interface FlowCanvasProps {
   initialEdges: Edge[];
   onNodesChange: (nodes: Node[]) => void;
   onEdgesChange: (edges: Edge[]) => void;
+  onNodeClick: (node: Node) => void;
 }
 
 export function FlowCanvas({
@@ -40,6 +41,7 @@ export function FlowCanvas({
   initialEdges,
   onNodesChange,
   onEdgesChange,
+  onNodeClick,
 }: FlowCanvasProps) {
   const [nodes, setNodes, handleNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, handleEdgesChange] = useEdgesState(initialEdges);
@@ -64,6 +66,13 @@ export function FlowCanvas({
     [handleNodesChange, nodes, onNodesChange]
   );
 
+  const handleNodeClickCallback = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
+      onNodeClick(node);
+    },
+    [onNodeClick]
+  );
+
   return (
     <div className="w-full h-full">
       <ReactFlow
@@ -71,6 +80,7 @@ export function FlowCanvas({
         edges={edges}
         onNodesChange={handleNodesChangeCallback}
         onEdgesChange={handleEdgesChange}
+        onNodeClick={handleNodeClickCallback}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView

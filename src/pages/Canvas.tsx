@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { FlowCanvas } from '@/components/canvas/FlowCanvas';
+import { InspectorPanel } from '@/components/canvas/InspectorPanel';
+import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Undo, Redo, ZoomIn, ZoomOut } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Undo, Redo, ZoomIn, ZoomOut, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Node, Edge } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
@@ -18,6 +20,8 @@ export default function Canvas() {
   const [project, setProject] = useState<any>(null);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [showInspector, setShowInspector] = useState(false);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -167,6 +171,39 @@ export default function Canvas() {
     setEdges(newEdges);
   }, []);
 
+  const handleNodeClick = useCallback((node: Node) => {
+    setSelectedNode(node);
+    setShowInspector(true);
+  }, []);
+
+  const handleUpdateNode = useCallback((nodeId: string, updates: Partial<Node['data']>) => {
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === nodeId
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                ...updates,
+              },
+            }
+          : node
+      )
+    );
+    // Update selected node if it's the one being edited
+    setSelectedNode((current) =>
+      current?.id === nodeId
+        ? {
+            ...current,
+            data: {
+              ...current.data,
+              ...updates,
+            },
+          }
+        : current
+    );
+  }, []);
+
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
@@ -234,11 +271,13 @@ export default function Canvas() {
             <Redo className="h-4 w-4" />
           </Button>
           <div className="h-6 w-px bg-border" />
-          <Button variant="outline" size="sm" disabled>
-            <ZoomOut className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" disabled>
-            <ZoomIn className="h-4 w-4" />
+          <Button
+            variant={showInspector ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setShowInspector(!showInspector)}
+          >
+            <Info className="h-4 w-4 mr-2" />
+            Inspector
           </Button>
           <Button variant="default" size="sm" onClick={saveCanvas} disabled={saving}>
             <Save className="h-4 w-4 mr-2" />
@@ -247,20 +286,35 @@ export default function Canvas() {
         </div>
       </header>
 
-      <div 
-        ref={dropRef}
-        className="flex-1"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        <FlowCanvas
-          projectId={projectId!}
-          initialNodes={nodes}
-          initialEdges={edges}
-          onNodesChange={handleNodesChange}
-          onEdgesChange={handleEdgesChange}
-        />
+      <div className="flex flex-1 overflow-hidden">
+        <div 
+          ref={dropRef}
+          className="flex-1"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          <FlowCanvas
+            projectId={projectId!}
+            initialNodes={nodes}
+            initialEdges={edges}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={handleEdgesChange}
+            onNodeClick={handleNodeClick}
+          />
+        </div>
+
+        {showInspector && (
+          <div className="border-l">
+            <InspectorPanel
+              selectedNode={selectedNode}
+              onUpdateNode={handleUpdateNode}
+              onClose={() => setShowInspector(false)}
+            />
+          </div>
+        )}
       </div>
+
+      <FunnelSummary nodes={nodes} />
     </div>
   );
 }
