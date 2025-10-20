@@ -131,11 +131,7 @@ export default function Dashboard() {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('workspaces')
-      .insert({ name: workspaceName, owner_id: session.user.id })
-      .select()
-      .single();
+    const { data, error } = await supabase.rpc('create_workspace', { _name: workspaceName });
 
     if (error) {
       console.error('Workspace creation error:', error);
@@ -149,7 +145,7 @@ export default function Dashboard() {
         title: 'Workspace created',
         description: `${workspaceName} has been created successfully.`,
       });
-      setWorkspaces([data, ...workspaces]);
+      await loadWorkspaces();
       setSelectedWorkspace(data.id);
       setWorkspaceName('');
       setCreateWorkspaceOpen(false);

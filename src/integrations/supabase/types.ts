@@ -243,6 +243,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_workspace: {
+        Args: { _name: string }
+        Returns: {
+          created_at: string | null
+          id: string
+          name: string
+          owner_id: string
+          updated_at: string | null
+        }
+      }
       has_workspace_role: {
         Args: {
           required_role: Database["public"]["Enums"]["workspace_role"]
