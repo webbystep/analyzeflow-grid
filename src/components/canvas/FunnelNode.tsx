@@ -8,6 +8,7 @@ import {
   PartyPopper,
   GitBranch,
 } from 'lucide-react';
+import { MetricsFlowIndicator } from './MetricsFlowIndicator';
 
 interface FunnelNodeData {
   label: string;
@@ -66,34 +67,12 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         <div className="font-semibold text-sm">{data.label}</div>
       </div>
       
-      {(data.visits !== undefined || data.conversionRate !== undefined) && (
-        <div className="space-y-1 text-xs">
-          {data.visits !== undefined && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Visits:</span>
-              <span className="font-medium">{data.visits.toLocaleString()}</span>
-            </div>
-          )}
-          {data.conversionRate !== undefined && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">CR:</span>
-              <span className="font-medium">{data.conversionRate}%</span>
-            </div>
-          )}
-          {data.conversions !== undefined && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Conv:</span>
-              <span className="font-medium">{data.conversions.toLocaleString()}</span>
-            </div>
-          )}
-          {data.revenue !== undefined && (
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Revenue:</span>
-              <span className="font-medium">${data.revenue.toLocaleString()}</span>
-            </div>
-          )}
-        </div>
-      )}
+      <MetricsFlowIndicator
+        visits={data.visits}
+        conversions={data.conversions}
+        revenue={data.revenue}
+        conversionRate={data.conversionRate}
+      />
       
       <Handle 
         type="source" 

@@ -54,7 +54,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
     if (conversionRate) updates.conversionRate = parseFloat(conversionRate);
     if (averageOrderValue) updates.averageOrderValue = parseFloat(averageOrderValue);
 
-    // Calculate conversions and revenue
+    // Calculate conversions and revenue for current node
     if (updates.visits && updates.conversionRate) {
       updates.conversions = Math.round((updates.visits * updates.conversionRate) / 100);
     }

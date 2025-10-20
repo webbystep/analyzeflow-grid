@@ -17,6 +17,7 @@ import { ExportDialog } from '@/components/canvas/ExportDialog';
 import { ShareDialog } from '@/components/canvas/ShareDialog';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
 import { useHistory } from '@/hooks/useHistory';
+import { useMetricsFlow } from '@/lib/hooks/useMetricsFlow';
 
 export default function Canvas() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -37,6 +38,7 @@ export default function Canvas() {
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
   const { pushHistory, undo, redo, canUndo, canRedo } = useHistory([], []);
+  const { calculateMetricsFlow } = useMetricsFlow();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -195,8 +197,9 @@ export default function Canvas() {
   }, []);
 
   const handleUpdateNode = useCallback((nodeId: string, updates: Partial<Node['data']>) => {
-    setNodes((nds) =>
-      nds.map((node) =>
+    setNodes((nds) => {
+      // First update the node with new data
+      const updatedNodes = nds.map((node) =>
         node.id === nodeId
           ? {
               ...node,
@@ -206,8 +209,20 @@ export default function Canvas() {
               },
             }
           : node
-      )
-    );
+      );
+
+      // Then propagate metrics downstream if metrics were updated
+      const metricsChanged = updates.visits !== undefined || 
+                            updates.conversionRate !== undefined || 
+                            updates.averageOrderValue !== undefined;
+      
+      if (metricsChanged) {
+        return calculateMetricsFlow(updatedNodes, edges, nodeId);
+      }
+      
+      return updatedNodes;
+    });
+
     // Update selected node if it's the one being edited
     setSelectedNode((current) =>
       current?.id === nodeId
@@ -220,7 +235,7 @@ export default function Canvas() {
           }
         : current
     );
-  }, []);
+  }, [edges, calculateMetricsFlow]);
 
   const handleSelectTemplate = useCallback((template: FunnelTemplate) => {
     const { nodes: templateNodes, edges: templateEdges } = createNodesFromTemplate(template);
