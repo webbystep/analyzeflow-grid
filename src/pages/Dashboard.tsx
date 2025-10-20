@@ -58,6 +58,21 @@ export default function Dashboard() {
   }, [selectedWorkspace]);
 
   const loadWorkspaces = async () => {
+    // First, ensure user profile exists
+    if (user) {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profile) {
+        console.log('Profile not found, creating...');
+        // Profile might not exist yet, wait a moment and retry
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
     const { data, error } = await supabase
       .from('workspaces')
       .select('*')
@@ -103,13 +118,27 @@ export default function Dashboard() {
     e.preventDefault();
     if (!user) return;
 
+    // Get current session to ensure auth.uid() is available
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication required',
+        description: 'Please sign in again to create a workspace.',
+      });
+      navigate('/auth');
+      return;
+    }
+
     const { data, error } = await supabase
       .from('workspaces')
-      .insert({ name: workspaceName, owner_id: user.id })
+      .insert({ name: workspaceName, owner_id: session.user.id })
       .select()
       .single();
 
     if (error) {
+      console.error('Workspace creation error:', error);
       toast({
         variant: 'destructive',
         title: 'Error creating workspace',
