@@ -12,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Node, Edge } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
 import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
-import { AnalyticsDashboard } from '@/components/canvas/AnalyticsDashboard';
 import { ExportDialog } from '@/components/canvas/ExportDialog';
 
 export default function Canvas() {
@@ -27,8 +26,8 @@ export default function Canvas() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showInspector, setShowInspector] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
-  const [showAnalytics, setShowAnalytics] = useState(true);
   const [showExport, setShowExport] = useState(false);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -318,14 +317,6 @@ export default function Canvas() {
 
         <div className="flex items-center gap-2">
           <Button
-            variant={showAnalytics ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setShowAnalytics(!showAnalytics)}
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Analytics
-          </Button>
-          <Button
             variant="outline"
             size="sm"
             onClick={() => setShowExport(true)}
@@ -369,11 +360,9 @@ export default function Canvas() {
         </div>
       </header>
 
-      {showAnalytics && <AnalyticsDashboard nodes={nodes} />}
-
       <div className="flex flex-1 overflow-hidden">
         <div 
-          ref={dropRef}
+          ref={canvasRef}
           className="flex-1"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -413,6 +402,7 @@ export default function Canvas() {
         nodes={nodes}
         edges={edges}
         projectName={project?.name}
+        canvasRef={canvasRef}
       />
     </div>
   );

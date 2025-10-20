@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, RefObject } from 'react';
 import { Node, Edge } from '@xyflow/react';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Download, FileJson, FileSpreadsheet } from 'lucide-react';
+import { Download, FileJson, FileSpreadsheet, FileImage, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ExportDialogProps {
@@ -19,6 +21,7 @@ interface ExportDialogProps {
   nodes: Node[];
   edges: Edge[];
   projectName?: string;
+  canvasRef: RefObject<HTMLDivElement>;
 }
 
 export function ExportDialog({
@@ -27,8 +30,9 @@ export function ExportDialog({
   nodes,
   edges,
   projectName = 'funnel',
+  canvasRef,
 }: ExportDialogProps) {
-  const [format, setFormat] = useState<'json' | 'csv'>('json');
+  const [format, setFormat] = useState<'json' | 'csv' | 'png' | 'pdf'>('json');
   const { toast } = useToast();
 
   const exportAsJSON = () => {
@@ -97,11 +101,88 @@ export function ExportDialog({
     URL.revokeObjectURL(url);
   };
 
-  const handleExport = () => {
+  const exportAsPNG = async () => {
+    if (!canvasRef.current) return;
+    
+    try {
+      const dataUrl = await toPng(canvasRef.current, {
+        filter: (node) => {
+          return !node?.classList?.contains('react-flow__minimap') &&
+                 !node?.classList?.contains('react-flow__controls');
+        },
+      });
+      
+      const link = document.createElement('a');
+      link.download = `${projectName}-canvas-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('PNG export error:', error);
+    }
+  };
+
+  const exportAsPDF = async () => {
+    if (!canvasRef.current) return;
+    
+    try {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) return;
+
+      const dataUrl = await toPng(canvasRef.current, {
+        filter: (node) => {
+          return !node?.classList?.contains('react-flow__minimap') &&
+                 !node?.classList?.contains('react-flow__controls');
+        },
+      });
+
+      const img = new Image();
+      img.src = dataUrl;
+      await new Promise((resolve) => { img.onload = resolve; });
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context.drawImage(img, 0, 0);
+
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (img.height * imgWidth) / img.width;
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      if (imgHeight <= pageHeight) {
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      } else {
+        let heightLeft = imgHeight;
+        let position = 0;
+        
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+      }
+      
+      pdf.save(`${projectName}-canvas-${Date.now()}.pdf`);
+    } catch (error) {
+      console.error('PDF export error:', error);
+    }
+  };
+
+  const handleExport = async () => {
     if (format === 'json') {
       exportAsJSON();
-    } else {
+    } else if (format === 'csv') {
       exportAsCSV();
+    } else if (format === 'png') {
+      await exportAsPNG();
+    } else if (format === 'pdf') {
+      await exportAsPDF();
     }
 
     toast({
@@ -123,7 +204,7 @@ export function ExportDialog({
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          <RadioGroup value={format} onValueChange={(value) => setFormat(value as 'json' | 'csv')}>
+          <RadioGroup value={format} onValueChange={(value) => setFormat(value as any)}>
             <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
               <RadioGroupItem value="json" id="json" />
               <Label htmlFor="json" className="flex items-center gap-2 cursor-pointer flex-1">
@@ -145,6 +226,32 @@ export function ExportDialog({
                   <div className="font-medium">CSV</div>
                   <div className="text-xs text-muted-foreground">
                     Táblázatos formátum Excel-hez
+                  </div>
+                </div>
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
+              <RadioGroupItem value="png" id="png" />
+              <Label htmlFor="png" className="flex items-center gap-2 cursor-pointer flex-1">
+                <FileImage className="h-4 w-4" />
+                <div>
+                  <div className="font-medium">PNG kép</div>
+                  <div className="text-xs text-muted-foreground">
+                    Vizuális canvas prezentációhoz
+                  </div>
+                </div>
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
+              <RadioGroupItem value="pdf" id="pdf" />
+              <Label htmlFor="pdf" className="flex items-center gap-2 cursor-pointer flex-1">
+                <FileText className="h-4 w-4" />
+                <div>
+                  <div className="font-medium">PDF dokumentum</div>
+                  <div className="text-xs text-muted-foreground">
+                    Nyomtatásra kész formátum
                   </div>
                 </div>
               </Label>
