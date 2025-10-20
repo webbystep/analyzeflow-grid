@@ -58,6 +58,22 @@ All colors MUST be HSL.
     --node-condition: 231 48% 48%;
   }
 
+  /* React Flow Edge Hover Effects */
+  .react-flow__edge-path {
+    transition: stroke-width 0.2s ease, stroke 0.2s ease;
+  }
+
+  .react-flow__edge-path:hover {
+    stroke-width: 3 !important;
+    stroke: hsl(var(--primary)) !important;
+  }
+
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke-width: 3 !important;
+    stroke: hsl(var(--primary)) !important;
+  }
+
+
   .dark {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;

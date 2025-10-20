@@ -59,12 +59,14 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
       <Handle 
         type="target" 
         position={Position.Top} 
-        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
+        style={{ transformOrigin: 'center' }}
       />
       <Handle 
         type="target" 
         position={Position.Left} 
-        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
+        style={{ transformOrigin: 'center' }}
       />
       
       <div className="flex items-center gap-2 mb-2">
@@ -87,12 +89,14 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
       <Handle 
         type="source" 
         position={Position.Bottom} 
-        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
+        style={{ transformOrigin: 'center' }}
       />
       <Handle 
         type="source" 
         position={Position.Right} 
-        className="w-4 h-4 !bg-primary hover:scale-125 transition-transform" 
+        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
+        style={{ transformOrigin: 'center' }}
       />
     </motion.div>
   );
