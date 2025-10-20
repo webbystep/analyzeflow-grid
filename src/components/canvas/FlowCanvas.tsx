@@ -40,6 +40,8 @@ interface FlowCanvasProps {
   onNodesChange: (nodes: Node[]) => void;
   onEdgesChange: (edges: Edge[]) => void;
   onNodeClick: (node: Node) => void;
+  onInsertNode?: (edgeId: string, position: { x: number; y: number }) => void;
+  onDeleteEdge?: (edgeId: string) => void;
   readonly?: boolean;
 }
 
@@ -50,6 +52,8 @@ export function FlowCanvas({
   onNodesChange,
   onEdgesChange,
   onNodeClick,
+  onInsertNode,
+  onDeleteEdge,
   readonly = false,
 }: FlowCanvasProps) {
   const [nodes, setNodes] = useNodesState(initialNodes);
@@ -102,11 +106,21 @@ export function FlowCanvas({
     [onNodeClick]
   );
 
+  // Enhance edges with handlers
+  const enhancedEdges = edges.map(edge => ({
+    ...edge,
+    data: {
+      ...edge.data,
+      onInsertNode,
+      onDeleteEdge,
+    }
+  }));
+
   return (
     <div className="w-full h-full">
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={enhancedEdges}
         onNodesChange={readonly ? undefined : onNodesChangeInternal}
         onEdgesChange={readonly ? undefined : onEdgesChangeInternal}
         onNodeClick={handleNodeClickCallback}

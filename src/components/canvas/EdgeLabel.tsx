@@ -2,6 +2,13 @@ import { EdgeLabelRenderer, EdgeProps, getBezierPath, BaseEdge } from '@xyflow/r
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Plus } from 'lucide-react';
+import { EdgeContextMenu } from './EdgeContextMenu';
+
+interface CustomEdgeProps extends EdgeProps {
+  onInsertNode?: (edgeId: string, position: { x: number; y: number }) => void;
+  onDeleteEdge?: (edgeId: string) => void;
+}
 
 export function CustomEdge({
   id,
@@ -25,10 +32,27 @@ export function CustomEdge({
 
   const [isEditing, setIsEditing] = useState(false);
   const [dropOffRate, setDropOffRate] = useState<number>((data?.dropOffRate as number) || 0);
+  const [isHovering, setIsHovering] = useState(false);
+  
+  // Extract handlers from data
+  const onInsertNode = (data as any)?.onInsertNode;
+  const onDeleteEdge = (data as any)?.onDeleteEdge;
 
   const handleSave = () => {
     setIsEditing(false);
     // This will be handled by parent component through edge data updates
+  };
+
+  const handleInsertClick = () => {
+    if (onInsertNode) {
+      onInsertNode(id, { x: labelX, y: labelY });
+    }
+  };
+
+  const handleDeleteClick = () => {
+    if (onDeleteEdge) {
+      onDeleteEdge(id);
+    }
   };
 
   return (
@@ -42,6 +66,8 @@ export function CustomEdge({
             pointerEvents: 'all',
           }}
           className="nodrag nopan"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
           {isEditing ? (
             <Card className="p-2 bg-background shadow-lg">
@@ -67,12 +93,29 @@ export function CustomEdge({
               </div>
             </Card>
           ) : (
-            <div
-              onClick={() => setIsEditing(true)}
-              className="px-2 py-1 bg-background border border-border rounded-md text-xs font-medium cursor-pointer hover:bg-accent transition-colors"
+            <EdgeContextMenu
+              edge={{ id, source: '', target: '', data }}
+              onInsertNode={onInsertNode || (() => {})}
+              onDeleteEdge={onDeleteEdge || (() => {})}
+              labelPosition={{ x: labelX, y: labelY }}
             >
-              {(data?.label as string) || `Drop-off: ${dropOffRate}%`}
-            </div>
+              <div className="relative">
+                <div
+                  onClick={() => setIsEditing(true)}
+                  className="px-2 py-1 bg-background border border-border rounded-md text-xs font-medium cursor-pointer hover:bg-accent transition-colors"
+                >
+                  {(data?.label as string) || `Drop-off: ${dropOffRate}%`}
+                </div>
+                {isHovering && onInsertNode && (
+                  <button
+                    onClick={handleInsertClick}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-200 border-2 border-background"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            </EdgeContextMenu>
           )}
         </div>
       </EdgeLabelRenderer>

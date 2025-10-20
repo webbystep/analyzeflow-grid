@@ -352,6 +352,61 @@ export default function Canvas() {
     }
   }, [toast]);
 
+  const handleInsertNodeBetweenEdges = useCallback((edgeId: string, position: { x: number; y: number }) => {
+    const edge = edges.find(e => e.id === edgeId);
+    if (!edge) return;
+
+    // Create new node at edge midpoint
+    const newNode: Node = {
+      id: crypto.randomUUID(),
+      type: 'landing',
+      position: {
+        x: position.x - 90, // Node width / 2
+        y: position.y - 40, // Node height / 2
+      },
+      data: { 
+        label: 'New Node',
+        visits: 1000,
+        conversionRate: 10,
+      },
+    };
+
+    // Remove original edge and create two new ones
+    const newEdges = edges.filter(e => e.id !== edgeId);
+    newEdges.push({
+      id: `edge-${edge.source}-${newNode.id}`,
+      source: edge.source,
+      target: newNode.id,
+      data: edge.data, // Preserve original edge data (e.g., drop-off rate)
+    });
+    newEdges.push({
+      id: `edge-${newNode.id}-${edge.target}`,
+      source: newNode.id,
+      target: edge.target,
+      data: { dropOffRate: 0 },
+    });
+
+    setNodes((nds) => [...nds, newNode]);
+    setEdges(newEdges);
+    pushHistory([...nodes, newNode], newEdges);
+
+    toast({
+      title: 'Node beszúrva',
+      description: 'Új node sikeresen hozzáadva az edge közepére.',
+    });
+  }, [edges, nodes, pushHistory, toast]);
+
+  const handleDeleteEdge = useCallback((edgeId: string) => {
+    const updatedEdges = edges.filter(e => e.id !== edgeId);
+    setEdges(updatedEdges);
+    pushHistory(nodes, updatedEdges);
+
+    toast({
+      title: 'Edge törölve',
+      description: 'Az összekötés el lett távolítva.',
+    });
+  }, [edges, nodes, pushHistory, toast]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -539,6 +594,8 @@ export default function Canvas() {
               onNodesChange={handleNodesChange}
               onEdgesChange={handleEdgesChange}
               onNodeClick={handleNodeClick}
+              onInsertNode={handleInsertNodeBetweenEdges}
+              onDeleteEdge={handleDeleteEdge}
             />
           </div>
         </CanvasContextMenu>
