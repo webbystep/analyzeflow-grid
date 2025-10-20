@@ -55,6 +55,51 @@ export type Database = {
           },
         ]
       }
+      guest_access: {
+        Row: {
+          created_at: string
+          created_by: string
+          email: string
+          id: string
+          project_id: string | null
+          token: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          email: string
+          id?: string
+          project_id?: string | null
+          token: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          email?: string
+          id?: string
+          project_id?: string | null
+          token?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_access_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guest_access_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nodes: {
         Row: {
           color: string | null
@@ -175,9 +220,12 @@ export type Database = {
           accepted_at: string | null
           created_at: string
           email: string
+          email_sent_at: string | null
           expires_at: string
           id: string
+          invitation_type: string | null
           invited_by: string
+          project_id: string | null
           role: Database["public"]["Enums"]["workspace_role"]
           token: string
           workspace_id: string
@@ -186,9 +234,12 @@ export type Database = {
           accepted_at?: string | null
           created_at?: string
           email: string
+          email_sent_at?: string | null
           expires_at?: string
           id?: string
+          invitation_type?: string | null
           invited_by: string
+          project_id?: string | null
           role?: Database["public"]["Enums"]["workspace_role"]
           token: string
           workspace_id: string
@@ -197,14 +248,24 @@ export type Database = {
           accepted_at?: string | null
           created_at?: string
           email?: string
+          email_sent_at?: string | null
           expires_at?: string
           id?: string
+          invitation_type?: string | null
           invited_by?: string
+          project_id?: string | null
           role?: Database["public"]["Enums"]["workspace_role"]
           token?: string
           workspace_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "workspace_invitations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "workspace_invitations_workspace_id_fkey"
             columns: ["workspace_id"]
@@ -293,9 +354,12 @@ export type Database = {
           accepted_at: string | null
           created_at: string
           email: string
+          email_sent_at: string | null
           expires_at: string
           id: string
+          invitation_type: string | null
           invited_by: string
+          project_id: string | null
           role: Database["public"]["Enums"]["workspace_role"]
           token: string
           workspace_id: string

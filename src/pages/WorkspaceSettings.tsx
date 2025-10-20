@@ -38,6 +38,9 @@ export default function WorkspaceSettings() {
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'viewer' | 'editor' | 'admin'>('viewer');
+  const [inviteType, setInviteType] = useState<'member' | 'guest'>('member');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
+  const [projects, setProjects] = useState<any[]>([]);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [invitationLink, setInvitationLink] = useState<string | null>(null);
 
@@ -51,6 +54,7 @@ export default function WorkspaceSettings() {
     if (workspaceId && user) {
       loadWorkspace();
       loadMembers();
+      loadProjects();
     }
   }, [workspaceId, user]);
 
@@ -105,32 +109,113 @@ export default function WorkspaceSettings() {
     }
   };
 
+  const loadProjects = async () => {
+    if (!workspaceId) return;
+
+    const { data, error } = await supabase
+      .from('projects')
+      .select('id, name')
+      .eq('workspace_id', workspaceId)
+      .eq('is_archived', false);
+
+    if (!error && data) {
+      setProjects(data);
+    }
+  };
+
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!workspaceId || !user) return;
 
-    // Generate unique token
+    // Validate guest invitation requires project
+    if (inviteType === 'guest' && !selectedProjectId) {
+      toast({
+        variant: 'destructive',
+        title: 'Projekt szükséges',
+        description: 'Külsős tag meghívásához válassz egy projektet!',
+      });
+      return;
+    }
+
     const token = crypto.randomUUID();
 
-    // Create invitation
-    const { data, error } = await supabase
-      .from('workspace_invitations')
-      .insert({
-        workspace_id: workspaceId,
-        email: inviteEmail,
-        role: inviteRole,
-        token: token,
-        invited_by: user.id,
-      })
-      .select()
-      .single();
+    try {
+      if (inviteType === 'guest') {
+        // Create guest access
+        const { error: guestError } = await supabase
+          .from('guest_access')
+          .insert({
+            workspace_id: workspaceId,
+            project_id: selectedProjectId,
+            email: inviteEmail,
+            token: token,
+            created_by: user.id,
+          });
 
-    if (error) {
+        if (guestError) throw guestError;
+
+        // Send email via edge function
+        const selectedProject = projects.find(p => p.id === selectedProjectId);
+        await supabase.functions.invoke('send-workspace-invitation', {
+          body: {
+            email: inviteEmail,
+            token: token,
+            invitationType: 'guest',
+            workspaceName: workspace?.name,
+            inviterName: user.user_metadata?.name || user.email,
+            projectId: selectedProjectId,
+            projectName: selectedProject?.name,
+          },
+        });
+
+        toast({
+          title: 'Guest meghívó elküldve!',
+          description: 'A külsős tag emailben megkapja a projekt megtekintési linket.',
+        });
+      } else {
+        // Create workspace invitation
+        const { error: inviteError } = await supabase
+          .from('workspace_invitations')
+          .insert({
+            workspace_id: workspaceId,
+            email: inviteEmail,
+            role: inviteRole,
+            token: token,
+            invited_by: user.id,
+            invitation_type: 'member',
+          });
+
+        if (inviteError) throw inviteError;
+
+        // Send email via edge function
+        await supabase.functions.invoke('send-workspace-invitation', {
+          body: {
+            email: inviteEmail,
+            token: token,
+            invitationType: 'member',
+            workspaceName: workspace?.name,
+            inviterName: user.user_metadata?.name || user.email,
+            role: inviteRole,
+          },
+        });
+
+        toast({
+          title: 'Meghívó elküldve!',
+          description: 'Az új tag emailben megkapja a meghívót.',
+        });
+      }
+
+      setInviteEmail('');
+      setInviteRole('viewer');
+      setInviteType('member');
+      setSelectedProjectId('');
+      setInviteOpen(false);
+    } catch (error: any) {
       if (error.code === '23505') {
         toast({
           variant: 'destructive',
-          title: 'Már meghívott',
-          description: 'Ez az email cím már meg van hívva ebbe a workspace-be.',
+          title: 'Már létezik',
+          description: 'Ez az email már hozzáférést kapott ehhez a projekthez vagy workspace-hez.',
         });
       } else {
         toast({
@@ -139,23 +224,7 @@ export default function WorkspaceSettings() {
           description: error.message,
         });
       }
-      return;
     }
-
-    // Generate invitation link
-    const inviteUrl = `${window.location.origin}/accept-invitation?token=${token}`;
-
-    // Copy to clipboard
-    await navigator.clipboard.writeText(inviteUrl);
-
-    toast({
-      title: 'Meghívó létrehozva!',
-      description: 'A meghívó link a vágólapra másolva. Küldd el email-ben a meghívottnak!',
-    });
-
-    setInviteEmail('');
-    setInviteRole('viewer');
-    setInviteOpen(false);
   };
 
   const handleUpdateRole = async (userId: string, newRole: 'viewer' | 'editor' | 'admin' | 'owner') => {
@@ -270,10 +339,28 @@ export default function WorkspaceSettings() {
                       <DialogHeader>
                         <DialogTitle>Tag meghívása</DialogTitle>
                         <DialogDescription>
-                          Adj meg egy email címet és generálj egy meghívó linket. A meghívott regisztrálhat vagy bejelentkezhet a link megnyitásakor.
+                          Válaszd ki hogy belsős vagy külsős tagot szeretnél meghívni.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
+                        <div>
+                          <Label htmlFor="inviteType">Meghívó típusa</Label>
+                          <Select value={inviteType} onValueChange={(value: any) => setInviteType(value)}>
+                            <SelectTrigger id="inviteType">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="member">Belsős tag (teljes hozzáférés)</SelectItem>
+                              <SelectItem value="guest">Külsős tag (csak megtekintés)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {inviteType === 'member' 
+                              ? 'Belsős tag teljes workspace hozzáférést kap, szerkeszthet projekteket.'
+                              : 'Külsős tag csak egy adott projektet tud megtekinteni, szerkeszteni nem.'}
+                          </p>
+                        </div>
+                        
                         <div>
                           <Label htmlFor="email">Email cím</Label>
                           <Input
@@ -284,29 +371,47 @@ export default function WorkspaceSettings() {
                             placeholder="pelda@email.com"
                             required
                           />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            <LinkIcon className="h-3 w-3 inline mr-1" />
-                            Egy egyedi meghívó linket fogsz kapni, amit elküldhetsz neki
-                          </p>
                         </div>
-                        <div>
-                          <Label htmlFor="role">Role</Label>
-                          <Select value={inviteRole} onValueChange={(value: any) => setInviteRole(value)}>
-                            <SelectTrigger id="role">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="viewer">Viewer - Can view projects</SelectItem>
-                              <SelectItem value="editor">Editor - Can edit projects</SelectItem>
-                              <SelectItem value="admin">Admin - Can manage members</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+
+                        {inviteType === 'member' ? (
+                          <div>
+                            <Label htmlFor="role">Szerepkör</Label>
+                            <Select value={inviteRole} onValueChange={(value: any) => setInviteRole(value)}>
+                              <SelectTrigger id="role">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="viewer">Megtekintő - Projekteket láthat</SelectItem>
+                                <SelectItem value="editor">Szerkesztő - Projekteket szerkeszthet</SelectItem>
+                                <SelectItem value="admin">Admin - Tagokat kezelhet</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        ) : (
+                          <div>
+                            <Label htmlFor="project">Megosztott projekt</Label>
+                            <Select value={selectedProjectId} onValueChange={setSelectedProjectId} required>
+                              <SelectTrigger id="project">
+                                <SelectValue placeholder="Válassz projektet..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {projects.map((project) => (
+                                  <SelectItem key={project.id} value={project.id}>
+                                    {project.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              A külsős tag csak ezt a projektet fogja látni, read-only módban.
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <DialogFooter>
                         <Button type="submit">
-                          <Copy className="mr-2 h-4 w-4" />
-                          Link generálása
+                          <Mail className="mr-2 h-4 w-4" />
+                          Meghívó küldése emailben
                         </Button>
                       </DialogFooter>
                     </form>

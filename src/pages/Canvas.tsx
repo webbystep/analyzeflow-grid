@@ -6,6 +6,7 @@ import { FlowCanvas } from '@/components/canvas/FlowCanvas';
 import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { TemplateDialog } from '@/components/canvas/TemplateDialog';
+import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, BarChart3, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -307,6 +308,12 @@ export default function Canvas() {
           </Button>
           <div className="h-6 w-px bg-border" />
           <h1 className="text-lg font-semibold">{project?.name}</h1>
+          {project && (
+            <ProjectCollaborators 
+              workspaceId={project.workspace_id} 
+              projectId={projectId!}
+            />
+          )}
           {saving && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-3 w-3 animate-spin" />

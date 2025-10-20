@@ -34,12 +34,13 @@ const edgeTypes = {
 };
 
 interface FlowCanvasProps {
-  projectId: string;
+  projectId?: string;
   initialNodes: Node[];
   initialEdges: Edge[];
   onNodesChange: (nodes: Node[]) => void;
   onEdgesChange: (edges: Edge[]) => void;
   onNodeClick: (node: Node) => void;
+  readonly?: boolean;
 }
 
 export function FlowCanvas({
@@ -49,6 +50,7 @@ export function FlowCanvas({
   onNodesChange,
   onEdgesChange,
   onNodeClick,
+  readonly = false,
 }: FlowCanvasProps) {
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
@@ -105,12 +107,15 @@ export function FlowCanvas({
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChangeInternal}
-        onEdgesChange={onEdgesChangeInternal}
+        onNodesChange={readonly ? undefined : onNodesChangeInternal}
+        onEdgesChange={readonly ? undefined : onEdgesChangeInternal}
         onNodeClick={handleNodeClickCallback}
-        onConnect={onConnect}
+        onConnect={readonly ? undefined : onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        nodesDraggable={!readonly}
+        nodesConnectable={!readonly}
+        elementsSelectable={!readonly}
         fitView
         deleteKeyCode={null}
         className="bg-background"
@@ -118,9 +123,11 @@ export function FlowCanvas({
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         <Controls />
         <MiniMap />
-        <Panel position="top-left">
-          <NodeToolbar projectId={projectId} />
-        </Panel>
+        {!readonly && projectId && (
+          <Panel position="top-left">
+            <NodeToolbar projectId={projectId} />
+          </Panel>
+        )}
       </ReactFlow>
     </div>
   );
