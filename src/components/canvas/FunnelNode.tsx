@@ -32,15 +32,17 @@ const nodeIcons = {
   condition: GitBranch,
 };
 
-export const FunnelNode = memo(({ data, type }: { data: FunnelNodeData; type?: string }) => {
+export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData; type?: string; selected?: boolean }) => {
   const Icon = nodeIcons[type as keyof typeof nodeIcons] || FileText;
   const nodeType = type as keyof typeof nodeIcons;
   
   return (
     <div 
-      className="px-4 py-3 rounded-lg border-2 bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl"
+      className={`px-4 py-3 rounded-lg border-2 bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl ${
+        selected ? 'ring-2 ring-primary ring-offset-2' : ''
+      }`}
       style={{
-        borderColor: `hsl(var(--node-${nodeType}))`,
+        borderColor: selected ? `hsl(var(--primary))` : `hsl(var(--node-${nodeType}))`,
       }}
     >
       <Handle type="target" position={Position.Top} className="w-3 h-3" />

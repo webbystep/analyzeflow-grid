@@ -5,11 +5,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { FlowCanvas } from '@/components/canvas/FlowCanvas';
 import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { FunnelSummary } from '@/components/canvas/FunnelSummary';
+import { TemplateDialog } from '@/components/canvas/TemplateDialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Undo, Redo, ZoomIn, ZoomOut, Info } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Node, Edge } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
+import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
 
 export default function Canvas() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -22,6 +24,7 @@ export default function Canvas() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showInspector, setShowInspector] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -104,6 +107,11 @@ export default function Canvas() {
     }
 
     setLoading(false);
+    
+    // Show templates on first load if no nodes
+    if (!nodesData || nodesData.length === 0) {
+      setShowTemplates(true);
+    }
   };
 
   const saveCanvas = async () => {
@@ -204,6 +212,42 @@ export default function Canvas() {
     );
   }, []);
 
+  const handleSelectTemplate = useCallback((template: FunnelTemplate) => {
+    const { nodes: templateNodes, edges: templateEdges } = createNodesFromTemplate(template);
+    setNodes(templateNodes);
+    setEdges(templateEdges);
+    toast({
+      title: 'Template loaded',
+      description: `${template.name} has been added to your canvas.`,
+    });
+  }, [toast]);
+
+  const handleDeleteSelected = useCallback(() => {
+    if (selectedNode) {
+      setNodes((nds) => nds.filter((n) => n.id !== selectedNode.id));
+      setEdges((eds) => eds.filter((e) => e.source !== selectedNode.id && e.target !== selectedNode.id));
+      setSelectedNode(null);
+      toast({
+        title: 'Node deleted',
+        description: 'The selected node has been removed.',
+      });
+    }
+  }, [selectedNode, toast]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Delete selected node
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNode) {
+        e.preventDefault();
+        handleDeleteSelected();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedNode, handleDeleteSelected]);
+
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
@@ -264,11 +308,13 @@ export default function Canvas() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" disabled>
-            <Undo className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" disabled>
-            <Redo className="h-4 w-4" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowTemplates(true)}
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            Templates
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
@@ -279,6 +325,17 @@ export default function Canvas() {
             <Info className="h-4 w-4 mr-2" />
             Inspector
           </Button>
+          {selectedNode && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDeleteSelected}
+              className="text-destructive hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </Button>
+          )}
           <Button variant="default" size="sm" onClick={saveCanvas} disabled={saving}>
             <Save className="h-4 w-4 mr-2" />
             Save
@@ -315,6 +372,12 @@ export default function Canvas() {
       </div>
 
       <FunnelSummary nodes={nodes} />
+
+      <TemplateDialog
+        open={showTemplates}
+        onOpenChange={setShowTemplates}
+        onSelectTemplate={handleSelectTemplate}
+      />
     </div>
   );
 }
