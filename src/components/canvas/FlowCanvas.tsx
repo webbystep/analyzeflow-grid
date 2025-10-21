@@ -71,6 +71,11 @@ export function FlowCanvas({
     setEdges(initialEdges);
   }, [initialEdges, setEdges]);
 
+  const isValidConnection = useCallback((connection: Connection) => {
+    // Prevent self-loop: node cannot connect to itself
+    return connection.source !== connection.target;
+  }, []);
+
   const onConnect = useCallback(
     (params: Connection) => {
       const newEdges = addEdge(params, edges);
@@ -138,6 +143,7 @@ export function FlowCanvas({
         onNodeClick={handleNodeClickCallback}
         onConnect={readonly ? undefined : onConnect}
         onSelectionChange={handleSelectionChangeCallback}
+        isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         nodesDraggable={!readonly}

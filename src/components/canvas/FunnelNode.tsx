@@ -62,14 +62,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           : undefined,
       }}
     >
-      {/* Top handle - always visible */}
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-      />
-      
-      {/* Side handles - visible only on hover */}
+      {/* All handles - visible only on hover */}
       <AnimatePresence>
         {isHovered && (
           <>
@@ -78,14 +71,46 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.15 }}
+              style={{ position: 'absolute', top: '-8px', left: '50%', transform: 'translateX(-50%)' }}
+            >
+              <Handle 
+                id="top"
+                type="source" 
+                position={Position.Top} 
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.15 }}
+              style={{ position: 'absolute', bottom: '-8px', left: '50%', transform: 'translateX(-50%)' }}
+            >
+              <Handle 
+                id="bottom"
+                type="source" 
+                position={Position.Bottom} 
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.15 }}
               style={{ position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <Handle 
-                type="target" 
+                id="left"
+                type="source" 
                 position={Position.Left} 
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
             </motion.div>
+            
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -94,6 +119,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
               style={{ position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <Handle 
+                id="right"
                 type="source" 
                 position={Position.Right} 
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
@@ -118,13 +144,6 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         conversions={data.conversions}
         revenue={data.revenue}
         conversionRate={data.conversionRate}
-      />
-      
-      {/* Bottom handle - always visible */}
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
       />
     </motion.div>
   );
