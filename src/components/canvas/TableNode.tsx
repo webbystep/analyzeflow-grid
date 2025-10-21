@@ -71,7 +71,7 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
 
       {/* Header */}
       <div 
-        className="px-4 py-3 rounded-t-lg flex items-center gap-2"
+        className="px-4 py-3 flex items-center gap-2 rounded-t-lg"
         style={{ 
           backgroundColor: 'hsl(var(--node-landing))',
           color: 'white'
