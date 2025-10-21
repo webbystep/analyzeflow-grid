@@ -33,7 +33,7 @@ export function SelectionToolbar({
     >
       <div className="bg-card border shadow-lg rounded-lg px-3 py-2 flex items-center gap-2">
         <span className="text-sm font-medium text-muted-foreground mr-2">
-          {selectedCount} node{selectedCount > 1 ? 's' : ''} selected
+          {selectedCount} node{selectedCount > 1 ? '' : ''} kiválasztva
         </span>
         
         <div className="h-5 w-px bg-border" />
@@ -45,40 +45,40 @@ export function SelectionToolbar({
           className="h-8"
         >
           <Copy className="h-4 w-4 mr-2" />
-          Duplicate
+          Másolás
         </Button>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8">
               <AlignHorizontalJustifyCenter className="h-4 w-4 mr-2" />
-              Align
+              Igazítás
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center">
             <DropdownMenuItem onClick={() => onAlign('left')}>
               <AlignLeft className="h-4 w-4 mr-2" />
-              Align Left
+              Balra igazítás
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAlign('center')}>
               <AlignHorizontalJustifyCenter className="h-4 w-4 mr-2" />
-              Align Center (Horizontal)
+              Középre (vízszintesen)
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAlign('right')}>
               <AlignRight className="h-4 w-4 mr-2" />
-              Align Right
+              Jobbra igazítás
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAlign('top')}>
               <AlignVerticalJustifyStart className="h-4 w-4 mr-2" />
-              Align Top
+              Fel igazítás
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAlign('middle')}>
               <AlignVerticalJustifyCenter className="h-4 w-4 mr-2" />
-              Align Middle (Vertical)
+              Középre (függőlegesen)
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAlign('bottom')}>
               <AlignVerticalJustifyEnd className="h-4 w-4 mr-2" />
-              Align Bottom
+              Le igazítás
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -92,7 +92,7 @@ export function SelectionToolbar({
           className="h-8 text-destructive hover:text-destructive"
         >
           <Trash2 className="h-4 w-4 mr-2" />
-          Delete
+          Törlés
         </Button>
       </div>
     </motion.div>

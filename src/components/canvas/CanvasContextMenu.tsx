@@ -29,11 +29,11 @@ export function CanvasContextMenu({
           <>
             <ContextMenuItem onClick={onFitView}>
               <Maximize2 className="mr-2 h-4 w-4" />
-              Fit All Nodes
+              Összes node illesztése
             </ContextMenuItem>
             <ContextMenuItem onClick={onClearCanvas} className="text-destructive focus:text-destructive">
               <Eraser className="mr-2 h-4 w-4" />
-              Clear Canvas
+              Canvas törlése
             </ContextMenuItem>
           </>
         )}

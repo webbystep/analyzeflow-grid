@@ -32,10 +32,10 @@ export function TemplateDialog({ open, onOpenChange, onSelectTemplate }: Templat
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Choose a Funnel Template
+            Válassz egy tölcsér sablont
           </DialogTitle>
           <DialogDescription>
-            Start with a pre-built funnel template and customize it to your needs
+            Indulj egy előre elkészített tölcsér sablonnal és szabd testre igényeid szerint
           </DialogDescription>
         </DialogHeader>
 
@@ -68,7 +68,7 @@ export function TemplateDialog({ open, onOpenChange, onSelectTemplate }: Templat
                       {template.category}
                     </Badge>
                     <span className="text-muted-foreground">
-                      {template.nodes.length} steps
+                      {template.nodes.length} lépés
                     </span>
                   </div>
                 </CardContent>
@@ -79,7 +79,7 @@ export function TemplateDialog({ open, onOpenChange, onSelectTemplate }: Templat
 
         <div className="mt-4 pt-4 border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full">
-            Start from Blank Canvas
+            Indítás üres canvassal
           </Button>
         </div>
       </DialogContent>

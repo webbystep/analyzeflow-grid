@@ -27,39 +27,39 @@ interface NodeTypeOption {
 const nodeTypes: NodeTypeOption[] = [
   {
     type: 'traffic',
-    label: 'Traffic Source',
+    label: 'Forgalom',
     icon: <Globe className="w-6 h-6" />,
-    description: 'Starting point for your funnel',
+    description: 'Tölcsér kiindulási pontja',
   },
   {
     type: 'email',
     label: 'Email',
     icon: <Mail className="w-6 h-6" />,
-    description: 'Email marketing step',
+    description: 'Email marketing lépés',
   },
   {
     type: 'landing',
-    label: 'Landing Page',
+    label: 'Landoló oldal',
     icon: <Layout className="w-6 h-6" />,
-    description: 'Landing or content page',
+    description: 'Landoló vagy tartalmi oldal',
   },
   {
     type: 'checkout',
-    label: 'Checkout',
+    label: 'Pénztár',
     icon: <ShoppingCart className="w-6 h-6" />,
-    description: 'Payment or checkout step',
+    description: 'Fizetési vagy rendelési lépés',
   },
   {
     type: 'thankyou',
-    label: 'Thank You',
+    label: 'Köszönöm',
     icon: <CheckCircle className="w-6 h-6" />,
-    description: 'Confirmation or success page',
+    description: 'Megerősítő vagy sikeres oldal',
   },
   {
     type: 'condition',
-    label: 'Condition',
+    label: 'Feltétel',
     icon: <GitBranch className="w-6 h-6" />,
-    description: 'Split flow based on condition',
+    description: 'Folyamat szétválasztása feltétel szerint',
   },
 ];
 
@@ -83,9 +83,9 @@ export function InsertNodeDialog({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Select Node Type</DialogTitle>
+          <DialogTitle>Válassz node típust</DialogTitle>
           <DialogDescription>
-            Choose the type of node to insert into your funnel
+            Válaszd ki milyen típusú node-ot szeretnél beszúrni a tölcsérbe
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-3 mt-4">

@@ -57,7 +57,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
                 <Users className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Total Visits</div>
+                <div className="text-xs text-muted-foreground">Összes látogatás</div>
                 <div className="text-lg font-semibold">{metrics.totalVisits.toLocaleString()}</div>
               </div>
             </div>
@@ -69,7 +69,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
                 <Target className="h-4 w-4 text-success" />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Conversions</div>
+                <div className="text-xs text-muted-foreground">Konverziók</div>
                 <div className="text-lg font-semibold">{metrics.totalConversions.toLocaleString()}</div>
               </div>
             </div>
@@ -81,7 +81,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
                 <TrendingUp className="h-4 w-4 text-accent" />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Avg CR</div>
+                <div className="text-xs text-muted-foreground">Átlag KR</div>
                 <div className="text-lg font-semibold">{metrics.avgConversionRate}%</div>
               </div>
             </div>
@@ -93,9 +93,9 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
                 <DollarSign className="h-4 w-4 text-success" />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Total Revenue</div>
+                <div className="text-xs text-muted-foreground">Összes bevétel</div>
                 <div className="text-lg font-semibold text-success">
-                  ${metrics.totalRevenue.toLocaleString()}
+                  {metrics.totalRevenue.toLocaleString()} Ft
                 </div>
               </div>
             </div>
@@ -108,8 +108,8 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
                     <DollarSign className="h-4 w-4 text-warning" />
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground">Avg AOV</div>
-                    <div className="text-lg font-semibold">${metrics.avgOrderValue}</div>
+                    <div className="text-xs text-muted-foreground">Átlag ÁRÉ</div>
+                    <div className="text-lg font-semibold">{metrics.avgOrderValue} Ft</div>
                   </div>
                 </div>
               </>
@@ -117,7 +117,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
           </div>
 
           <div className="text-xs text-muted-foreground">
-            {metrics.nodeCount} {metrics.nodeCount === 1 ? 'node' : 'nodes'}
+            {metrics.nodeCount} {metrics.nodeCount === 1 ? 'node' : 'node'}
           </div>
         </div>
       </div>

@@ -88,7 +88,7 @@ export default function Canvas() {
     if (projectError) {
       toast({
         variant: 'destructive',
-        title: 'Error loading project',
+        title: 'Projekt betöltési hiba',
         description: projectError.message,
       });
       navigate('/dashboard');
@@ -190,7 +190,7 @@ export default function Canvas() {
       console.error('Error saving canvas:', error);
       toast({
         variant: 'destructive',
-        title: 'Error saving',
+        title: 'Mentési hiba',
         description: error.message,
       });
     } finally {
@@ -263,8 +263,8 @@ export default function Canvas() {
     setNodes(templateNodes);
     setEdges(templateEdges);
     toast({
-      title: 'Template loaded',
-      description: `${template.name} has been added to your canvas.`,
+      title: 'Sablon betöltve',
+      description: `${template.name} hozzáadva a canvashoz.`,
     });
   }, [toast]);
 
@@ -705,7 +705,7 @@ export default function Canvas() {
           {saving && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-3 w-3 animate-spin" />
-              Saving...
+              Mentés...
             </div>
           )}
         </div>
@@ -726,7 +726,7 @@ export default function Canvas() {
             disabled={!canUndo}
           >
             <Undo2 className="h-4 w-4 mr-2" />
-            Undo
+            Visszavonás
           </Button>
           <Button
             variant="outline"
@@ -735,7 +735,7 @@ export default function Canvas() {
             disabled={!canRedo}
           >
             <Redo2 className="h-4 w-4 mr-2" />
-            Redo
+            Újra
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
@@ -744,7 +744,7 @@ export default function Canvas() {
             onClick={() => setShowShare(true)}
           >
             <Share2 className="h-4 w-4 mr-2" />
-            Share
+            Megosztás
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
@@ -753,7 +753,7 @@ export default function Canvas() {
             onClick={() => setShowExport(true)}
           >
             <Download className="h-4 w-4 mr-2" />
-            Export
+            Exportálás
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
@@ -762,7 +762,7 @@ export default function Canvas() {
             onClick={() => setShowTemplates(true)}
           >
             <Sparkles className="h-4 w-4 mr-2" />
-            Templates
+            Sablonok
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
@@ -771,7 +771,7 @@ export default function Canvas() {
             onClick={() => setShowInspector(!showInspector)}
           >
             <Info className="h-4 w-4 mr-2" />
-            Inspector
+            Tulajdonságok
           </Button>
           {selectedNode && (
             <Button
@@ -781,12 +781,12 @@ export default function Canvas() {
               className="text-destructive hover:text-destructive"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              Delete
+              Törlés
             </Button>
           )}
           <Button variant="default" size="sm" onClick={saveCanvas} disabled={saving}>
             <Save className="h-4 w-4 mr-2" />
-            Save
+            Mentés
           </Button>
         </div>
       </header>

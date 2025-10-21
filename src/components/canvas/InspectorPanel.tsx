@@ -38,7 +38,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
       <Card className="w-80 h-full flex items-center justify-center">
         <CardContent className="text-center text-muted-foreground">
           <TrendingUp className="h-12 w-12 mx-auto mb-3 opacity-50" />
-          <p className="text-sm">Select a node to view details</p>
+          <p className="text-sm">Válassz egy node-ot a részletek megtekintéséhez</p>
         </CardContent>
       </Card>
     );
@@ -70,7 +70,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
       <CardHeader className="pb-3 border-b">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <CardTitle className="text-lg">Inspector</CardTitle>
+            <CardTitle className="text-lg">Tulajdonságok</CardTitle>
             <CardDescription className="text-xs mt-1">
               <Badge variant="outline" className="text-xs">
                 {selectedNode.type}
@@ -86,28 +86,28 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
       <CardContent className="flex-1 overflow-y-auto p-4">
         <Tabs defaultValue="properties" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="properties">Properties</TabsTrigger>
-            <TabsTrigger value="metrics">Metrics</TabsTrigger>
+            <TabsTrigger value="properties">Tulajdonságok</TabsTrigger>
+            <TabsTrigger value="metrics">Mutatók</TabsTrigger>
           </TabsList>
 
           <TabsContent value="properties" className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="node-label">Label</Label>
+              <Label htmlFor="node-label">Címke</Label>
               <Input
                 id="node-label"
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
-                placeholder="Node label"
+                placeholder="Node címke"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="node-notes">Notes</Label>
+              <Label htmlFor="node-notes">Jegyzetek</Label>
               <Textarea
                 id="node-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add notes about this step..."
+                placeholder="Jegyzet erről a lépésről..."
                 rows={4}
               />
             </div>
@@ -115,7 +115,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
 
           <TabsContent value="metrics" className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="node-visits">Visits / Traffic</Label>
+              <Label htmlFor="node-visits">Látogatások / Forgalom</Label>
               <Input
                 id="node-visits"
                 type="number"
@@ -124,12 +124,12 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
                 placeholder="1000"
               />
               <p className="text-xs text-muted-foreground">
-                Number of visitors reaching this step
+                Látogatók száma ezen a lépésen
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="node-cr">Conversion Rate (%)</Label>
+              <Label htmlFor="node-cr">Konverziós ráta (%)</Label>
               <Input
                 id="node-cr"
                 type="number"
@@ -139,43 +139,42 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
                 placeholder="10"
               />
               <p className="text-xs text-muted-foreground">
-                Percentage of visitors who convert
+                Konvertáló látogatók százaléka
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="node-aov">Average Order Value ($)</Label>
+              <Label htmlFor="node-aov">Átlagos rendelési érték (Ft)</Label>
               <Input
                 id="node-aov"
                 type="number"
                 step="0.01"
                 value={averageOrderValue}
                 onChange={(e) => setAverageOrderValue(e.target.value)}
-                placeholder="99.00"
+                placeholder="9900"
               />
               <p className="text-xs text-muted-foreground">
-                Average revenue per conversion
+                Átlagos bevétel konverziónként
               </p>
             </div>
 
             {visits && conversionRate && (
               <div className="pt-4 border-t">
-                <h4 className="text-sm font-semibold mb-2">Calculated Metrics</h4>
+                <h4 className="text-sm font-semibold mb-2">Számított mutatók</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Conversions:</span>
+                    <span className="text-muted-foreground">Konverziók:</span>
                     <span className="font-medium">
                       {Math.round((parseInt(visits) * parseFloat(conversionRate)) / 100).toLocaleString()}
                     </span>
                   </div>
                   {averageOrderValue && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Revenue:</span>
+                      <span className="text-muted-foreground">Bevétel:</span>
                       <span className="font-medium text-success">
-                        $
                         {Math.round(
                           (parseInt(visits) * parseFloat(conversionRate) * parseFloat(averageOrderValue)) / 100
-                        ).toLocaleString()}
+                        ).toLocaleString()} Ft
                       </span>
                     </div>
                   )}
@@ -188,7 +187,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
         <div className="mt-6 pt-4 border-t">
           <Button onClick={handleSave} className="w-full">
             <Save className="mr-2 h-4 w-4" />
-            Save Changes
+            Változások mentése
           </Button>
         </div>
       </CardContent>

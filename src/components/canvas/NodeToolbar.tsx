@@ -22,39 +22,39 @@ const nodeTemplates: Array<{
 }> = [
   {
     type: 'traffic',
-    label: 'Traffic Source',
+    label: 'Forgalom',
     icon: TrendingUp,
-    description: 'Ad campaigns, organic traffic',
+    description: 'Hirdetések, organikus forgalom',
   },
   {
     type: 'email',
     label: 'Email',
     icon: Mail,
-    description: 'Email sequences, broadcasts',
+    description: 'Email sorozatok, hírlevelek',
   },
   {
     type: 'landing',
-    label: 'Landing Page',
+    label: 'Landoló oldal',
     icon: FileText,
-    description: 'Sales pages, opt-in pages',
+    description: 'Értékesítési, feliratkozási oldalak',
   },
   {
     type: 'checkout',
-    label: 'Checkout',
+    label: 'Pénztár',
     icon: ShoppingCart,
-    description: 'Payment, order forms',
+    description: 'Fizetés, rendelési űrlapok',
   },
   {
     type: 'thankyou',
-    label: 'Thank You',
+    label: 'Köszönöm',
     icon: PartyPopper,
-    description: 'Confirmation, success pages',
+    description: 'Megerősítés, sikeres oldalak',
   },
   {
     type: 'condition',
-    label: 'Condition/Split',
+    label: 'Feltétel/Elágazás',
     icon: GitBranch,
-    description: 'A/B tests, conditional logic',
+    description: 'A/B tesztek, feltételes logika',
   },
 ];
 
@@ -111,8 +111,8 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
   return (
     <Card className="w-64 shadow-xl">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg">Node Library</CardTitle>
-        <CardDescription className="text-xs">Drag nodes onto the canvas</CardDescription>
+        <CardTitle className="text-lg">Node könyvtár</CardTitle>
+        <CardDescription className="text-xs">Húzd a node-okat a canvasra</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         {nodeTemplates.map((template) => {
