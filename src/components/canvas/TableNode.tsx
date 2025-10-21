@@ -67,48 +67,50 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
 
       {/* Header */}
       <div 
-        className="relative px-4 py-3 flex items-center gap-2 rounded-t-md"
+        className="relative px-4 py-3 flex items-center justify-between rounded-t-md"
         style={{ 
           backgroundColor: 'hsl(var(--node-landing))',
           color: 'white'
         }}
       >
-        <Database className="w-4 h-4" />
-        {isEditing ? (
-          <input
-            type="text"
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            onBlur={() => {
-              setIsEditing(false);
-              if (label.trim() && label !== tableData.label) {
-                (tableData as any).onLabelChange?.(id, label.trim());
-              } else {
-                setLabel(tableData.label);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+        <div className="flex items-center gap-2">
+          <Database className="w-4 h-4" />
+          {isEditing ? (
+            <input
+              type="text"
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              onBlur={() => {
                 setIsEditing(false);
                 if (label.trim() && label !== tableData.label) {
                   (tableData as any).onLabelChange?.(id, label.trim());
+                } else {
+                  setLabel(tableData.label);
                 }
-              } else if (e.key === 'Escape') {
-                setLabel(tableData.label);
-                setIsEditing(false);
-              }
-            }}
-            className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white"
-            autoFocus
-          />
-        ) : (
-          <span 
-            className="font-semibold text-sm cursor-text"
-            onClick={() => setIsEditing(true)}
-          >
-            {tableData.label}
-          </span>
-        )}
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setIsEditing(false);
+                  if (label.trim() && label !== tableData.label) {
+                    (tableData as any).onLabelChange?.(id, label.trim());
+                  }
+                } else if (e.key === 'Escape') {
+                  setLabel(tableData.label);
+                  setIsEditing(false);
+                }
+              }}
+              className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white"
+              autoFocus
+            />
+          ) : (
+            <span 
+              className="font-semibold text-sm cursor-text"
+              onClick={() => setIsEditing(true)}
+            >
+              {tableData.label}
+            </span>
+          )}
+        </div>
         <ConnectionHandle />
       </div>
 

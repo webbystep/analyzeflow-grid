@@ -79,12 +79,13 @@ export const FunnelNode = memo(({
     }} />
       
       {/* Colored header bar */}
-      <div className="relative flex items-center gap-2 px-3 py-2 rounded-t-md" style={{
+      <div className="relative flex items-center justify-between px-3 py-2 rounded-t-md" style={{
       backgroundColor: `hsl(var(--node-${nodeType}))`,
       color: 'white'
     }}>
-        <Icon className="w-4 h-4" />
-        {isEditing ? <input type="text" value={label} onChange={e => setLabel(e.target.value)} onBlur={() => {
+        <div className="flex items-center gap-2">
+          <Icon className="w-4 h-4" />
+          {isEditing ? <input type="text" value={label} onChange={e => setLabel(e.target.value)} onBlur={() => {
         setIsEditing(false);
         if (label.trim() && label !== data.label) {
           (data as any).onLabelChange?.(id, label.trim());
@@ -104,6 +105,7 @@ export const FunnelNode = memo(({
       }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white w-full" autoFocus /> : <div className="font-semibold text-sm cursor-text" onClick={() => setIsEditing(true)}>
             {data.label}
           </div>}
+        </div>
         <ConnectionHandle />
       </div>
       
