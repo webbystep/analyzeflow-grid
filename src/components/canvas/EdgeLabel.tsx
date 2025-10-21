@@ -73,21 +73,22 @@ export function CustomEdge({
           transition: 'all 0.2s ease-out',
         }}
       />
-      {/* Animated flow overlay */}
-      <path
-        d={edgePath}
-        fill="none"
-        stroke={sourceNodeColor}
-        strokeWidth={isHighlighted ? 4 : 3}
-        strokeDasharray="5,10"
-        style={{
-          animation: isHighlighted 
-            ? 'edge-flow 0.5s linear infinite' 
-            : 'edge-flow 1s linear infinite',
-          opacity: isHighlighted ? 0.9 : 0.6,
-          transition: 'all 0.2s ease-out',
-        }}
-      />
+      {/* Animated particles */}
+      {[0, 0.25, 0.5, 0.75].map((offset) => (
+        <circle
+          key={offset}
+          r={isHighlighted ? 4 : 3}
+          fill={sourceNodeColor}
+          opacity={0.8}
+        >
+          <animateMotion
+            dur={isHighlighted ? "2s" : "3s"}
+            repeatCount="indefinite"
+            path={edgePath}
+            begin={`${offset * (isHighlighted ? 2 : 3)}s`}
+          />
+        </circle>
+      ))}
       
       {/* Connection points */}
       <circle 
