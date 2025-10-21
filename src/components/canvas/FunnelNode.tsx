@@ -64,7 +64,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
     >
       {/* All handles - always in DOM, visually hidden when not hovered */}
       
-      {/* Top handles */}
+      {/* Top handle */}
       <div
         style={{
           position: 'absolute',
@@ -77,24 +77,17 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         }}
       >
         <Handle 
-          id="top-source"
+          id="top"
           type="source"
           position={Position.Top} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7 }}
-        />
-        <Handle 
-          id="top-target"
-          type="target"
-          position={Position.Top} 
           isConnectableEnd={true}
           className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
           style={{ opacity: 0.7 }}
         />
       </div>
       
-      {/* Bottom handles */}
+      {/* Bottom handle */}
       <div
         style={{
           position: 'absolute',
@@ -107,24 +100,17 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         }}
       >
         <Handle 
-          id="bottom-source"
+          id="bottom"
           type="source"
           position={Position.Bottom} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7 }}
-        />
-        <Handle 
-          id="bottom-target"
-          type="target"
-          position={Position.Bottom} 
           isConnectableEnd={true}
           className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
           style={{ opacity: 0.7 }}
         />
       </div>
       
-      {/* Left handles */}
+      {/* Left handle */}
       <div
         style={{
           position: 'absolute',
@@ -137,24 +123,17 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         }}
       >
         <Handle 
-          id="left-source"
+          id="left"
           type="source"
           position={Position.Left} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7 }}
-        />
-        <Handle 
-          id="left-target"
-          type="target"
-          position={Position.Left} 
           isConnectableEnd={true}
           className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
           style={{ opacity: 0.7 }}
         />
       </div>
       
-      {/* Right handles */}
+      {/* Right handle */}
       <div
         style={{
           position: 'absolute',
@@ -167,17 +146,10 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         }}
       >
         <Handle 
-          id="right-source"
+          id="right"
           type="source"
           position={Position.Right} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7 }}
-        />
-        <Handle 
-          id="right-target"
-          type="target"
-          position={Position.Right} 
           isConnectableEnd={true}
           className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
           style={{ opacity: 0.7 }}
