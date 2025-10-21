@@ -40,10 +40,6 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Connection handle for starting connections */}
-      <ConnectionHandle />
-      
-      {/* Invisible target handles for receiving connections */}
       <Handle 
         type="target"
         position={Position.Top}
@@ -71,7 +67,7 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
 
       {/* Header */}
       <div 
-        className="px-4 py-3 flex items-center gap-2 rounded-t-lg"
+        className="relative px-4 py-3 flex items-center gap-2 rounded-t-lg pr-10"
         style={{ 
           backgroundColor: 'hsl(var(--node-landing))',
           color: 'white'
@@ -113,6 +109,7 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
             {tableData.label}
           </span>
         )}
+        <ConnectionHandle />
       </div>
 
       {/* Fields */}

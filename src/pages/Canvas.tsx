@@ -599,6 +599,11 @@ export default function Canvas() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts when editing text
+      const target = e.target as HTMLElement;
+      const isEditable = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (isEditable) return;
+
       // Undo
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
         e.preventDefault();
@@ -618,8 +623,8 @@ export default function Canvas() {
           handleDuplicateNode(selectedNode);
         }
       }
-      // Delete - works for both single and multi-select
-      if (e.key === 'Delete' || e.key === 'Backspace') {
+      // Delete - works for both single and multi-select (only Delete key)
+      if (e.key === 'Delete') {
         e.preventDefault();
         if (selectedNodes.length > 0) {
           handleBulkDelete();

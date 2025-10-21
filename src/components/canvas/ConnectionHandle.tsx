@@ -4,7 +4,7 @@ import { Handle, Position } from '@xyflow/react';
 export function ConnectionHandle() {
   return (
     <div
-      className="absolute top-1 right-1 z-50"
+      className="absolute top-1/2 -translate-y-1/2 right-2 z-50"
       style={{
         width: '32px',
         height: '32px',

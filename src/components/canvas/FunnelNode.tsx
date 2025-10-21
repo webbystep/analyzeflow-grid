@@ -78,10 +78,6 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
             : `0 2px 4px rgba(0,0,0,0.1)`,
       }}
     >
-      {/* Connection handle for starting connections */}
-      <ConnectionHandle />
-      
-      {/* Invisible target handles for receiving connections */}
       <Handle 
         type="target"
         position={Position.Top}
@@ -109,7 +105,7 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
       
       {/* Colored header bar */}
       <div 
-        className="flex items-center gap-2 px-3 py-2 rounded-t-lg"
+        className="relative flex items-center gap-2 px-3 py-2 rounded-t-lg pr-10"
         style={{ 
           backgroundColor: `hsl(var(--node-${nodeType}))`,
           color: 'white'
@@ -151,6 +147,7 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
             {data.label}
           </div>
         )}
+        <ConnectionHandle />
       </div>
       
       {/* Metrics section */}
