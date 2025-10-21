@@ -15,6 +15,7 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   SelectionMode,
+  ConnectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FunnelNode } from './FunnelNode';
@@ -153,6 +154,7 @@ export function FlowCanvas({
         multiSelectionKeyCode={['Meta', 'Control']}
         panOnDrag={[1, 2]}
         selectNodesOnDrag={false}
+        connectionMode={ConnectionMode.Strict}
         connectionRadius={40}
         snapToGrid={true}
         snapGrid={[15, 15]}

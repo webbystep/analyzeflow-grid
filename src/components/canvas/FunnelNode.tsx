@@ -74,10 +74,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
               style={{ position: 'absolute', top: '-8px', left: '50%', transform: 'translateX(-50%)' }}
             >
               <Handle 
-                id="top"
+                id="top-source"
                 type="source"
                 position={Position.Top} 
                 isConnectableStart={true}
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+              <Handle 
+                id="top-target"
+                type="target"
+                position={Position.Top} 
                 isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
@@ -91,10 +97,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
               style={{ position: 'absolute', bottom: '-8px', left: '50%', transform: 'translateX(-50%)' }}
             >
               <Handle 
-                id="bottom"
+                id="bottom-source"
                 type="source"
                 position={Position.Bottom} 
                 isConnectableStart={true}
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+              <Handle 
+                id="bottom-target"
+                type="target"
+                position={Position.Bottom} 
                 isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
@@ -108,10 +120,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
               style={{ position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <Handle 
-                id="left"
+                id="left-source"
                 type="source"
                 position={Position.Left} 
                 isConnectableStart={true}
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+              <Handle 
+                id="left-target"
+                type="target"
+                position={Position.Left} 
                 isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
@@ -125,10 +143,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
               style={{ position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <Handle 
-                id="right"
+                id="right-source"
                 type="source"
                 position={Position.Right} 
                 isConnectableStart={true}
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+              <Handle 
+                id="right-target"
+                type="target"
+                position={Position.Right} 
                 isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
