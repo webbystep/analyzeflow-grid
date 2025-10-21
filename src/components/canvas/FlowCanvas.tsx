@@ -24,6 +24,7 @@ import { FunnelNode } from './FunnelNode';
 import { TableNode } from './TableNode';
 import { NodeToolbar } from './NodeToolbar';
 import { FloatingEdge } from './FloatingEdge';
+import { CustomConnectionLine } from './CustomConnectionLine';
 
 const nodeTypes = {
   traffic: FunnelNode,
@@ -166,10 +167,7 @@ export function FlowCanvas({
         connectionRadius={40}
         snapToGrid={true}
         snapGrid={[15, 15]}
-        connectionLineStyle={{ 
-          stroke: 'hsl(var(--primary))', 
-          strokeWidth: 2 
-        }}
+        connectionLineComponent={CustomConnectionLine}
         panOnScroll={true}
         zoomOnPinch={true}
         minZoom={0.2}

@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   TrendingUp,
   Mail,
@@ -10,6 +10,7 @@ import {
   GitBranch,
 } from 'lucide-react';
 import { MetricsFlowIndicator } from './MetricsFlowIndicator';
+import { ConnectionHandle } from './ConnectionHandle';
 
 interface FunnelNodeData {
   label: string;
@@ -77,151 +78,34 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
             : `0 2px 4px rgba(0,0,0,0.1)`,
       }}
     >
-      {/* All handles - always in DOM, visually hidden when not hovered */}
+      {/* Connection handle for starting connections */}
+      <ConnectionHandle />
       
-      {/* Top handles */}
-      <div
-        className="hover:scale-110"
-        style={{
-          position: 'absolute',
-          top: '-8px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          opacity: 1,
-          pointerEvents: 'auto',
-          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '16px',
-          height: '16px',
-        }}
-      >
-        <Handle 
-          id="top-source"
-          type="source"
-          position={Position.Top} 
-          isConnectableStart={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-        <Handle 
-          id="top-target"
-          type="target"
-          position={Position.Top} 
-          isConnectableEnd={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-      </div>
-      
-      {/* Bottom handles */}
-      <div
-        className="hover:scale-110"
-        style={{
-          position: 'absolute',
-          bottom: '-8px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          opacity: 1,
-          pointerEvents: 'auto',
-          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '16px',
-          height: '16px',
-        }}
-      >
-        <Handle 
-          id="bottom-source"
-          type="source"
-          position={Position.Bottom} 
-          isConnectableStart={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-        <Handle 
-          id="bottom-target"
-          type="target"
-          position={Position.Bottom} 
-          isConnectableEnd={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-      </div>
-      
-      {/* Left handles */}
-      <div
-        className="hover:scale-110"
-        style={{
-          position: 'absolute',
-          left: '-8px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          opacity: 1,
-          pointerEvents: 'auto',
-          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '16px',
-          height: '16px',
-        }}
-      >
-        <Handle 
-          id="left-source"
-          type="source"
-          position={Position.Left} 
-          isConnectableStart={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-        <Handle 
-          id="left-target"
-          type="target"
-          position={Position.Left} 
-          isConnectableEnd={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-      </div>
-      
-      {/* Right handles */}
-      <div
-        className="hover:scale-110"
-        style={{
-          position: 'absolute',
-          right: '-8px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          opacity: 1,
-          pointerEvents: 'auto',
-          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '16px',
-          height: '16px',
-        }}
-      >
-        <Handle 
-          id="right-source"
-          type="source"
-          position={Position.Right} 
-          isConnectableStart={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-        <Handle 
-          id="right-target"
-          type="target"
-          position={Position.Right} 
-          isConnectableEnd={true}
-          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
-          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
-        />
-      </div>
+      {/* Invisible target handles for receiving connections */}
+      <Handle 
+        type="target"
+        position={Position.Top}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
+      />
+      <Handle 
+        type="target"
+        position={Position.Bottom}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
+      />
+      <Handle 
+        type="target"
+        position={Position.Left}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
+      />
+      <Handle 
+        type="target"
+        position={Position.Right}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
+      />
       
       {/* Colored header bar */}
       <div 

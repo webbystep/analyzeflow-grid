@@ -4,6 +4,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import { Key, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ConnectionHandle } from './ConnectionHandle';
 
 export interface TableField {
   name: string;
@@ -39,24 +40,33 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Handles */}
-      <Handle
+      {/* Connection handle for starting connections */}
+      <ConnectionHandle />
+      
+      {/* Invisible target handles for receiving connections */}
+      <Handle 
+        type="target"
+        position={Position.Top}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
+      />
+      <Handle 
+        type="target"
+        position={Position.Bottom}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
+      />
+      <Handle 
         type="target"
         position={Position.Left}
-        className="w-3 h-3 !bg-gray-800 !border-2 !border-white"
-        style={{ 
-          opacity: 1,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        }}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
       />
-      <Handle
-        type="source"
+      <Handle 
+        type="target"
         position={Position.Right}
-        className="w-3 h-3 !bg-gray-800 !border-2 !border-white"
-        style={{ 
-          opacity: 1,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        }}
+        className="!w-3 !h-3 !bg-transparent !border-0"
+        style={{ opacity: 0, pointerEvents: 'auto' }}
       />
 
       {/* Header */}
