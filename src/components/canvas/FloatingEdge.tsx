@@ -42,6 +42,27 @@ function getSmartControlPoints(
   return { cp1x, cp1y, cp2x, cp2y };
 }
 
+function getOptimalHandles(
+  sourceNode: { x: number; y: number; width: number; height: number },
+  targetNode: { x: number; y: number; width: number; height: number }
+) {
+  const dx = targetNode.x - sourceNode.x;
+  const dy = targetNode.y - sourceNode.y;
+  
+  // Horizontal vs Vertical priority
+  if (Math.abs(dx) > Math.abs(dy)) {
+    return {
+      source: dx > 0 ? 'right' : 'left',
+      target: dx > 0 ? 'left' : 'right',
+    };
+  } else {
+    return {
+      source: dy > 0 ? 'bottom' : 'top',
+      target: dy > 0 ? 'top' : 'bottom',
+    };
+  }
+}
+
 export function FloatingEdge({
   id,
   sourceX,
@@ -52,6 +73,8 @@ export function FloatingEdge({
   targetPosition,
   data,
   markerEnd,
+  source,
+  target,
 }: EdgeProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [dropOffRate, setDropOffRate] = useState<number>((data?.dropOffRate as number) || 0);
@@ -60,27 +83,54 @@ export function FloatingEdge({
   const onInsertNode = (data as any)?.onInsertNode;
   const onDeleteEdge = (data as any)?.onDeleteEdge;
   const isHighlighted = (data as any)?.isHighlighted || false;
+  const allNodes = (data as any)?.allNodes || [];
+
+  // Smart routing: calculate optimal handles based on node positions
+  const sourceNode = allNodes.find((n: any) => n.id === source);
+  const targetNode = allNodes.find((n: any) => n.id === target);
+
+  let optimalSourcePosition = sourcePosition || 'right';
+  let optimalTargetPosition = targetPosition || 'left';
+
+  if (sourceNode && targetNode) {
+    const sourceNodeData = {
+      x: sourceNode.position.x,
+      y: sourceNode.position.y,
+      width: 280,
+      height: 120,
+    };
+    const targetNodeData = {
+      x: targetNode.position.x,
+      y: targetNode.position.y,
+      width: 280,
+      height: 120,
+    };
+    
+    const optimal = getOptimalHandles(sourceNodeData, targetNodeData);
+    optimalSourcePosition = optimal.source;
+    optimalTargetPosition = optimal.target;
+  }
 
   const { cp1x, cp1y, cp2x, cp2y } = useMemo(
     () =>
       getSmartControlPoints(
         sourceX,
         sourceY,
-        sourcePosition || 'right',
+        optimalSourcePosition,
         targetX,
         targetY,
-        targetPosition || 'left'
+        optimalTargetPosition
       ),
-    [sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition]
+    [sourceX, sourceY, optimalSourcePosition, targetX, targetY, optimalTargetPosition]
   );
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
-    sourcePosition,
+    sourcePosition: optimalSourcePosition as any,
     targetX,
     targetY,
-    targetPosition,
+    targetPosition: optimalTargetPosition as any,
     curvature: 0.25,
   });
 
@@ -119,23 +169,27 @@ export function FloatingEdge({
         }}
       />
 
-      {/* Animated flow indicator (only on hover) */}
-      {isHovering && (
+      {/* Animated flow indicators - show on hover OR when highlighted */}
+      {(isHovering || isHighlighted) && (
         <>
-          {[0, 0.33, 0.66].map((offset) => (
+          {[0, 0.16, 0.33, 0.5, 0.66, 0.83].map((offset) => (
             <circle
               key={offset}
               r={isHighlighted ? 4 : 3}
               fill="hsl(var(--primary))"
-              opacity={0.6}
+              opacity={0.7}
               style={{ willChange: 'transform' }}
             >
               <animateMotion
-                dur="1.5s"
+                dur="2s"
                 repeatCount="indefinite"
-                path={edgePath}
-                begin={`${offset * 1.5}s`}
-              />
+                keyPoints="0;1"
+                keyTimes="0;1"
+                calcMode="linear"
+                begin={`${offset * 2}s`}
+              >
+                <mpath href={`#${id}`} />
+              </animateMotion>
             </circle>
           ))}
         </>

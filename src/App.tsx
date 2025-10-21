@@ -11,6 +11,7 @@ import GuestCanvas from "./pages/GuestCanvas";
 import WorkspaceSettings from "./pages/WorkspaceSettings";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import NotFound from "./pages/NotFound";
+import "./styles/react-flow-dark.css";
 
 const queryClient = new QueryClient();
 
