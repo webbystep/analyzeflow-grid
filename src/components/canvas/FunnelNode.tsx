@@ -1,6 +1,6 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   TrendingUp,
   Mail,
@@ -37,6 +37,7 @@ const nodeIcons = {
 export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData; type?: string; selected?: boolean }) => {
   const Icon = nodeIcons[type as keyof typeof nodeIcons] || FileText;
   const nodeType = type as keyof typeof nodeIcons;
+  const [isHovered, setIsHovered] = useState(false);
   
   return (
     <motion.div
@@ -49,6 +50,8 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         duration: 0.15, 
         ease: 'easeOut',
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={`px-4 py-3 rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl ${
         selected ? 'border-[3px] shadow-2xl' : 'border-2'
       }`}
@@ -59,18 +62,46 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           : undefined,
       }}
     >
+      {/* Top handle - always visible */}
       <Handle 
         type="target" 
         position={Position.Top} 
-        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
-        style={{ transformOrigin: 'center' }}
+        className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
       />
-      <Handle 
-        type="target" 
-        position={Position.Left} 
-        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
-        style={{ transformOrigin: 'center' }}
-      />
+      
+      {/* Side handles - visible only on hover */}
+      <AnimatePresence>
+        {isHovered && (
+          <>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.15 }}
+              style={{ position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)' }}
+            >
+              <Handle 
+                type="target" 
+                position={Position.Left} 
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.15 }}
+              style={{ position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)' }}
+            >
+              <Handle 
+                type="source" 
+                position={Position.Right} 
+                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
       
       <div className="flex items-center gap-2 mb-2">
         <div
@@ -89,17 +120,11 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         conversionRate={data.conversionRate}
       />
       
+      {/* Bottom handle - always visible */}
       <Handle 
         type="source" 
         position={Position.Bottom} 
-        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
-        style={{ transformOrigin: 'center' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Right} 
-        className="w-4 h-4 !bg-primary hover:scale-150 transition-transform duration-200 ease-out"
-        style={{ transformOrigin: 'center' }}
+        className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
       />
     </motion.div>
   );

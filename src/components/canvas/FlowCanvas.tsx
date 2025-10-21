@@ -147,7 +147,7 @@ export function FlowCanvas({
         multiSelectionKeyCode={['Meta', 'Control']}
         panOnDrag={[1, 2]}
         selectNodesOnDrag={false}
-        connectionRadius={20}
+        connectionRadius={40}
         snapToGrid={true}
         snapGrid={[15, 15]}
         connectionLineStyle={{ 
