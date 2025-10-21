@@ -62,104 +62,127 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           : undefined,
       }}
     >
-      {/* All handles - visible only on hover */}
-      <AnimatePresence>
-        {isHovered && (
-          <>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.15 }}
-              style={{ position: 'absolute', top: '-8px', left: '50%', transform: 'translateX(-50%)' }}
-            >
-              <Handle 
-                id="top-source"
-                type="source"
-                position={Position.Top} 
-                isConnectableStart={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-              <Handle 
-                id="top-target"
-                type="target"
-                position={Position.Top} 
-                isConnectableEnd={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.15 }}
-              style={{ position: 'absolute', bottom: '-8px', left: '50%', transform: 'translateX(-50%)' }}
-            >
-              <Handle 
-                id="bottom-source"
-                type="source"
-                position={Position.Bottom} 
-                isConnectableStart={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-              <Handle 
-                id="bottom-target"
-                type="target"
-                position={Position.Bottom} 
-                isConnectableEnd={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.15 }}
-              style={{ position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <Handle 
-                id="left-source"
-                type="source"
-                position={Position.Left} 
-                isConnectableStart={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-              <Handle 
-                id="left-target"
-                type="target"
-                position={Position.Left} 
-                isConnectableEnd={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.15 }}
-              style={{ position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <Handle 
-                id="right-source"
-                type="source"
-                position={Position.Right} 
-                isConnectableStart={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-              <Handle 
-                id="right-target"
-                type="target"
-                position={Position.Right} 
-                isConnectableEnd={true}
-                className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-              />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* All handles - always in DOM, visually hidden when not hovered */}
+      
+      {/* Top handles */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-8px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          opacity: isHovered ? 1 : 0,
+          pointerEvents: isHovered ? 'auto' : 'none',
+          transition: 'opacity 0.15s ease-out',
+        }}
+      >
+        <Handle 
+          id="top-source"
+          type="source"
+          position={Position.Top} 
+          isConnectableStart={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+        <Handle 
+          id="top-target"
+          type="target"
+          position={Position.Top} 
+          isConnectableEnd={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+      </div>
+      
+      {/* Bottom handles */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-8px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          opacity: isHovered ? 1 : 0,
+          pointerEvents: isHovered ? 'auto' : 'none',
+          transition: 'opacity 0.15s ease-out',
+        }}
+      >
+        <Handle 
+          id="bottom-source"
+          type="source"
+          position={Position.Bottom} 
+          isConnectableStart={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+        <Handle 
+          id="bottom-target"
+          type="target"
+          position={Position.Bottom} 
+          isConnectableEnd={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+      </div>
+      
+      {/* Left handles */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '-8px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          opacity: isHovered ? 1 : 0,
+          pointerEvents: isHovered ? 'auto' : 'none',
+          transition: 'opacity 0.15s ease-out',
+        }}
+      >
+        <Handle 
+          id="left-source"
+          type="source"
+          position={Position.Left} 
+          isConnectableStart={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+        <Handle 
+          id="left-target"
+          type="target"
+          position={Position.Left} 
+          isConnectableEnd={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+      </div>
+      
+      {/* Right handles */}
+      <div
+        style={{
+          position: 'absolute',
+          right: '-8px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          opacity: isHovered ? 1 : 0,
+          pointerEvents: isHovered ? 'auto' : 'none',
+          transition: 'opacity 0.15s ease-out',
+        }}
+      >
+        <Handle 
+          id="right-source"
+          type="source"
+          position={Position.Right} 
+          isConnectableStart={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+        <Handle 
+          id="right-target"
+          type="target"
+          position={Position.Right} 
+          isConnectableEnd={true}
+          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
+          style={{ opacity: 0.7 }}
+        />
+      </div>
       
       <div className="flex items-center gap-2 mb-2">
         <div
