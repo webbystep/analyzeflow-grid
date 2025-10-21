@@ -11,7 +11,7 @@ import { SelectionToolbar } from '@/components/canvas/SelectionToolbar';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, Download, Share2, Undo2, Redo2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Node, Edge } from '@xyflow/react';
+import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
 import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
 import { ExportDialog } from '@/components/canvas/ExportDialog';
@@ -47,6 +47,7 @@ export default function Canvas() {
     edges: Set<string>;
   }>({ nodes: new Set(), edges: new Set() });
   const canvasRef = useRef<HTMLDivElement>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -575,6 +576,19 @@ export default function Canvas() {
     });
   }, [edges, nodes, pushHistory, toast]);
 
+  const handleReactFlowInit = useCallback((instance: ReactFlowInstance) => {
+    reactFlowInstance.current = instance;
+  }, []);
+
+  const handleFitView = useCallback(() => {
+    if (reactFlowInstance.current) {
+      reactFlowInstance.current.fitView({ 
+        padding: 0.2,
+        duration: 500,
+      });
+    }
+  }, []);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -758,10 +772,11 @@ export default function Canvas() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <CanvasContextMenu
-          onClearCanvas={handleClearCanvas}
-          hasNodes={nodes.length > 0}
-        >
+            <CanvasContextMenu
+              onClearCanvas={handleClearCanvas}
+              onFitView={handleFitView}
+              hasNodes={nodes.length > 0}
+            >
           <div 
             ref={canvasRef}
             className="flex-1"
@@ -783,10 +798,9 @@ export default function Canvas() {
                 data: {
                   ...edge.data,
                   isHighlighted: highlightedElements.edges.has(edge.id),
-                  sourceNodeColor: nodes.find(n => n.id === edge.source)?.type 
-                    ? `hsl(var(--node-${nodes.find(n => n.id === edge.source)?.type}))`
-                    : undefined,
                   cardinality: { source: '1', target: 'N' },
+                  onInsertNode: handleInsertNodeBetweenEdges,
+                  onDeleteEdge: handleDeleteEdge,
                 }
               }))}
               onNodesChange={handleNodesChange}
@@ -795,6 +809,7 @@ export default function Canvas() {
               onInsertNode={handleInsertNodeBetweenEdges}
               onDeleteEdge={handleDeleteEdge}
               onSelectionChange={handleSelectionChange}
+              onInit={handleReactFlowInit}
             />
             <SelectionToolbar
               selectedCount={selectedNodes.length}

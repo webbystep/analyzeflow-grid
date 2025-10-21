@@ -1,8 +1,8 @@
 import { EdgeLabelRenderer, EdgeProps, getBezierPath, BaseEdge } from '@xyflow/react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { EdgeContextMenu } from './EdgeContextMenu';
 
 interface CustomEdgeProps extends EdgeProps {
@@ -21,14 +21,16 @@ export function CustomEdge({
   data,
   markerEnd,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  });
+  const [edgePath, labelX, labelY] = useMemo(() => {
+    return getBezierPath({
+      sourceX,
+      sourceY,
+      sourcePosition,
+      targetX,
+      targetY,
+      targetPosition,
+    });
+  }, [sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [dropOffRate, setDropOffRate] = useState<number>((data?.dropOffRate as number) || 0);
@@ -38,7 +40,6 @@ export function CustomEdge({
   const onInsertNode = (data as any)?.onInsertNode;
   const onDeleteEdge = (data as any)?.onDeleteEdge;
   const isHighlighted = (data as any)?.isHighlighted || false;
-  const sourceNodeColor = (data as any)?.sourceNodeColor || 'hsl(var(--primary))';
   const cardinality = (data as any)?.cardinality || { source: '1', target: 'N' };
 
   const handleSave = () => {
@@ -66,25 +67,29 @@ export function CustomEdge({
         markerEnd={markerEnd}
         style={{
           strokeWidth: isHighlighted ? 4 : 3,
-          stroke: sourceNodeColor,
+          stroke: 'hsl(var(--muted-foreground))',
           filter: isHighlighted 
-            ? `drop-shadow(0 0 8px ${sourceNodeColor}99)` 
+            ? 'drop-shadow(0 0 8px hsl(var(--muted-foreground) / 0.6))' 
             : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
           transition: 'all 0.2s ease-out',
         }}
       />
       {/* Animated particles */}
-      {[0, 0.25, 0.5, 0.75].map((offset) => (
+      {[0, 0.5].map((offset) => (
         <circle
           key={offset}
           r={isHighlighted ? 4 : 3}
-          fill={sourceNodeColor}
-          opacity={0.8}
+          fill="hsl(var(--muted-foreground))"
+          opacity={0.6}
+          style={{ willChange: 'transform' }}
         >
           <animateMotion
             dur={isHighlighted ? "2s" : "3s"}
             repeatCount="indefinite"
             path={edgePath}
+            keyPoints="0;1"
+            keyTimes="0;1"
+            calcMode="linear"
             begin={`${offset * (isHighlighted ? 2 : 3)}s`}
           />
         </circle>
@@ -95,15 +100,15 @@ export function CustomEdge({
         cx={sourceX} 
         cy={sourceY} 
         r={3} 
-        fill={sourceNodeColor}
-        opacity={0.4}
+        fill="hsl(var(--muted-foreground))"
+        opacity={0.3}
       />
       <circle 
         cx={targetX} 
         cy={targetY} 
         r={3} 
-        fill={sourceNodeColor}
-        opacity={0.4}
+        fill="hsl(var(--muted-foreground))"
+        opacity={0.3}
       />
       
       {/* Cardinality labels */}
@@ -171,13 +176,25 @@ export function CustomEdge({
                 >
                   {(data?.label as string) || `Drop-off: ${dropOffRate}%`}
                 </div>
-                {isHovering && onInsertNode && (
-                  <button
-                    onClick={handleInsertClick}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-200 border-2 border-background"
-                  >
-                    <Plus className="w-3 h-3" />
-                  </button>
+                {isHovering && (
+                  <>
+                    {onInsertNode && (
+                      <button
+                        onClick={handleInsertClick}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-200 border-2 border-background z-10"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    )}
+                    {onDeleteEdge && (
+                      <button
+                        onClick={handleDeleteClick}
+                        className="absolute -top-2 -left-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-200 border-2 border-background z-10"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </EdgeContextMenu>

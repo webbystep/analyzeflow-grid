@@ -16,6 +16,7 @@ import {
   applyEdgeChanges,
   SelectionMode,
   ConnectionMode,
+  ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FunnelNode } from './FunnelNode';
@@ -47,6 +48,7 @@ interface FlowCanvasProps {
   onInsertNode?: (edgeId: string, position: { x: number; y: number }) => void;
   onDeleteEdge?: (edgeId: string) => void;
   onSelectionChange?: (nodes: Node[]) => void;
+  onInit?: (instance: ReactFlowInstance) => void;
   readonly?: boolean;
 }
 
@@ -60,6 +62,7 @@ export function FlowCanvas({
   onInsertNode,
   onDeleteEdge,
   onSelectionChange,
+  onInit,
   readonly = false,
 }: FlowCanvasProps) {
   const [nodes, setNodes] = useNodesState(initialNodes);
@@ -146,6 +149,7 @@ export function FlowCanvas({
         onNodeClick={handleNodeClickCallback}
         onConnect={readonly ? undefined : onConnect}
         onSelectionChange={handleSelectionChangeCallback}
+        onInit={onInit}
         isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
