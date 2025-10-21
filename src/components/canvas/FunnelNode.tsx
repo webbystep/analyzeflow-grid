@@ -79,7 +79,7 @@ export const FunnelNode = memo(({
     }} />
       
       {/* Colored header bar */}
-      <div className="relative flex items-center gap-2 px-3 py-2 rounded-t-md pr-10" style={{
+      <div className="relative flex items-center gap-2 px-3 py-2 rounded-t-md" style={{
       backgroundColor: `hsl(var(--node-${nodeType}))`,
       color: 'white'
     }}>
