@@ -19,6 +19,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FunnelNode } from './FunnelNode';
+import { TableNode } from './TableNode';
 import { NodeToolbar } from './NodeToolbar';
 import { CustomEdge } from './EdgeLabel';
 
@@ -29,6 +30,7 @@ const nodeTypes = {
   checkout: FunnelNode,
   thankyou: FunnelNode,
   condition: FunnelNode,
+  table: TableNode,
 };
 
 const edgeTypes = {
@@ -166,8 +168,13 @@ export function FlowCanvas({
         deleteKeyCode={null}
         className="bg-background"
       >
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        <Controls />
+        <Background 
+          variant={BackgroundVariant.Dots} 
+          gap={20} 
+          size={1}
+          style={{ opacity: 0.3 }}
+        />
+        <Controls showZoom={true} showFitView={true} showInteractive={true} />
         <MiniMap />
         {!readonly && projectId && (
           <Panel position="top-left">

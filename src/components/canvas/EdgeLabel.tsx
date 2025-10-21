@@ -34,9 +34,12 @@ export function CustomEdge({
   const [dropOffRate, setDropOffRate] = useState<number>((data?.dropOffRate as number) || 0);
   const [isHovering, setIsHovering] = useState(false);
   
-  // Extract handlers from data
+  // Extract handlers and state from data
   const onInsertNode = (data as any)?.onInsertNode;
   const onDeleteEdge = (data as any)?.onDeleteEdge;
+  const isHighlighted = (data as any)?.isHighlighted || false;
+  const sourceNodeColor = (data as any)?.sourceNodeColor || 'hsl(var(--primary))';
+  const cardinality = (data as any)?.cardinality || { source: '1', target: 'N' };
 
   const handleSave = () => {
     setIsEditing(false);
@@ -62,23 +65,63 @@ export function CustomEdge({
         path={edgePath} 
         markerEnd={markerEnd}
         style={{
-          strokeWidth: 3,
-          stroke: 'hsl(var(--primary))',
-          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+          strokeWidth: isHighlighted ? 4 : 3,
+          stroke: sourceNodeColor,
+          filter: isHighlighted 
+            ? `drop-shadow(0 0 8px ${sourceNodeColor}99)` 
+            : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+          transition: 'all 0.2s ease-out',
         }}
       />
       {/* Animated flow overlay */}
       <path
         d={edgePath}
         fill="none"
-        stroke="hsl(var(--primary))"
-        strokeWidth={3}
+        stroke={sourceNodeColor}
+        strokeWidth={isHighlighted ? 4 : 3}
         strokeDasharray="5,10"
         style={{
-          animation: 'edge-flow 1s linear infinite',
-          opacity: 0.6,
+          animation: isHighlighted 
+            ? 'edge-flow 0.5s linear infinite' 
+            : 'edge-flow 1s linear infinite',
+          opacity: isHighlighted ? 0.9 : 0.6,
+          transition: 'all 0.2s ease-out',
         }}
       />
+      
+      {/* Connection points */}
+      <circle 
+        cx={sourceX} 
+        cy={sourceY} 
+        r={3} 
+        fill={sourceNodeColor}
+        opacity={0.4}
+      />
+      <circle 
+        cx={targetX} 
+        cy={targetY} 
+        r={3} 
+        fill={sourceNodeColor}
+        opacity={0.4}
+      />
+      
+      {/* Cardinality labels */}
+      <text
+        x={sourceX + (sourcePosition === 'right' ? 15 : -15)}
+        y={sourceY - 10}
+        className="text-xs fill-muted-foreground font-mono"
+        textAnchor={sourcePosition === 'right' ? 'start' : 'end'}
+      >
+        {cardinality.source}
+      </text>
+      <text
+        x={targetX + (targetPosition === 'left' ? -15 : 15)}
+        y={targetY - 10}
+        className="text-xs fill-muted-foreground font-mono"
+        textAnchor={targetPosition === 'left' ? 'end' : 'start'}
+      >
+        {cardinality.target}
+      </text>
       <EdgeLabelRenderer>
         <div
           style={{

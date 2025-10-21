@@ -1,4 +1,4 @@
-export type NodeType = 'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition';
+export type NodeType = 'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition' | 'table';
 
 export interface NodeMetrics {
   visits?: number;
@@ -32,6 +32,12 @@ export interface FlowEdge {
   label?: string;
   data?: {
     dropOffRate?: number;
+    isHighlighted?: boolean;
+    sourceNodeColor?: string;
+    cardinality?: {
+      source: string;
+      target: string;
+    };
     [key: string]: any;
   };
 }

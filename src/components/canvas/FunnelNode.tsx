@@ -34,10 +34,11 @@ const nodeIcons = {
   condition: GitBranch,
 };
 
-export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData; type?: string; selected?: boolean }) => {
+export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNodeData; type?: string; selected?: boolean; id: string }) => {
   const Icon = nodeIcons[type as keyof typeof nodeIcons] || FileText;
   const nodeType = type as keyof typeof nodeIcons;
   const [isHovered, setIsHovered] = useState(false);
+  const isConnectedHighlighted = (data as any).isConnectedHighlighted || false;
   
   return (
     <motion.div
@@ -50,16 +51,28 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
         duration: 0.15, 
         ease: 'easeOut',
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        (data as any).onNodeHover?.(id);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        (data as any).onNodeHover?.(null);
+      }}
       className={`rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl overflow-hidden ${
         selected ? 'border-[3px] shadow-2xl' : 'border-2'
       }`}
       style={{
-        borderColor: selected ? `hsl(var(--primary))` : `hsl(var(--node-${nodeType}))`,
+        borderColor: selected 
+          ? `hsl(var(--primary))` 
+          : isConnectedHighlighted 
+            ? `hsl(var(--primary) / 0.5)` 
+            : `hsl(var(--node-${nodeType}))`,
         boxShadow: selected 
           ? `0 10px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--primary) / 0.1)` 
-          : `0 2px 4px rgba(0,0,0,0.1)`,
+          : isConnectedHighlighted
+            ? `0 10px 30px -10px hsl(var(--primary) / 0.6), 0 0 0 2px hsl(var(--primary) / 0.3)`
+            : `0 2px 4px rgba(0,0,0,0.1)`,
       }}
     >
       {/* All handles - always in DOM, visually hidden when not hovered */}

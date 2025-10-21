@@ -41,6 +41,11 @@ export default function Canvas() {
     edgeId: string;
     position: { x: number; y: number };
   } | null>(null);
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
+  const [highlightedElements, setHighlightedElements] = useState<{
+    nodes: Set<string>;
+    edges: Set<string>;
+  }>({ nodes: new Set(), edges: new Set() });
   const canvasRef = useRef<HTMLDivElement>(null);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
@@ -362,6 +367,28 @@ export default function Canvas() {
       description: `${selectedNodes.length} node igazítva.`,
     });
   }, [selectedNodes, nodes, edges, toast, pushHistory]);
+
+  const handleNodeHover = useCallback((nodeId: string | null) => {
+    setHoveredNodeId(nodeId);
+    
+    if (!nodeId) {
+      setHighlightedElements({ nodes: new Set(), edges: new Set() });
+      return;
+    }
+    
+    const connectedNodes = new Set<string>();
+    const connectedEdges = new Set<string>();
+    
+    edges.forEach(edge => {
+      if (edge.source === nodeId || edge.target === nodeId) {
+        connectedEdges.add(edge.id);
+        connectedNodes.add(edge.source);
+        connectedNodes.add(edge.target);
+      }
+    });
+    
+    setHighlightedElements({ nodes: connectedNodes, edges: connectedEdges });
+  }, [edges]);
 
   const handleDeleteSelected = useCallback(() => {
     if (selectedNode) {
@@ -743,8 +770,25 @@ export default function Canvas() {
           >
             <FlowCanvas
               projectId={projectId!}
-              initialNodes={nodes}
-              initialEdges={edges}
+              initialNodes={nodes.map(node => ({
+                ...node,
+                data: {
+                  ...node.data,
+                  onNodeHover: handleNodeHover,
+                  isConnectedHighlighted: highlightedElements.nodes.has(node.id),
+                }
+              }))}
+              initialEdges={edges.map(edge => ({
+                ...edge,
+                data: {
+                  ...edge.data,
+                  isHighlighted: highlightedElements.edges.has(edge.id),
+                  sourceNodeColor: nodes.find(n => n.id === edge.source)?.type 
+                    ? `hsl(var(--node-${nodes.find(n => n.id === edge.source)?.type}))`
+                    : undefined,
+                  cardinality: { source: '1', target: 'N' },
+                }
+              }))}
               onNodesChange={handleNodesChange}
               onEdgesChange={handleEdgesChange}
               onNodeClick={handleNodeClick}
