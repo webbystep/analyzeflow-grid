@@ -38,6 +38,8 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
   const Icon = nodeIcons[type as keyof typeof nodeIcons] || FileText;
   const nodeType = type as keyof typeof nodeIcons;
   const [isHovered, setIsHovered] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [label, setLabel] = useState(data.label);
   const isConnectedHighlighted = (data as any).isConnectedHighlighted || false;
   
   return (
@@ -85,8 +87,8 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
           top: '-8px',
           left: '50%',
           transform: 'translateX(-50%)',
-          opacity: isHovered ? 1 : 0,
-          pointerEvents: isHovered ? 'auto' : 'none',
+          opacity: 1,
+          pointerEvents: 'auto',
           transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
@@ -121,8 +123,8 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
           bottom: '-8px',
           left: '50%',
           transform: 'translateX(-50%)',
-          opacity: isHovered ? 1 : 0,
-          pointerEvents: isHovered ? 'auto' : 'none',
+          opacity: 1,
+          pointerEvents: 'auto',
           transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
@@ -157,8 +159,8 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
           left: '-8px',
           top: '50%',
           transform: 'translateY(-50%)',
-          opacity: isHovered ? 1 : 0,
-          pointerEvents: isHovered ? 'auto' : 'none',
+          opacity: 1,
+          pointerEvents: 'auto',
           transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
@@ -193,8 +195,8 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
           right: '-8px',
           top: '50%',
           transform: 'translateY(-50%)',
-          opacity: isHovered ? 1 : 0,
-          pointerEvents: isHovered ? 'auto' : 'none',
+          opacity: 1,
+          pointerEvents: 'auto',
           transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
@@ -230,7 +232,41 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
         }}
       >
         <Icon className="w-4 h-4" />
-        <div className="font-semibold text-sm">{data.label}</div>
+        {isEditing ? (
+          <input
+            type="text"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            onBlur={() => {
+              setIsEditing(false);
+              if (label.trim() && label !== data.label) {
+                (data as any).onLabelChange?.(id, label.trim());
+              } else {
+                setLabel(data.label);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setIsEditing(false);
+                if (label.trim() && label !== data.label) {
+                  (data as any).onLabelChange?.(id, label.trim());
+                }
+              } else if (e.key === 'Escape') {
+                setLabel(data.label);
+                setIsEditing(false);
+              }
+            }}
+            className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white w-full"
+            autoFocus
+          />
+        ) : (
+          <div 
+            className="font-semibold text-sm cursor-text"
+            onClick={() => setIsEditing(true)}
+          >
+            {data.label}
+          </div>
+        )}
       </div>
       
       {/* Metrics section */}

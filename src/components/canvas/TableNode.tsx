@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import * as React from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import { Key, Database } from 'lucide-react';
@@ -21,6 +22,8 @@ export interface TableNodeData {
 
 export const TableNode = memo(({ data, selected, id }: NodeProps) => {
   const tableData = data as unknown as TableNodeData;
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [label, setLabel] = React.useState(tableData.label);
   const isConnectedHighlighted = tableData.isConnectedHighlighted || false;
 
   return (
@@ -65,7 +68,41 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
         }}
       >
         <Database className="w-4 h-4" />
-        <span className="font-semibold text-sm">{tableData.label}</span>
+        {isEditing ? (
+          <input
+            type="text"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            onBlur={() => {
+              setIsEditing(false);
+              if (label.trim() && label !== tableData.label) {
+                (tableData as any).onLabelChange?.(id, label.trim());
+              } else {
+                setLabel(tableData.label);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setIsEditing(false);
+                if (label.trim() && label !== tableData.label) {
+                  (tableData as any).onLabelChange?.(id, label.trim());
+                }
+              } else if (e.key === 'Escape') {
+                setLabel(tableData.label);
+                setIsEditing(false);
+              }
+            }}
+            className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white"
+            autoFocus
+          />
+        ) : (
+          <span 
+            className="font-semibold text-sm cursor-text"
+            onClick={() => setIsEditing(true)}
+          >
+            {tableData.label}
+          </span>
+        )}
       </div>
 
       {/* Fields */}

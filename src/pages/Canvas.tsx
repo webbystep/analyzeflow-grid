@@ -9,8 +9,9 @@ import { TemplateDialog } from '@/components/canvas/TemplateDialog';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { SelectionToolbar } from '@/components/canvas/SelectionToolbar';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, Download, Share2, Undo2, Redo2 } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from 'next-themes';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
 import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
@@ -26,6 +27,7 @@ export default function Canvas() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [project, setProject] = useState<any>(null);
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -54,28 +56,6 @@ export default function Canvas() {
   const { pushHistory, undo, redo, canUndo, canRedo } = useHistory([], []);
   const { calculateMetricsFlow } = useMetricsFlow();
 
-  const nodeObstacles = useMemo(() => {
-    return nodes.map(node => {
-      const dimensions = {
-        traffic: { width: 200, height: 120 },
-        email: { width: 200, height: 120 },
-        landing: { width: 200, height: 120 },
-        checkout: { width: 200, height: 120 },
-        thankyou: { width: 200, height: 120 },
-        condition: { width: 200, height: 120 },
-        table: { width: 280, height: 200 },
-      };
-      
-      const size = dimensions[node.type as keyof typeof dimensions] || { width: 200, height: 120 };
-      
-      return {
-        id: node.id,
-        position: node.position,
-        width: size.width,
-        height: size.height,
-      };
-    });
-  }, [nodes]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -273,6 +253,10 @@ export default function Canvas() {
         : current
     );
   }, [edges, calculateMetricsFlow]);
+
+  const handleLabelChange = useCallback((nodeId: string, newLabel: string) => {
+    handleUpdateNode(nodeId, { label: newLabel });
+  }, [handleUpdateNode]);
 
   const handleSelectTemplate = useCallback((template: FunnelTemplate) => {
     const { nodes: templateNodes, edges: templateEdges } = createNodesFromTemplate(template);
@@ -724,6 +708,14 @@ export default function Canvas() {
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+          <div className="h-6 w-px bg-border" />
+          <Button
+            variant="outline"
             size="sm"
             onClick={handleUndo}
             disabled={!canUndo}
@@ -813,6 +805,7 @@ export default function Canvas() {
                 data: {
                   ...node.data,
                   onNodeHover: handleNodeHover,
+                  onLabelChange: handleLabelChange,
                   isConnectedHighlighted: highlightedElements.nodes.has(node.id),
                 }
               }))}
@@ -824,7 +817,7 @@ export default function Canvas() {
                   cardinality: { source: '1', target: 'N' },
                   onInsertNode: handleInsertNodeBetweenEdges,
                   onDeleteEdge: handleDeleteEdge,
-                  allNodes: nodeObstacles,
+                  allNodes: nodes,
                 }
               }))}
               onNodesChange={handleNodesChange}

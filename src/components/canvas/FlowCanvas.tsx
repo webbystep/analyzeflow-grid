@@ -19,10 +19,11 @@ import {
   ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { useTheme } from 'next-themes';
 import { FunnelNode } from './FunnelNode';
 import { TableNode } from './TableNode';
 import { NodeToolbar } from './NodeToolbar';
-import { CustomEdge } from './EdgeLabel';
+import { FloatingEdge } from './FloatingEdge';
 
 const nodeTypes = {
   traffic: FunnelNode,
@@ -35,7 +36,7 @@ const nodeTypes = {
 };
 
 const edgeTypes = {
-  default: CustomEdge,
+  default: FloatingEdge,
 };
 
 interface FlowCanvasProps {
@@ -65,6 +66,7 @@ export function FlowCanvas({
   onInit,
   readonly = false,
 }: FlowCanvasProps) {
+  const { theme } = useTheme();
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
 
@@ -140,7 +142,7 @@ export function FlowCanvas({
   }));
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" style={{ touchAction: 'none' }}>
       <ReactFlow
         nodes={nodes}
         edges={enhancedEdges}
@@ -168,9 +170,14 @@ export function FlowCanvas({
           stroke: 'hsl(var(--primary))', 
           strokeWidth: 2 
         }}
+        panOnScroll={true}
+        zoomOnPinch={true}
+        minZoom={0.2}
+        maxZoom={4}
         fitView
         deleteKeyCode={null}
         className="bg-background"
+        colorMode={theme === 'dark' ? 'dark' : 'light'}
       >
         <Background 
           variant={BackgroundVariant.Dots} 
