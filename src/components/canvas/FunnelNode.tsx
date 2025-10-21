@@ -75,8 +75,10 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
             >
               <Handle 
                 id="top"
-                type="source" 
+                type="source"
                 position={Position.Top} 
+                isConnectableStart={true}
+                isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
             </motion.div>
@@ -90,8 +92,10 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
             >
               <Handle 
                 id="bottom"
-                type="source" 
+                type="source"
                 position={Position.Bottom} 
+                isConnectableStart={true}
+                isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
             </motion.div>
@@ -105,8 +109,10 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
             >
               <Handle 
                 id="left"
-                type="source" 
+                type="source"
                 position={Position.Left} 
+                isConnectableStart={true}
+                isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
             </motion.div>
@@ -120,8 +126,10 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
             >
               <Handle 
                 id="right"
-                type="source" 
+                type="source"
                 position={Position.Right} 
+                isConnectableStart={true}
+                isConnectableEnd={true}
                 className="w-4 h-4 !bg-primary transition-all duration-200 opacity-60 hover:opacity-100 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
               />
             </motion.div>
