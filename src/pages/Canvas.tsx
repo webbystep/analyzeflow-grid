@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -53,6 +53,29 @@ export default function Canvas() {
   const [saving, setSaving] = useState(false);
   const { pushHistory, undo, redo, canUndo, canRedo } = useHistory([], []);
   const { calculateMetricsFlow } = useMetricsFlow();
+
+  const nodeObstacles = useMemo(() => {
+    return nodes.map(node => {
+      const dimensions = {
+        traffic: { width: 200, height: 120 },
+        email: { width: 200, height: 120 },
+        landing: { width: 200, height: 120 },
+        checkout: { width: 200, height: 120 },
+        thankyou: { width: 200, height: 120 },
+        condition: { width: 200, height: 120 },
+        table: { width: 280, height: 200 },
+      };
+      
+      const size = dimensions[node.type as keyof typeof dimensions] || { width: 200, height: 120 };
+      
+      return {
+        id: node.id,
+        position: node.position,
+        width: size.width,
+        height: size.height,
+      };
+    });
+  }, [nodes]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -801,6 +824,7 @@ export default function Canvas() {
                   cardinality: { source: '1', target: 'N' },
                   onInsertNode: handleInsertNodeBetweenEdges,
                   onDeleteEdge: handleDeleteEdge,
+                  allNodes: nodeObstacles,
                 }
               }))}
               onNodesChange={handleNodesChange}

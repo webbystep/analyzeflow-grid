@@ -1,9 +1,11 @@
-import { EdgeLabelRenderer, EdgeProps, getBezierPath, BaseEdge } from '@xyflow/react';
+import { EdgeLabelRenderer, EdgeProps, BaseEdge } from '@xyflow/react';
 import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Plus, Trash2 } from 'lucide-react';
 import { EdgeContextMenu } from './EdgeContextMenu';
+import { calculatePath } from '@/lib/pathfinding/astar';
+import { generateSVGPath, getPathMidpoint } from '@/lib/pathfinding/pathSmoothing';
 
 interface CustomEdgeProps extends EdgeProps {
   onInsertNode?: (edgeId: string, position: { x: number; y: number }) => void;
@@ -20,17 +22,39 @@ export function CustomEdge({
   targetPosition,
   data,
   markerEnd,
+  source,
+  target,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = useMemo(() => {
-    return getBezierPath({
-      sourceX,
-      sourceY,
-      sourcePosition,
-      targetX,
-      targetY,
-      targetPosition,
-    });
-  }, [sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition]);
+  const allNodes = (data as any)?.allNodes || [];
+  
+  const edgePath = useMemo(() => {
+    if (!allNodes || allNodes.length === 0) {
+      return `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`;
+    }
+
+    const obstacles = allNodes
+      .filter((node: any) => node.id !== source && node.id !== target)
+      .map((node: any) => ({
+        x: node.position.x - 20,
+        y: node.position.y - 20,
+        width: node.width + 40,
+        height: node.height + 40,
+      }));
+
+    const pathPoints = calculatePath(
+      { x: sourceX, y: sourceY },
+      { x: targetX, y: targetY },
+      obstacles,
+      20
+    );
+
+    return generateSVGPath(pathPoints);
+  }, [sourceX, sourceY, targetX, targetY, source, target, allNodes]);
+
+  const [labelX, labelY] = useMemo(() => {
+    const midpoint = getPathMidpoint(edgePath);
+    return [midpoint.x, midpoint.y];
+  }, [edgePath]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [dropOffRate, setDropOffRate] = useState<number>((data?.dropOffRate as number) || 0);

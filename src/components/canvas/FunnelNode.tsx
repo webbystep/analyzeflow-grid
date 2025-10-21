@@ -59,7 +59,7 @@ export const FunnelNode = memo(({ data, type, selected, id }: { data: FunnelNode
         setIsHovered(false);
         (data as any).onNodeHover?.(null);
       }}
-      className={`rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl overflow-hidden ${
+      className={`rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl overflow-hidden relative z-10 ${
         selected ? 'border-[3px] shadow-2xl' : 'border-2'
       }`}
       style={{
