@@ -32,7 +32,7 @@ export default function Auth() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error signing in',
+        title: 'Bejelentkezési hiba',
         description: error.message,
       });
     } else {
@@ -59,13 +59,13 @@ export default function Auth() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error signing up',
+        title: 'Regisztrációs hiba',
         description: error.message,
       });
     } else {
       toast({
-        title: 'Account created!',
-        description: 'Please check your email to verify your account.',
+        title: 'Fiók létrehozva!',
+        description: 'Kérjük, ellenőrizd az emailedet a fiókod megerősítéséhez.',
       });
     }
     setLoading(false);
@@ -83,7 +83,7 @@ export default function Auth() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error signing in with Google',
+        title: 'Google bejelentkezési hiba',
         description: error.message,
       });
       setLoading(false);
@@ -100,13 +100,13 @@ export default function Auth() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">FlowVision Pro</CardTitle>
-          <CardDescription>Create and analyze your funnels with precision</CardDescription>
+          <CardDescription>Készíts és elemezz tölcséreket pontosan</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="signin">Bejelentkezés</TabsTrigger>
+              <TabsTrigger value="signup">Regisztráció</TabsTrigger>
             </TabsList>
 
             <TabsContent value="signin">
@@ -116,14 +116,14 @@ export default function Auth() {
                   <Input
                     id="signin-email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="te@pelda.hu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
+                  <Label htmlFor="signin-password">Jelszó</Label>
                   <Input
                     id="signin-password"
                     type="password"
@@ -134,7 +134,7 @@ export default function Auth() {
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Sign In
+                  Bejelentkezés
                 </Button>
               </form>
             </TabsContent>
@@ -142,11 +142,11 @@ export default function Auth() {
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Name</Label>
+                  <Label htmlFor="signup-name">Név</Label>
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder="Your name"
+                    placeholder="A te neved"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -157,14 +157,14 @@ export default function Auth() {
                   <Input
                     id="signup-email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="te@pelda.hu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
+                  <Label htmlFor="signup-password">Jelszó</Label>
                   <Input
                     id="signup-password"
                     type="password"
@@ -176,7 +176,7 @@ export default function Auth() {
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Create Account
+                  Fiók létrehozása
                 </Button>
               </form>
             </TabsContent>
@@ -187,7 +187,7 @@ export default function Auth() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-card px-2 text-muted-foreground">Vagy folytatás ezzel</span>
             </div>
           </div>
 

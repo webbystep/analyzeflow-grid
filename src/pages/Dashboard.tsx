@@ -81,7 +81,7 @@ export default function Dashboard() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error loading workspaces',
+        title: 'Munkaterületek betöltési hiba',
         description: error.message,
       });
     } else {
@@ -106,7 +106,7 @@ export default function Dashboard() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error loading projects',
+        title: 'Projektek betöltési hiba',
         description: error.message,
       });
     } else {
@@ -124,8 +124,8 @@ export default function Dashboard() {
     if (!session) {
       toast({
         variant: 'destructive',
-        title: 'Authentication required',
-        description: 'Please sign in again to create a workspace.',
+        title: 'Hitelesítés szükséges',
+        description: 'Kérjük, jelentkezz be újra a munkaterület létrehozásához.',
       });
       navigate('/auth');
       return;
@@ -137,13 +137,13 @@ export default function Dashboard() {
       console.error('Workspace creation error:', error);
       toast({
         variant: 'destructive',
-        title: 'Error creating workspace',
+        title: 'Munkaterület létrehozási hiba',
         description: error.message,
       });
     } else {
       toast({
-        title: 'Workspace created',
-        description: `${workspaceName} has been created successfully.`,
+        title: 'Munkaterület létrehozva',
+        description: `${workspaceName} sikeresen létrehozva.`,
       });
       await loadWorkspaces();
       setSelectedWorkspace(data.id);
@@ -169,13 +169,13 @@ export default function Dashboard() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'Error creating project',
+        title: 'Projekt létrehozási hiba',
         description: error.message,
       });
     } else {
       toast({
-        title: 'Project created',
-        description: `${projectName} has been created successfully.`,
+        title: 'Projekt létrehozva',
+        description: `${projectName} sikeresen létrehozva.`,
       });
       setProjects([data, ...projects]);
       setProjectName('');
@@ -208,7 +208,7 @@ export default function Dashboard() {
           </div>
           <Button variant="outline" onClick={signOut}>
             <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
+            Kijelentkezés
           </Button>
         </div>
       </header>
@@ -216,37 +216,37 @@ export default function Dashboard() {
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold mb-2">Your Projects</h2>
-            <p className="text-muted-foreground">Create and manage your funnel projects</p>
+            <h2 className="text-3xl font-bold mb-2">Projektjeid</h2>
+            <p className="text-muted-foreground">Készíts és kezelj tölcsér projekteket</p>
           </div>
           <div className="flex gap-2">
             <Dialog open={createWorkspaceOpen} onOpenChange={setCreateWorkspaceOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
-                  New Workspace
+                  Új Munkaterület
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <form onSubmit={handleCreateWorkspace}>
                   <DialogHeader>
-                    <DialogTitle>Create Workspace</DialogTitle>
+                    <DialogTitle>Munkaterület létrehozása</DialogTitle>
                     <DialogDescription>
-                      Workspaces help you organize projects by team or client.
+                      A munkaterületek segítenek rendszerezni a projekteket csapat vagy ügyfél szerint.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="py-4">
-                    <Label htmlFor="workspace-name">Workspace Name</Label>
+                    <Label htmlFor="workspace-name">Munkaterület neve</Label>
                     <Input
                       id="workspace-name"
                       value={workspaceName}
                       onChange={(e) => setWorkspaceName(e.target.value)}
-                      placeholder="My Team"
+                      placeholder="Saját Csapatom"
                       required
                     />
                   </div>
                   <DialogFooter>
-                    <Button type="submit">Create Workspace</Button>
+                    <Button type="submit">Munkaterület létrehozása</Button>
                   </DialogFooter>
                 </form>
               </DialogContent>
@@ -256,40 +256,40 @@ export default function Dashboard() {
               <DialogTrigger asChild>
                 <Button disabled={!selectedWorkspace}>
                   <Plus className="mr-2 h-4 w-4" />
-                  New Project
+                  Új Projekt
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <form onSubmit={handleCreateProject}>
                   <DialogHeader>
-                    <DialogTitle>Create Project</DialogTitle>
+                    <DialogTitle>Projekt létrehozása</DialogTitle>
                     <DialogDescription>
-                      Start building your funnel visualization and analytics.
+                      Kezdd el építeni a tölcsér vizualizációt és analitikákat.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div>
-                      <Label htmlFor="project-name">Project Name</Label>
+                      <Label htmlFor="project-name">Projekt neve</Label>
                       <Input
                         id="project-name"
                         value={projectName}
                         onChange={(e) => setProjectName(e.target.value)}
-                        placeholder="My Funnel"
+                        placeholder="Saját Tölcsérem"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="project-description">Description (optional)</Label>
+                      <Label htmlFor="project-description">Leírás (opcionális)</Label>
                       <Input
                         id="project-description"
                         value={projectDescription}
                         onChange={(e) => setProjectDescription(e.target.value)}
-                        placeholder="Brief description of this project"
+                        placeholder="Rövid leírás a projektről"
                       />
                     </div>
                   </div>
                   <DialogFooter>
-                    <Button type="submit">Create Project</Button>
+                    <Button type="submit">Projekt létrehozása</Button>
                   </DialogFooter>
                 </form>
               </DialogContent>
@@ -299,7 +299,7 @@ export default function Dashboard() {
 
         {workspaces.length > 0 && (
           <div className="mb-6">
-            <Label className="mb-2 block">Workspace</Label>
+            <Label className="mb-2 block">Munkaterület</Label>
             <div className="flex gap-2 flex-wrap">
               {workspaces.map((workspace) => (
                 <div key={workspace.id} className="flex gap-1">
@@ -315,7 +315,7 @@ export default function Dashboard() {
                       variant="ghost"
                       size="icon"
                       onClick={() => navigate(`/workspace/${workspace.id}/settings`)}
-                      title="Workspace Settings"
+                      title="Munkaterület beállítások"
                     >
                       <Settings className="h-4 w-4" />
                     </Button>
@@ -329,15 +329,15 @@ export default function Dashboard() {
         {projects.length === 0 ? (
           <Card className="p-12 text-center">
             <CardHeader>
-              <CardTitle>No projects yet</CardTitle>
+              <CardTitle>Még nincsenek projektek</CardTitle>
               <CardDescription>
-                Create your first project to start building funnels
+                Hozd létre az első projektedet és kezdd el a tölcsérek építését
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Button onClick={() => setCreateProjectOpen(true)} disabled={!selectedWorkspace}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create Your First Project
+                Első projekt létrehozása
               </Button>
             </CardContent>
           </Card>
@@ -363,7 +363,7 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Calendar className="mr-2 h-4 w-4" />
-                    Updated {format(new Date(project.updated_at), 'MMM d, yyyy')}
+                    Módosítva {format(new Date(project.updated_at), 'MMM d, yyyy')}
                   </div>
                 </CardContent>
               </Card>
