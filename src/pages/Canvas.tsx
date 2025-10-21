@@ -7,6 +7,7 @@ import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { TemplateDialog } from '@/components/canvas/TemplateDialog';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
+import { SelectionToolbar } from '@/components/canvas/SelectionToolbar';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, Download, Share2, Undo2, Redo2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -30,6 +31,7 @@ export default function Canvas() {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [showInspector, setShowInspector] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -253,6 +255,114 @@ export default function Canvas() {
     });
   }, [toast]);
 
+  const handleSelectionChange = useCallback((selected: Node[]) => {
+    setSelectedNodes(selected);
+    // If only one node selected, also set it as selectedNode for inspector
+    if (selected.length === 1) {
+      setSelectedNode(selected[0]);
+    } else if (selected.length === 0) {
+      setSelectedNode(null);
+    }
+  }, []);
+
+  const handleBulkDelete = useCallback(() => {
+    if (selectedNodes.length === 0) return;
+    
+    const selectedIds = new Set(selectedNodes.map(n => n.id));
+    const updatedNodes = nodes.filter((n) => !selectedIds.has(n.id));
+    const updatedEdges = edges.filter((e) => !selectedIds.has(e.source) && !selectedIds.has(e.target));
+    
+    setNodes(updatedNodes);
+    setEdges(updatedEdges);
+    setSelectedNodes([]);
+    setSelectedNode(null);
+    setShowInspector(false);
+    pushHistory(updatedNodes, updatedEdges);
+    
+    toast({
+      title: 'Node-ok törölve',
+      description: `${selectedNodes.length} node el lett távolítva.`,
+    });
+  }, [selectedNodes, nodes, edges, toast, pushHistory]);
+
+  const handleBulkDuplicate = useCallback(() => {
+    if (selectedNodes.length === 0) return;
+    
+    const newNodes = selectedNodes.map((node) => ({
+      ...node,
+      id: crypto.randomUUID(),
+      position: {
+        x: node.position.x + 40,
+        y: node.position.y + 40,
+      },
+    }));
+    
+    const updatedNodes = [...nodes, ...newNodes];
+    setNodes(updatedNodes);
+    pushHistory(updatedNodes, edges);
+    
+    toast({
+      title: 'Node-ok másolva',
+      description: `${selectedNodes.length} node duplikálva lett.`,
+    });
+  }, [selectedNodes, nodes, edges, toast, pushHistory]);
+
+  const handleBulkAlign = useCallback((alignment: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => {
+    if (selectedNodes.length < 2) return;
+
+    const selectedIds = new Set(selectedNodes.map(n => n.id));
+    let targetValue: number;
+
+    if (alignment === 'left' || alignment === 'center' || alignment === 'right') {
+      const positions = selectedNodes.map(n => n.position.x);
+      switch (alignment) {
+        case 'left':
+          targetValue = Math.min(...positions);
+          break;
+        case 'right':
+          targetValue = Math.max(...positions);
+          break;
+        case 'center':
+          targetValue = (Math.min(...positions) + Math.max(...positions)) / 2;
+          break;
+      }
+
+      const updatedNodes = nodes.map((node) =>
+        selectedIds.has(node.id)
+          ? { ...node, position: { ...node.position, x: targetValue } }
+          : node
+      );
+      setNodes(updatedNodes);
+      pushHistory(updatedNodes, edges);
+    } else {
+      const positions = selectedNodes.map(n => n.position.y);
+      switch (alignment) {
+        case 'top':
+          targetValue = Math.min(...positions);
+          break;
+        case 'bottom':
+          targetValue = Math.max(...positions);
+          break;
+        case 'middle':
+          targetValue = (Math.min(...positions) + Math.max(...positions)) / 2;
+          break;
+      }
+
+      const updatedNodes = nodes.map((node) =>
+        selectedIds.has(node.id)
+          ? { ...node, position: { ...node.position, y: targetValue } }
+          : node
+      );
+      setNodes(updatedNodes);
+      pushHistory(updatedNodes, edges);
+    }
+
+    toast({
+      title: 'Node-ok igazítva',
+      description: `${selectedNodes.length} node igazítva.`,
+    });
+  }, [selectedNodes, nodes, edges, toast, pushHistory]);
+
   const handleDeleteSelected = useCallback(() => {
     if (selectedNode) {
       const updatedNodes = nodes.filter((n) => n.id !== selectedNode.id);
@@ -451,21 +561,34 @@ export default function Canvas() {
         e.preventDefault();
         handleRedo();
       }
-      // Duplicate
-      if ((e.ctrlKey || e.metaKey) && e.key === 'd' && selectedNode) {
+      // Duplicate - works for both single and multi-select
+      if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
         e.preventDefault();
-        handleDuplicateNode(selectedNode);
+        if (selectedNodes.length > 0) {
+          handleBulkDuplicate();
+        } else if (selectedNode) {
+          handleDuplicateNode(selectedNode);
+        }
       }
-      // Delete selected node
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNode) {
+      // Delete - works for both single and multi-select
+      if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
-        handleDeleteSelected();
+        if (selectedNodes.length > 0) {
+          handleBulkDelete();
+        } else if (selectedNode) {
+          handleDeleteSelected();
+        }
+      }
+      // Clear selection
+      if (e.key === 'Escape') {
+        setSelectedNodes([]);
+        setSelectedNode(null);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedNode, handleDeleteSelected, handleUndo, handleRedo, handleDuplicateNode]);
+  }, [selectedNode, selectedNodes, handleDeleteSelected, handleBulkDelete, handleBulkDuplicate, handleUndo, handleRedo, handleDuplicateNode]);
 
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
@@ -627,6 +750,13 @@ export default function Canvas() {
               onNodeClick={handleNodeClick}
               onInsertNode={handleInsertNodeBetweenEdges}
               onDeleteEdge={handleDeleteEdge}
+              onSelectionChange={handleSelectionChange}
+            />
+            <SelectionToolbar
+              selectedCount={selectedNodes.length}
+              onDelete={handleBulkDelete}
+              onDuplicate={handleBulkDuplicate}
+              onAlign={handleBulkAlign}
             />
           </div>
         </CanvasContextMenu>

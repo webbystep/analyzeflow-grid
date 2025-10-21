@@ -14,6 +14,7 @@ import {
   BackgroundVariant,
   applyNodeChanges,
   applyEdgeChanges,
+  SelectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { FunnelNode } from './FunnelNode';
@@ -42,6 +43,7 @@ interface FlowCanvasProps {
   onNodeClick: (node: Node) => void;
   onInsertNode?: (edgeId: string, position: { x: number; y: number }) => void;
   onDeleteEdge?: (edgeId: string) => void;
+  onSelectionChange?: (nodes: Node[]) => void;
   readonly?: boolean;
 }
 
@@ -54,6 +56,7 @@ export function FlowCanvas({
   onNodeClick,
   onInsertNode,
   onDeleteEdge,
+  onSelectionChange,
   readonly = false,
 }: FlowCanvasProps) {
   const [nodes, setNodes] = useNodesState(initialNodes);
@@ -106,6 +109,15 @@ export function FlowCanvas({
     [onNodeClick]
   );
 
+  const handleSelectionChangeCallback = useCallback(
+    ({ nodes: selectedNodes }: { nodes: Node[] }) => {
+      if (onSelectionChange) {
+        onSelectionChange(selectedNodes);
+      }
+    },
+    [onSelectionChange]
+  );
+
   // Enhance edges with handlers
   const enhancedEdges = edges.map(edge => ({
     ...edge,
@@ -125,11 +137,16 @@ export function FlowCanvas({
         onEdgesChange={readonly ? undefined : onEdgesChangeInternal}
         onNodeClick={handleNodeClickCallback}
         onConnect={readonly ? undefined : onConnect}
+        onSelectionChange={handleSelectionChangeCallback}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         nodesDraggable={!readonly}
         nodesConnectable={!readonly}
         elementsSelectable={!readonly}
+        selectionMode={SelectionMode.Partial}
+        multiSelectionKeyCode="Control"
+        panOnDrag={[1, 2]}
+        selectNodesOnDrag={false}
         connectionRadius={20}
         snapToGrid={true}
         snapGrid={[15, 15]}

@@ -41,19 +41,22 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ 
-        duration: 0.3, 
-        ease: 'easeOut',
-        type: 'spring',
-        stiffness: 200,
-        damping: 20
+      animate={{ 
+        scale: selected ? 1.02 : 1, 
+        opacity: 1 
       }}
-      className={`px-4 py-3 rounded-lg border-2 bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl ${
-        selected ? 'ring-2 ring-primary ring-offset-2' : ''
+      transition={{ 
+        duration: 0.15, 
+        ease: 'easeOut',
+      }}
+      className={`px-4 py-3 rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl ${
+        selected ? 'border-[3px] shadow-2xl' : 'border-2'
       }`}
       style={{
         borderColor: selected ? `hsl(var(--primary))` : `hsl(var(--node-${nodeType}))`,
+        boxShadow: selected 
+          ? `0 10px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--primary) / 0.1)` 
+          : undefined,
       }}
     >
       <Handle 
