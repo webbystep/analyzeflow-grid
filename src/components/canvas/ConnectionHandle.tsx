@@ -6,9 +6,9 @@ export function ConnectionHandle() {
     <Handle
       type="source"
       position={Position.Right}
-      className="!relative !flex !w-5 !h-5 !bg-background !border-2 !border-white !rounded-full !shadow-lg hover:!shadow-xl hover:!bg-background transition-all duration-200 cursor-crosshair"
+      className="!static !inline-flex !items-center !justify-center shrink-0 !w-5 !h-5 !bg-background !border-2 !border-white !rounded-full !shadow-lg hover:!shadow-xl hover:!bg-background transition-all duration-200 cursor-crosshair !top-auto !right-auto !bottom-auto !left-auto !transform-none"
     >
-      <Plus className="w-3.5 h-3.5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      <Plus className="w-3.5 h-3.5 text-foreground pointer-events-none" />
     </Handle>
   );
 }
