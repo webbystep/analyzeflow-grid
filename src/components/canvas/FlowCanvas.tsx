@@ -144,7 +144,7 @@ export function FlowCanvas({
         nodesConnectable={!readonly}
         elementsSelectable={!readonly}
         selectionMode={SelectionMode.Partial}
-        multiSelectionKeyCode="Control"
+        multiSelectionKeyCode={['Meta', 'Control']}
         panOnDrag={[1, 2]}
         selectNodesOnDrag={false}
         connectionRadius={20}
