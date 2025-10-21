@@ -57,7 +57,27 @@ export function CustomEdge({
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
+      <BaseEdge 
+        id={id} 
+        path={edgePath} 
+        markerEnd={markerEnd}
+        style={{
+          strokeWidth: 2,
+          stroke: 'hsl(var(--primary))',
+        }}
+      />
+      {/* Animated flow overlay */}
+      <path
+        d={edgePath}
+        fill="none"
+        stroke="hsl(var(--primary))"
+        strokeWidth={2}
+        strokeDasharray="5,10"
+        style={{
+          animation: 'edge-flow 1s linear infinite',
+          opacity: 0.6,
+        }}
+      />
       <EdgeLabelRenderer>
         <div
           style={{

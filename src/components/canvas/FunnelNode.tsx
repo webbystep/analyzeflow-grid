@@ -66,6 +66,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
       
       {/* Top handles */}
       <div
+        className="hover:scale-110"
         style={{
           position: 'absolute',
           top: '-8px',
@@ -73,7 +74,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           transform: 'translateX(-50%)',
           opacity: isHovered ? 1 : 0,
           pointerEvents: isHovered ? 'auto' : 'none',
-          transition: 'opacity 0.15s ease-out',
+          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -86,21 +87,22 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Top} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
         />
         <Handle 
           id="top-target"
           type="target"
           position={Position.Top} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
         />
       </div>
       
       {/* Bottom handles */}
       <div
+        className="hover:scale-110"
         style={{
           position: 'absolute',
           bottom: '-8px',
@@ -108,7 +110,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           transform: 'translateX(-50%)',
           opacity: isHovered ? 1 : 0,
           pointerEvents: isHovered ? 'auto' : 'none',
-          transition: 'opacity 0.15s ease-out',
+          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -121,21 +123,22 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Bottom} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
         />
         <Handle 
           id="bottom-target"
           type="target"
           position={Position.Bottom} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
         />
       </div>
       
       {/* Left handles */}
       <div
+        className="hover:scale-110"
         style={{
           position: 'absolute',
           left: '-8px',
@@ -143,7 +146,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           transform: 'translateY(-50%)',
           opacity: isHovered ? 1 : 0,
           pointerEvents: isHovered ? 'auto' : 'none',
-          transition: 'opacity 0.15s ease-out',
+          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -156,21 +159,22 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Left} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
         />
         <Handle 
           id="left-target"
           type="target"
           position={Position.Left} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
         />
       </div>
       
       {/* Right handles */}
       <div
+        className="hover:scale-110"
         style={{
           position: 'absolute',
           right: '-8px',
@@ -178,7 +182,7 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           transform: 'translateY(-50%)',
           opacity: isHovered ? 1 : 0,
           pointerEvents: isHovered ? 'auto' : 'none',
-          transition: 'opacity 0.15s ease-out',
+          transition: 'opacity 0.15s ease-out, transform 0.2s ease-out',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -191,16 +195,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Right} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
         />
         <Handle 
           id="right-target"
           type="target"
           position={Position.Right} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200 hover:opacity-100 hover:scale-110 hover:shadow-[0_0_8px_2px_hsl(var(--primary)/0.6)]"
-          style={{ opacity: 0.7, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-4 h-4 !bg-primary transition-all duration-200"
+          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
         />
       </div>
       
