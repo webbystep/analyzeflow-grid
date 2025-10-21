@@ -817,7 +817,6 @@ export default function Canvas() {
                   cardinality: { source: '1', target: 'N' },
                   onInsertNode: handleInsertNodeBetweenEdges,
                   onDeleteEdge: handleDeleteEdge,
-                  allNodes: nodes,
                 }
               }))}
               onNodesChange={handleNodesChange}

@@ -1,5 +1,5 @@
-import { EdgeLabelRenderer, EdgeProps, getBezierPath } from '@xyflow/react';
-import { useState, useMemo } from 'react';
+import { EdgeLabelRenderer, EdgeProps, getBezierPath, useStore, Node, Position } from '@xyflow/react';
+import { useState, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Plus, Trash2 } from 'lucide-react';
@@ -10,67 +10,70 @@ interface CustomEdgeProps extends EdgeProps {
   onDeleteEdge?: (edgeId: string) => void;
 }
 
-function getSmartControlPoints(
-  sourceX: number,
-  sourceY: number,
-  sourcePosition: string,
-  targetX: number,
-  targetY: number,
-  targetPosition: string
-) {
-  const distance = Math.sqrt(
-    Math.pow(targetX - sourceX, 2) + Math.pow(targetY - sourceY, 2)
-  );
+// Get the intersection point between two nodes
+function getNodeIntersection(
+  intersectionNode: Node,
+  targetNode: Node
+): { x: number; y: number } {
+  const { width = 280, height = 120 } = intersectionNode.measured || {};
+  const { position: intersectionPosition } = intersectionNode;
+  const { position: targetPosition } = targetNode;
 
-  const offset = Math.min(distance * 0.3, 150);
+  const w = width / 2;
+  const h = height / 2;
 
-  let cp1x = sourceX;
-  let cp1y = sourceY;
-  let cp2x = targetX;
-  let cp2y = targetY;
+  const x2 = intersectionPosition.x + w;
+  const y2 = intersectionPosition.y + h;
+  const x1 = targetPosition.x + w;
+  const y1 = targetPosition.y + h;
 
-  if (sourcePosition === 'right') cp1x += offset;
-  if (sourcePosition === 'left') cp1x -= offset;
-  if (targetPosition === 'right') cp2x += offset;
-  if (targetPosition === 'left') cp2x -= offset;
+  const xx1 = (x1 - x2) / (2 * w) - (y1 - y2) / (2 * h);
+  const yy1 = (x1 - x2) / (2 * w) + (y1 - y2) / (2 * h);
+  const a = 1 / (Math.abs(xx1) + Math.abs(yy1));
+  const xx3 = a * xx1;
+  const yy3 = a * yy1;
+  const x = w * (xx3 + yy3) + x2;
+  const y = h * (-xx3 + yy3) + y2;
 
-  if (sourcePosition === 'bottom') cp1y += offset;
-  if (sourcePosition === 'top') cp1y -= offset;
-  if (targetPosition === 'bottom') cp2y += offset;
-  if (targetPosition === 'top') cp2y -= offset;
-
-  return { cp1x, cp1y, cp2x, cp2y };
+  return { x, y };
 }
 
-function getOptimalHandles(
-  sourceNode: { x: number; y: number; width: number; height: number },
-  targetNode: { x: number; y: number; width: number; height: number }
-) {
-  const dx = targetNode.x - sourceNode.x;
-  const dy = targetNode.y - sourceNode.y;
-  
-  // Horizontal vs Vertical priority
-  if (Math.abs(dx) > Math.abs(dy)) {
-    return {
-      source: dx > 0 ? 'right' : 'left',
-      target: dx > 0 ? 'left' : 'right',
-    };
-  } else {
-    return {
-      source: dy > 0 ? 'bottom' : 'top',
-      target: dy > 0 ? 'top' : 'bottom',
-    };
-  }
+// Determine which side of the node the edge should connect to
+function getEdgePosition(node: Node, intersectionPoint: { x: number; y: number }): Position {
+  const { width = 280, height = 120 } = node.measured || {};
+  const { x, y } = node.position;
+
+  const px = Math.round(intersectionPoint.x);
+  const py = Math.round(intersectionPoint.y);
+
+  if (px <= x + 1) return Position.Left;
+  if (px >= x + width - 1) return Position.Right;
+  if (py <= y + 1) return Position.Top;
+  if (py >= y + height - 1) return Position.Bottom;
+
+  return Position.Top;
+}
+
+// Calculate edge parameters based on node positions
+function getEdgeParams(source: Node, target: Node) {
+  const sourceIntersection = getNodeIntersection(source, target);
+  const targetIntersection = getNodeIntersection(target, source);
+
+  const sourcePos = getEdgePosition(source, sourceIntersection);
+  const targetPos = getEdgePosition(target, targetIntersection);
+
+  return {
+    sx: sourceIntersection.x,
+    sy: sourceIntersection.y,
+    tx: targetIntersection.x,
+    ty: targetIntersection.y,
+    sourcePos,
+    targetPos,
+  };
 }
 
 export function FloatingEdge({
   id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
   data,
   markerEnd,
   source,
@@ -83,55 +86,28 @@ export function FloatingEdge({
   const onInsertNode = (data as any)?.onInsertNode;
   const onDeleteEdge = (data as any)?.onDeleteEdge;
   const isHighlighted = (data as any)?.isHighlighted || false;
-  const allNodes = (data as any)?.allNodes || [];
 
-  // Smart routing: calculate optimal handles based on node positions
-  const sourceNode = allNodes.find((n: any) => n.id === source);
-  const targetNode = allNodes.find((n: any) => n.id === target);
-
-  let optimalSourcePosition = sourcePosition || 'right';
-  let optimalTargetPosition = targetPosition || 'left';
-
-  if (sourceNode && targetNode) {
-    const sourceNodeData = {
-      x: sourceNode.position.x,
-      y: sourceNode.position.y,
-      width: 280,
-      height: 120,
-    };
-    const targetNodeData = {
-      x: targetNode.position.x,
-      y: targetNode.position.y,
-      width: 280,
-      height: 120,
-    };
-    
-    const optimal = getOptimalHandles(sourceNodeData, targetNodeData);
-    optimalSourcePosition = optimal.source;
-    optimalTargetPosition = optimal.target;
-  }
-
-  const { cp1x, cp1y, cp2x, cp2y } = useMemo(
-    () =>
-      getSmartControlPoints(
-        sourceX,
-        sourceY,
-        optimalSourcePosition,
-        targetX,
-        targetY,
-        optimalTargetPosition
-      ),
-    [sourceX, sourceY, optimalSourcePosition, targetX, targetY, optimalTargetPosition]
+  // Use React Flow store to get node positions
+  const sourceNode = useStore(
+    useCallback((store) => store.nodeLookup.get(source), [source])
+  );
+  const targetNode = useStore(
+    useCallback((store) => store.nodeLookup.get(target), [target])
   );
 
+  if (!sourceNode || !targetNode) {
+    return null;
+  }
+
+  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(sourceNode, targetNode);
+
   const [edgePath, labelX, labelY] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition: optimalSourcePosition as any,
-    targetX,
-    targetY,
-    targetPosition: optimalTargetPosition as any,
-    curvature: 0.25,
+    sourceX: sx,
+    sourceY: sy,
+    sourcePosition: sourcePos,
+    targetX: tx,
+    targetY: ty,
+    targetPosition: targetPos,
   });
 
   const handleSave = () => {
