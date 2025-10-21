@@ -104,7 +104,7 @@ export const FunnelNode = memo(({
       }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white w-full" autoFocus /> : <div className="font-semibold text-sm cursor-text" onClick={() => setIsEditing(true)}>
             {data.label}
           </div>}
-        <ConnectionHandle className="mx-[8px]" />
+        <ConnectionHandle />
       </div>
       
       {/* Metrics section */}
