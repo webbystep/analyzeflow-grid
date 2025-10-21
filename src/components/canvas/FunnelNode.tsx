@@ -52,14 +52,14 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`px-4 py-3 rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl ${
+      className={`rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl overflow-hidden ${
         selected ? 'border-[3px] shadow-2xl' : 'border-2'
       }`}
       style={{
         borderColor: selected ? `hsl(var(--primary))` : `hsl(var(--node-${nodeType}))`,
         boxShadow: selected 
           ? `0 10px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--primary) / 0.1)` 
-          : undefined,
+          : `0 2px 4px rgba(0,0,0,0.1)`,
       }}
     >
       {/* All handles - always in DOM, visually hidden when not hovered */}
@@ -87,16 +87,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Top} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
         <Handle 
           id="top-target"
           type="target"
           position={Position.Top} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
       </div>
       
@@ -123,16 +123,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Bottom} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
         <Handle 
           id="bottom-target"
           type="target"
           position={Position.Bottom} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
       </div>
       
@@ -159,16 +159,16 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Left} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
         <Handle 
           id="left-target"
           type="target"
           position={Position.Left} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
       </div>
       
@@ -195,35 +195,41 @@ export const FunnelNode = memo(({ data, type, selected }: { data: FunnelNodeData
           type="source"
           position={Position.Right} 
           isConnectableStart={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 1, pointerEvents: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
         <Handle 
           id="right-target"
           type="target"
           position={Position.Right} 
           isConnectableEnd={true}
-          className="w-4 h-4 !bg-primary transition-all duration-200"
-          style={{ opacity: 0.8, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto' }}
+          className="w-3 h-3 !bg-gray-800 !border-2 !border-white transition-all duration-200"
+          style={{ opacity: 1, position: 'absolute', top: 0, left: 0, zIndex: 2, pointerEvents: 'auto', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
         />
       </div>
       
-      <div className="flex items-center gap-2 mb-2">
-        <div
-          className="p-1.5 rounded"
-          style={{ backgroundColor: `hsl(var(--node-${nodeType}) / 0.2)` }}
-        >
-          <Icon className="w-4 h-4" style={{ color: `hsl(var(--node-${nodeType}))` }} />
-        </div>
+      {/* Colored header bar */}
+      <div 
+        className="flex items-center gap-2 px-3 py-2"
+        style={{ 
+          backgroundColor: `hsl(var(--node-${nodeType}))`,
+          color: 'white'
+        }}
+      >
+        <Icon className="w-4 h-4" />
         <div className="font-semibold text-sm">{data.label}</div>
       </div>
       
-      <MetricsFlowIndicator
-        visits={data.visits}
-        conversions={data.conversions}
-        revenue={data.revenue}
-        conversionRate={data.conversionRate}
-      />
+      {/* Metrics section */}
+      <div className="px-3 py-2">
+      
+        <MetricsFlowIndicator
+          visits={data.visits}
+          conversions={data.conversions}
+          revenue={data.revenue}
+          conversionRate={data.conversionRate}
+        />
+      </div>
     </motion.div>
   );
 });

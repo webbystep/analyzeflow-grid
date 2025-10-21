@@ -56,12 +56,13 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
 
-    --node-traffic: 198 93% 60%;
-    --node-email: 280 65% 60%;
-    --node-landing: 142 71% 45%;
-    --node-checkout: 38 92% 50%;
-    --node-thankyou: 142 71% 45%;
-    --node-condition: 231 48% 48%;
+    /* Node type colors - Liam ERD inspired pastel palette */
+    --node-traffic: 220 70% 65%;     /* Soft blue */
+    --node-email: 280 60% 65%;       /* Soft purple */
+    --node-landing: 160 55% 60%;     /* Soft green */
+    --node-checkout: 30 75% 60%;     /* Soft orange */
+    --node-thankyou: 340 70% 65%;    /* Soft pink */
+    --node-condition: 45 65% 60%;    /* Soft yellow */
   }
 
   /* React Flow Edge Hover Effects */
@@ -121,12 +122,13 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
 
-    --node-traffic: 198 93% 60%;
-    --node-email: 280 65% 60%;
-    --node-landing: 142 71% 45%;
-    --node-checkout: 38 92% 50%;
-    --node-thankyou: 142 71% 45%;
-    --node-condition: 231 70% 65%;
+    /* Node type colors - Liam ERD inspired pastel palette (dark mode) */
+    --node-traffic: 220 60% 55%;     /* Soft blue (darker) */
+    --node-email: 280 50% 55%;       /* Soft purple (darker) */
+    --node-landing: 160 45% 50%;     /* Soft green (darker) */
+    --node-checkout: 30 65% 55%;     /* Soft orange (darker) */
+    --node-thankyou: 340 60% 55%;    /* Soft pink (darker) */
+    --node-condition: 45 55% 50%;    /* Soft yellow (darker) */
   }
 }
 

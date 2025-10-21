@@ -39,7 +39,7 @@ export const MetricsFlowIndicator = memo(({
   }
 
   return (
-    <div className="space-y-1 text-xs">
+    <div className="space-y-1 text-xs font-mono">
       {visits !== undefined && (
         <div className="flex items-center justify-between gap-2">
           <span className="text-muted-foreground flex items-center gap-1">

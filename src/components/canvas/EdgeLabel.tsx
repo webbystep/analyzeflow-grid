@@ -62,8 +62,9 @@ export function CustomEdge({
         path={edgePath} 
         markerEnd={markerEnd}
         style={{
-          strokeWidth: 2,
+          strokeWidth: 3,
           stroke: 'hsl(var(--primary))',
+          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
         }}
       />
       {/* Animated flow overlay */}
@@ -71,7 +72,7 @@ export function CustomEdge({
         d={edgePath}
         fill="none"
         stroke="hsl(var(--primary))"
-        strokeWidth={2}
+        strokeWidth={3}
         strokeDasharray="5,10"
         style={{
           animation: 'edge-flow 1s linear infinite',
