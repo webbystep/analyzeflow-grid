@@ -32,7 +32,7 @@ export const TableNode = memo(({ data, selected, id }: NodeProps) => {
       onMouseEnter={() => tableData.onNodeHover?.(id)}
       onMouseLeave={() => tableData.onNodeHover?.(null)}
       className={cn(
-        "relative rounded-lg bg-card border-2 transition-all min-w-[220px] max-w-[300px]",
+        "relative rounded-lg bg-card border-2 transition-all min-w-[220px] max-w-[300px] overflow-visible",
         selected && "border-primary shadow-lg ring-2 ring-primary/20",
         !selected && !isConnectedHighlighted && "border-border shadow-md",
         isConnectedHighlighted && "border-primary/50 shadow-2xl ring-2 ring-primary/30"
