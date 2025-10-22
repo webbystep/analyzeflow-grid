@@ -147,13 +147,9 @@ export default function Canvas() {
     setSaving(true);
 
     try {
-      // Delete existing nodes and edges
-      await supabase.from('nodes').delete().eq('project_id', projectId);
-      await supabase.from('edges').delete().eq('project_id', projectId);
-
-      // Insert new nodes
+      // Upsert nodes (insert or update)
       if (nodes.length > 0) {
-        const nodesToInsert = nodes.map((node) => ({
+        const nodesToUpsert = nodes.map((node) => ({
           id: node.id,
           project_id: projectId,
           type: node.type || 'traffic',
@@ -163,12 +159,31 @@ export default function Canvas() {
           data: (node.data || {}) as any,
         }));
 
-        await supabase.from('nodes').insert(nodesToInsert);
+        await supabase.from('nodes').upsert(nodesToUpsert);
       }
 
-      // Insert new edges
+      // Get current node IDs
+      const currentNodeIds = new Set(nodes.map(n => n.id));
+      
+      // Delete nodes that no longer exist
+      const { data: existingNodes } = await supabase
+        .from('nodes')
+        .select('id')
+        .eq('project_id', projectId);
+      
+      if (existingNodes) {
+        const nodesToDelete = existingNodes
+          .filter(n => !currentNodeIds.has(n.id))
+          .map(n => n.id);
+        
+        if (nodesToDelete.length > 0) {
+          await supabase.from('nodes').delete().in('id', nodesToDelete);
+        }
+      }
+
+      // Upsert edges (insert or update)
       if (edges.length > 0) {
-        const edgesToInsert = edges.map((edge) => ({
+        const edgesToUpsert = edges.map((edge) => ({
           id: edge.id,
           project_id: projectId,
           source_id: edge.source,
@@ -177,7 +192,26 @@ export default function Canvas() {
           data: (edge.data || {}) as any,
         }));
 
-        await supabase.from('edges').insert(edgesToInsert);
+        await supabase.from('edges').upsert(edgesToUpsert);
+      }
+
+      // Get current edge IDs
+      const currentEdgeIds = new Set(edges.map(e => e.id));
+      
+      // Delete edges that no longer exist
+      const { data: existingEdges } = await supabase
+        .from('edges')
+        .select('id')
+        .eq('project_id', projectId);
+      
+      if (existingEdges) {
+        const edgesToDelete = existingEdges
+          .filter(e => !currentEdgeIds.has(e.id))
+          .map(e => e.id);
+        
+        if (edgesToDelete.length > 0) {
+          await supabase.from('edges').delete().in('id', edgesToDelete);
+        }
       }
 
       // Update project timestamp
