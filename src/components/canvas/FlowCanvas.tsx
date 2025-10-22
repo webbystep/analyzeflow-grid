@@ -33,6 +33,7 @@ const nodeTypes = {
   checkout: FunnelNode,
   thankyou: FunnelNode,
   condition: FunnelNode,
+  custom: FunnelNode,
   table: TableNode,
 };
 

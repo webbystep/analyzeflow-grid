@@ -7,7 +7,7 @@ import {
   ShoppingCart,
   PartyPopper,
   GitBranch,
-  TableIcon,
+  Table,
   Box,
 } from 'lucide-react';
 import { NodeType } from '@/lib/types/canvas';
@@ -61,7 +61,7 @@ const nodeTemplates: Array<{
   {
     type: 'table',
     label: 'Táblázat',
-    icon: TableIcon,
+    icon: Table,
     description: 'Adatok megjelenítése táblázatban',
   },
   {

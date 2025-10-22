@@ -41,7 +41,7 @@ export function TemplateDialog({ open, onOpenChange, onSelectTemplate }: Templat
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {funnelTemplates.map((template) => {
-            const Icon = categoryIcons[template.category];
+            const Icon = categoryIcons[template.category] || FileText;
             return (
               <Card
                 key={template.id}
@@ -57,7 +57,7 @@ export function TemplateDialog({ open, onOpenChange, onSelectTemplate }: Templat
                       <CardTitle className="text-base mb-1">{template.name}</CardTitle>
                       <CardDescription className="text-xs">{template.description}</CardDescription>
                     </div>
-                    <div className={`p-2 rounded-lg ${categoryColors[template.category]}`}>
+                    <div className={`p-2 rounded-lg ${categoryColors[template.category] ?? 'bg-muted/10 text-muted-foreground'}`}>
                       <Icon className="h-4 w-4" />
                     </div>
                   </div>
