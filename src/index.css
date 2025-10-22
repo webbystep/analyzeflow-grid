@@ -74,6 +74,7 @@ All colors MUST be HSL.
     --node-thankyou: 340 70% 65%;    /* Soft pink */
     --node-condition: 45 65% 60%;    /* Soft yellow */
     --node-table: 200 60% 60%;       /* Soft cyan */
+    --node-custom: 148 163 184;      /* Slate gray - neutral */
   }
 
   /* React Flow Edge Hover Effects */
@@ -141,6 +142,7 @@ All colors MUST be HSL.
     --node-thankyou: 340 60% 55%;    /* Soft pink (darker) */
     --node-condition: 45 55% 50%;    /* Soft yellow (darker) */
     --node-table: 200 50% 50%;       /* Soft cyan (darker) */
+    --node-custom: 148 163 184;      /* Slate gray - neutral */
   }
 }
 

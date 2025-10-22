@@ -17,6 +17,7 @@ interface InspectorPanelProps {
 
 export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: InspectorPanelProps) {
   const [label, setLabel] = useState('');
+  const [customText, setCustomText] = useState('');
   const [visits, setVisits] = useState('');
   const [conversionRate, setConversionRate] = useState('');
   const [averageOrderValue, setAverageOrderValue] = useState('');
@@ -36,6 +37,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
     if (selectedNode) {
       const data = selectedNode.data as any;
       setLabel(data.label || '');
+      setCustomText(data.customText || '');
       setVisits(data.visits?.toString() || '');
       setConversionRate(data.conversionRate?.toString() || '');
       setAverageOrderValue(data.averageOrderValue?.toString() || '');
@@ -69,6 +71,10 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
       label,
       notes,
     };
+
+    if (customText.trim()) {
+      updates.customText = customText.trim();
+    }
 
     if (visits) updates.visits = parseInt(visits);
     if (conversionRate) updates.conversionRate = parseFloat(conversionRate);
@@ -143,6 +149,21 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="Node címke"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="customText">Egyedi leírás (opcionális)</Label>
+              <Textarea
+                id="customText"
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                placeholder="Pl.: Telefonos kapcsolatfelvétel 3000 céggel, 2 hét alatt"
+                className="nodrag resize-none"
+                rows={3}
+              />
+              <p className="text-xs text-muted-foreground">
+                Ez a szöveg megjelenik a node-on a metrikák felett
+              </p>
             </div>
 
             <div className="space-y-2">

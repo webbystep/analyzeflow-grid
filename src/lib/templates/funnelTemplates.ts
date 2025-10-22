@@ -4,12 +4,13 @@ export interface FunnelTemplate {
   id: string;
   name: string;
   description: string;
-  category: 'ecommerce' | 'saas' | 'leadgen' | 'webinar';
+  category: 'ecommerce' | 'saas' | 'leadgen' | 'webinar' | 'custom';
   nodes: Array<{
     type: string;
     label: string;
     position: { x: number; y: number };
     data: {
+      customText?: string;
       visits?: number;
       conversionRate?: number;
       averageOrderValue?: number;
@@ -196,6 +197,48 @@ export const funnelTemplates: FunnelTemplate[] = [
       { source: '0', target: '1' },
       { source: '1', target: '2' },
       { source: '2', target: '3' },
+    ],
+  },
+  {
+    id: 'custom-flow',
+    name: 'Egyedi folyamat sablon',
+    description: 'Kiindulási pont egyedi folyamatokhoz',
+    category: 'custom',
+    nodes: [
+      {
+        type: 'custom',
+        label: 'Első lépés',
+        position: { x: 250, y: 50 },
+        data: {
+          customText: 'Írd le a folyamat első lépését',
+          visits: 1000,
+        },
+      },
+      {
+        type: 'custom',
+        label: 'Második lépés',
+        position: { x: 250, y: 200 },
+        data: {
+          customText: 'Kapcsolatfelvétel vagy szűrés',
+          visits: 700,
+          conversionRate: 70,
+        },
+      },
+      {
+        type: 'custom',
+        label: 'Végső cél',
+        position: { x: 250, y: 350 },
+        data: {
+          customText: 'Lezárt ügyletek vagy konverziók',
+          visits: 490,
+          conversionRate: 70,
+          averageOrderValue: 10000,
+        },
+      },
+    ],
+    edges: [
+      { source: '0', target: '1' },
+      { source: '1', target: '2' },
     ],
   },
 ];

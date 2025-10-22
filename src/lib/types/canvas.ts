@@ -1,4 +1,4 @@
-export type NodeType = 'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition' | 'table';
+export type NodeType = 'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition' | 'table' | 'custom';
 
 export interface NodeCosts {
   // Direct costs for this specific node
@@ -29,6 +29,7 @@ export interface NodeMetrics {
 
 export interface NodeData extends NodeMetrics {
   label: string;
+  customText?: string;
   icon?: string;
   color?: string;
   notes?: string;

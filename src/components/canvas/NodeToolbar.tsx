@@ -7,6 +7,8 @@ import {
   ShoppingCart,
   PartyPopper,
   GitBranch,
+  TableIcon,
+  Box,
 } from 'lucide-react';
 import { NodeType } from '@/lib/types/canvas';
 
@@ -56,6 +58,18 @@ const nodeTemplates: Array<{
     icon: GitBranch,
     description: 'A/B tesztek, feltételes logika',
   },
+  {
+    type: 'table',
+    label: 'Táblázat',
+    icon: TableIcon,
+    description: 'Adatok megjelenítése táblázatban',
+  },
+  {
+    type: 'custom',
+    label: 'Egyedi',
+    icon: Box,
+    description: 'Saját lépés egyedi leírással',
+  },
 ];
 
 export function NodeToolbar({ projectId }: NodeToolbarProps) {
@@ -104,6 +118,7 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
       thankyou: '<path d="M5.8 11.3 2 22l10.7-3.79"></path><path d="M4 3h.01"></path><path d="M22 8h.01"></path><path d="M15 2h.01"></path><path d="M22 20h.01"></path><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"></path><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"></path><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7"></path><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"></path>',
       condition: '<line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path>',
       table: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line>',
+      custom: '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line>',
     };
     return paths[nodeType] || paths.landing;
   };

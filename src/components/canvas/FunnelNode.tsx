@@ -1,11 +1,12 @@
 import { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Mail, FileText, ShoppingCart, PartyPopper, GitBranch } from 'lucide-react';
+import { TrendingUp, Mail, FileText, ShoppingCart, PartyPopper, GitBranch, Box } from 'lucide-react';
 import { MetricsFlowIndicator } from './MetricsFlowIndicator';
 import { ConnectionHandle } from './ConnectionHandle';
 interface FunnelNodeData {
   label: string;
+  customText?: string;
   icon?: string;
   color?: string;
   visits?: number;
@@ -23,7 +24,9 @@ const nodeIcons = {
   landing: FileText,
   checkout: ShoppingCart,
   thankyou: PartyPopper,
-  condition: GitBranch
+  condition: GitBranch,
+  table: FileText,
+  custom: Box
 };
 export const FunnelNode = memo(({
   data,
@@ -111,7 +114,11 @@ export const FunnelNode = memo(({
       
       {/* Metrics section */}
       <div className="px-3 py-2">
-      
+        {data.customText && (
+          <div className="mb-2 text-sm text-muted-foreground italic border-l-2 border-primary/30 pl-2">
+            {data.customText}
+          </div>
+        )}
         <MetricsFlowIndicator visits={data.visits} conversions={data.conversions} revenue={data.revenue} conversionRate={data.conversionRate} />
       </div>
     </motion.div>;
