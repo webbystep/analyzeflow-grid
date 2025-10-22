@@ -105,7 +105,7 @@ export const FunnelNode = memo(({
           setLabel(data.label);
           setIsEditing(false);
         }
-      }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white w-full" autoFocus /> : <div className="font-semibold text-sm cursor-text" onClick={() => setIsEditing(true)}>
+      }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white max-w-[140px]" autoFocus /> : <div className="font-semibold text-sm cursor-text max-w-[140px] break-words" onClick={() => setIsEditing(true)}>
             {data.label}
           </div>}
         </div>
@@ -115,11 +115,13 @@ export const FunnelNode = memo(({
       {/* Metrics section */}
       <div className="px-3 py-2">
         {data.customText && (
-          <div className="mb-2 text-sm text-muted-foreground italic border-l-2 border-primary/30 pl-2">
+          <div className="mb-2 text-sm text-muted-foreground italic border-l-2 border-primary/30 pl-2 break-words">
             {data.customText}
           </div>
         )}
-        <MetricsFlowIndicator visits={data.visits} conversions={data.conversions} revenue={data.revenue} conversionRate={data.conversionRate} />
+        {nodeType !== 'custom' && (
+          <MetricsFlowIndicator visits={data.visits} conversions={data.conversions} revenue={data.revenue} conversionRate={data.conversionRate} />
+        )}
       </div>
     </motion.div>;
 });
