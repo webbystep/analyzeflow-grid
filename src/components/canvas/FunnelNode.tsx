@@ -60,7 +60,7 @@ export const FunnelNode = memo(({
   }} onMouseLeave={() => {
     setIsHovered(false);
     (data as any).onNodeHover?.(null);
-  }} className={`rounded-lg bg-card shadow-lg min-w-[180px] transition-all hover:shadow-xl overflow-visible relative z-10 ${selected ? 'border-[3px] shadow-2xl' : 'border-2'}`} style={{
+  }} className={`rounded-lg bg-card shadow-lg w-[200px] transition-all hover:shadow-xl overflow-visible relative z-10 ${selected ? 'border-[3px] shadow-2xl' : 'border-2'}`} style={{
     borderColor: selected ? `hsl(var(--primary))` : isConnectedHighlighted ? `hsl(var(--primary) / 0.5)` : `hsl(var(--node-${nodeType}))`,
     boxShadow: selected ? `0 10px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--primary) / 0.1)` : isConnectedHighlighted ? `0 10px 30px -10px hsl(var(--primary) / 0.6), 0 0 0 2px hsl(var(--primary) / 0.3)` : `0 2px 4px rgba(0,0,0,0.1)`
   }}>
@@ -105,7 +105,7 @@ export const FunnelNode = memo(({
           setLabel(data.label);
           setIsEditing(false);
         }
-      }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white max-w-[140px]" autoFocus /> : <div className="font-semibold text-sm cursor-text max-w-[140px] break-words" onClick={() => setIsEditing(true)}>
+      }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white flex-1 min-w-0" autoFocus /> : <div className="font-semibold text-sm cursor-text break-words flex-1 min-w-0" onClick={() => setIsEditing(true)}>
             {data.label}
           </div>}
         </div>
