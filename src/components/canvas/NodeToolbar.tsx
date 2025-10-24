@@ -29,7 +29,7 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
               key={node.type}
               draggable
               onDragStart={(e) => handleDragStart(e, node.type, node.label)}
-              className="flex items-center gap-3 p-3 rounded-lg border cursor-move transition-all group hover:bg-[#2e3031]"
+              className="flex items-center gap-3 p-3 rounded-lg border cursor-move transition-all group hover:bg-[#383a3b]"
               title={node.description}
               style={{
                 borderColor: '#383a3b',
