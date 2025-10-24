@@ -55,6 +55,9 @@ export interface NodeData extends NodeMetrics {
   notes?: string;
   tags?: string[];
   customFields?: Record<string, any>;
+  
+  // Dynamic metrics and costs (new flexible structure)
+  // These override the deprecated fields above
   [key: string]: any;
 }
 

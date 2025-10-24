@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { Node } from '@xyflow/react';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, Users, DollarSign, Target } from 'lucide-react';
+import { getNodeSchema } from '@/lib/nodeSchemas';
+import { NodeType } from '@/lib/types/canvas';
 
 interface FunnelSummaryProps {
   nodes: Node[];
@@ -15,27 +17,45 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
     let totalCosts = 0;
     let nodeCount = 0;
 
+    // Role-based aggregation
     nodes.forEach((node) => {
-      const data = node.data as any;
-      if (data.visits) {
-        totalVisits += data.visits;
-        nodeCount++;
-      }
-      if (data.conversions) {
-        totalConversions += data.conversions;
-      }
-      if (data.revenue) {
-        totalRevenue += data.revenue;
-      }
-      if (data.costs?.total) {
-        totalCosts += data.costs.total;
-      }
+      const nodeType = node.type as NodeType;
+      const schema = getNodeSchema(nodeType);
+      const nodeData = node.data;
+
+      if (!schema) return;
+
+      nodeCount++;
+
+      // Iterate through all sections and fields
+      Object.values(schema.sections).forEach(section => {
+        if (!section.fields) return;
+        
+        section.fields.forEach(field => {
+          const value = Number(nodeData[field.id]) || 0;
+          
+          switch (field.role) {
+            case 'visits_input':
+              totalVisits += value;
+              break;
+            case 'conversion_output':
+              totalConversions += value;
+              break;
+            case 'revenue_output':
+              totalRevenue += value;
+              break;
+            case 'cost_input':
+              totalCosts += value;
+              break;
+          }
+        });
+      });
     });
 
     const avgConversionRate =
       totalVisits > 0 ? ((totalConversions / totalVisits) * 100).toFixed(2) : '0.00';
     const avgOrderValue =
-      totalConversions > 0 ? (totalRevenue / totalConversions).toFixed(2) : '0.00';
+      totalConversions > 0 ? (totalRevenue / totalConversions).toFixed(0) : '0';
     const netProfit = totalRevenue - totalCosts;
     const roas = totalCosts > 0 ? (totalRevenue / totalCosts).toFixed(2) : '0.00';
 
