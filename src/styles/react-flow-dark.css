@@ -1,35 +1,46 @@
-/* Dark mode override for React Flow components */
+/* ============================
+   React Flow UI - Dark Mode
+   ============================ */
 .dark .react-flow__controls,
 .dark .react-flow__minimap {
-  background: hsl(var(--background));
-  border: 1px solid hsl(var(--border));
+  background: hsl(var(--color-bg-panel));
+  border: 1px solid hsl(var(--color-border-default));
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.05);
 }
 
 .dark .react-flow__controls-button {
-  background: hsl(var(--card));
-  border-bottom: 1px solid hsl(var(--border));
-  color: hsl(var(--foreground));
-  fill: hsl(var(--foreground));
+  background: hsl(var(--color-bg-card));
+  border-bottom: 1px solid hsl(var(--color-border-default));
+  color: hsl(var(--color-text-primary));
+  fill: hsl(var(--color-text-primary));
+  transition: all 0.2s ease;
 }
 
 .dark .react-flow__controls-button:hover {
-  background: hsl(var(--accent));
+  background: hsl(var(--color-accent-green));
+  color: hsl(var(--color-text-invert));
+  fill: hsl(var(--color-text-invert));
+  box-shadow: 0 0 8px rgba(var(--color-accent-green-rgb), 0.4);
 }
 
 .dark .react-flow__controls-button svg {
-  fill: hsl(var(--foreground));
+  fill: currentColor;
 }
 
 .dark .react-flow__minimap-mask {
-  fill: hsl(var(--background));
+  fill: hsl(var(--color-bg-panel));
 }
 
 .dark .react-flow__minimap-node {
   fill: hsl(var(--muted));
-  stroke: hsl(var(--border));
+  stroke: hsl(var(--color-border-default));
 }
 
 .dark .react-flow__attribution {
-  background: hsl(var(--card));
-  color: hsl(var(--muted-foreground));
+  background: hsl(var(--color-bg-card));
+  color: hsl(var(--color-text-secondary));
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  box-shadow: 0 0 6px rgba(var(--color-accent-green-rgb), 0.1);
 }
