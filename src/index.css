@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================
+   Animációk (edge flow / dashed highlight)
+   ========================================= */
 @keyframes edge-flow {
   to {
     stroke-dashoffset: -15;
@@ -18,201 +21,209 @@
   animation: dash 0.5s linear infinite;
 }
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* =======================================================
+   DESIGN SYSTEM TOKENEK
+   - Minden szín HSL-ben van megadva
+   - Mindent ezekből a tokenekből kell építeni
+   - Light: Liam ERD "világos párja"
+   - Dark: Liam ERD "neon cockpit"
+   ======================================================= */
 
 @layer base {
   :root {
-    /* Light Mode - Liam ERD Light */
-    --background: 245 246 247;
-    --foreground: 17 24 39;
-    
-    /* Surfaces - Liam ERD Light */
-    --color-bg-canvas: 245 246 247;
-    --color-bg-panel: 255 255 255;
-    --color-bg-card: 255 255 255;
-    --color-bg-elevated: 255 255 255;
-    --color-bg-sidebar: 255 255 255;
-    --color-bg-bottom-bar: 255 255 255;
-    --color-bg-node-header: 255 255 255;
-    --color-bg-node-body: 255 255 255;
-    
-    /* Borders */
-    --color-border-default: 0 0 0 / 0.12;
-    --color-border-active: 29 237 131;
-    --color-border-muted: 0 0 0 / 0.08;
-    --color-border: 0 0 0 / 0.12;
-    
-    /* Text */
-    --color-text-primary: 17 24 39;
-    --color-text-secondary: 107 114 128;
-    --color-text-dimmed: 156 163 175;
-    --color-text-invert: 255 255 255;
+    /* LIGHT MODE TOKENS
+       Canvas háttér: #F5F6F7 → hsl(210, 11.1%, 96.5%)
+       Panel / card / sidebar / bottom bar: #FFFFFF → hsl(0, 0%, 100%)
+       Border: rgba(0,0,0,0.12) → hsl(0 0% 0% / 0.12)
+       Vonal (edge alap): rgba(0,0,0,0.4) → hsl(0 0% 0% / 0.4)
+       Szövegek:
+         Primary: #111827 → hsl(220.9,39.3%,11.0%)
+         Secondary: #6B7280 → hsl(220,8.9%,46.1%)
+         Dimmed: #9CA3AF → hsl(217.9,10.6%,64.9%)
+       Akcentus zöld: #1DED83 → hsl(149.4,85.2%,52.2%)
+       "Invert" (szöveg a zöld gombon): #0E1522 → hsl(219,41.7%,9.4%)
+    */
 
-    --card: 255 255 255;
-    --card-foreground: 17 24 39;
+    --background: 210 11.1% 96.5%;         /* app body bg / canvas bg fallback */
+    --foreground: 220.9 39.3% 11.0%;       /* default text on light bg */
 
-    --popover: 255 255 255;
-    --popover-foreground: 17 24 39;
+    /* Felületek */
+    --color-bg-canvas: 210 11.1% 96.5%;    /* #F5F6F7 */
+    --color-bg-panel: 0 0% 100%;          /* #FFFFFF */
+    --color-bg-card: 0 0% 100%;
+    --color-bg-elevated: 0 0% 100%;
+    --color-bg-sidebar: 0 0% 100%;
+    --color-bg-bottom-bar: 0 0% 100%;
+    --color-bg-node-header: 0 0% 100%;
+    --color-bg-node-body: 0 0% 100%;
 
-    --primary: 29 237 131;
-    --primary-foreground: 14 21 34;
+    /* Határvonalak / border */
+    --color-border-default: 0 0% 0% / 0.12;  /* általános panel border */
+    --color-border-muted: 0 0% 0% / 0.08;
+    --color-border-active: 149.4 85.2% 52.2%; /* accent green */
+    --color-border: 0 0% 0% / 0.12;
 
-    --secondary: 0 0 0 / 0.12;
-    --secondary-foreground: 17 24 39;
+    /* Szövegek */
+    --color-text-primary: 220.9 39.3% 11.0%;  /* #111827 */
+    --color-text-secondary: 220 8.9% 46.1%;   /* #6B7280 */
+    --color-text-dimmed: 217.9 10.6% 64.9%;   /* #9CA3AF */
+    --color-text-invert: 219 41.7% 9.4%;      /* #0E1522 (megy a zöld gombra, dark text on neon) */
 
-    --muted: 0 0 0 / 0.08;
-    --muted-foreground: 107 114 128;
+    /* Semantic tokens Tailwind-style */
+    --card: 0 0% 100%;                /* panel/card bg */
+    --card-foreground: 220.9 39.3% 11.0%;
 
-    --accent: 29 237 131;
-    --accent-foreground: 14 21 34;
-    
-    /* Brand accent - Single vibrant green */
-    --color-accent-green: 29 237 131;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220.9 39.3% 11.0%;
+
+    --primary: 149.4 85.2% 52.2%;          /* #1DED83 */
+    --primary-foreground: 219 41.7% 9.4%;  /* #0E1522 */
+
+    --secondary: 0 0% 0% / 0.12;           /* subtle surface / stroke style */
+    --secondary-foreground: 220.9 39.3% 11.0%;
+
+    --muted: 0 0% 0% / 0.08;
+    --muted-foreground: 220 8.9% 46.1%;
+
+    --accent: 149.4 85.2% 52.2%;
+    --accent-foreground: 219 41.7% 9.4%;
+
+    /* Brand accent */
+    --color-accent-green: 149.4 85.2% 52.2%;
+    /* külön RGB-re nincs szükség Tailwind-ben, de a glow miatt megtartjuk */
     --color-accent-green-rgb: 29, 237, 131;
 
-    --destructive: 0 72 51;
-    --destructive-foreground: 255 255 255;
+    --destructive: 158.1 100% 14.1%;           /* #004833-ish sötétzöld; közelítőleg */
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 29 237 131;
-    --success-foreground: 14 21 34;
+    --success: 149.4 85.2% 52.2%;
+    --success-foreground: 219 41.7% 9.4%;
 
-    --warning: 38 92 50;
-    --warning-foreground: 255 255 255;
+    --warning: 138 42% 25%;                    /* közelítés #265c32 jellegéhez */
+    --warning-foreground: 0 0% 100%;
 
-    --border: 0 0 0 / 0.12;
-    --input: 0 0 0 / 0.12;
-    --ring: 29 237 131;
+    --border: 0 0% 0% / 0.12;
+    --input: 0 0% 0% / 0.12;
+    --ring: 149.4 85.2% 52.2%;
 
     --radius: 0.5rem;
 
-    --chart-1: 29 237 131;
-    --chart-2: 107 114 128;
-    --chart-3: 142 71 45;
-    --chart-4: 38 92 50;
-    --chart-5: 198 93 60;
-    
-    /* Chart colors */
-    --color-chart-line: 29 237 131;
-    --color-chart-fill: 29 237 131 / 0.2;
-    --color-chart-accent: 29 237 131;
+    /* Chart / data-viz */
+    --chart-1: 149.4 85.2% 52.2%;  /* accent green */
+    --chart-2: 220 8.9% 46.1%;     /* #6B7280 */
+    --chart-3: 18 52% 37%;         /* közelítés #8e472d meleg barna */
+    --chart-4: 138 42% 25%;        /* #265c32 */
+    --chart-5: 18 60% 51%;         /* #c65d3c-szerű narancs */
 
-    /* Node colors - Unified minimalist style */
-    --color-node-bg: 255 255 255;
-    --color-node-border: 0 0 0 / 0.12;
-    --color-line: 0 0 0 / 0.4;
-    --shadow-card: 0 0 0 / 0;
-    
-    /* Shadow/Glow */
+    /* Node-specifikus */
+    --color-node-bg: 0 0% 100%;
+    --color-node-border: 0 0% 0% / 0.12;
+    --color-line: 0 0% 0% / 0.4;   /* összekötő vonal alapértelmezett light módban */
+    --shadow-card: 0 0% 0% / 0;    /* nem használunk nagy doboz-shadow-ot, console vibe */
+
+    /* Glow / hover highlight light módban (visszafogottabb) */
     --shadow-glow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.2);
     --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.28);
   }
 
-  /* React Flow Edge Hover Effects */
-  .react-flow__edge-path {
-    transition: stroke-width 0.2s ease, stroke 0.2s ease;
-  }
-
-  .react-flow__edge-path:hover {
-    stroke-width: 3 !important;
-    stroke: hsl(var(--primary)) !important;
-  }
-
-  .react-flow__edge.selected .react-flow__edge-path {
-    stroke-width: 3 !important;
-    stroke: hsl(var(--primary)) !important;
-  }
-
-
+  /* DARK THEME TOKENS
+     Canvas háttér: #141414 → hsl(0,0%,7.8%)
+     Panelek / node / sidebar / bottom bar: #222526 → hsl(195,5.6%,14.1%)
+     Border: #383A3B → hsl(200,2.6%,22.5%)
+     Vonal (edge alap): #222526 → ugyanaz, tehát beleolvad
+     Szövegek:
+       Primary: #E5E7EB → hsl(220,13.0%,91.0%)
+       Secondary: #9CA3AF → hsl(217.9,10.6%,64.9%)
+       Dimmed: #6B7280 → hsl(220,8.9%,46.1%)
+     Accent green marad #1DED83 → hsl(149.4,85.2%,52.2%)
+     Invert text a zöldön: #0E1522 → hsl(219,41.7%,9.4%)
+  */
   .dark {
-    /* Dark Mode - Liam ERD "Neon Cockpit" */
-    --background: 20 20 20;
-    --foreground: 229 231 235;
-    
-    /* Surfaces - Liam ERD Dark */
-    --color-bg-canvas: 20 20 20;
-    --color-bg-panel: 34 37 38;
-    --color-bg-card: 34 37 38;
-    --color-bg-elevated: 34 37 38;
-    --color-bg-sidebar: 34 37 38;
-    --color-bg-bottom-bar: 34 37 38;
-    --color-bg-node-header: 34 37 38;
-    --color-bg-node-body: 34 37 38;
-    
-    /* Borders - Liam ERD Dark */
-    --color-border-default: 56 58 59;
-    --color-border-active: 29 237 131;
-    --color-border-muted: 255 255 255 / 0.05;
-    --color-border: 56 58 59;
-    
-    /* Text */
-    --color-text-primary: 229 231 235;
-    --color-text-secondary: 156 163 175;
-    --color-text-dimmed: 107 114 128;
-    --color-text-invert: 14 21 34;
+    --background: 0 0% 7.8%;
+    --foreground: 220 13% 91%;
 
-    --card: 34 37 38;
-    --card-foreground: 229 231 235;
+    /* Felületek */
+    --color-bg-canvas: 0 0% 7.8%;            /* #141414 */
+    --color-bg-panel: 195 5.6% 14.1%;        /* #222526 */
+    --color-bg-card: 195 5.6% 14.1%;
+    --color-bg-elevated: 195 5.6% 14.1%;
+    --color-bg-sidebar: 195 5.6% 14.1%;
+    --color-bg-bottom-bar: 195 5.6% 14.1%;
+    --color-bg-node-header: 195 5.6% 14.1%;
+    --color-bg-node-body: 195 5.6% 14.1%;
 
-    --popover: 34 37 38;
-    --popover-foreground: 229 231 235;
+    /* Határvonalak */
+    --color-border-default: 200 2.6% 22.5%;      /* #383A3B */
+    --color-border-muted: 0 0% 100% / 0.05;      /* finom belső elválasztók */
+    --color-border-active: 149.4 85.2% 52.2%;    /* zöld highlight */
+    --color-border: 200 2.6% 22.5%;
 
-    --primary: 29 237 131;
-    --primary-foreground: 14 21 34;
+    /* Szöveg */
+    --color-text-primary: 220 13% 91%;          /* #E5E7EB */
+    --color-text-secondary: 217.9 10.6% 64.9%;  /* #9CA3AF */
+    --color-text-dimmed: 220 8.9% 46.1%;        /* #6B7280 */
+    --color-text-invert: 219 41.7% 9.4%;        /* #0E1522 */
 
-    --secondary: 34 37 38;
-    --secondary-foreground: 229 231 235;
+    /* Tailwind-style semantic tokens */
+    --card: 195 5.6% 14.1%;
+    --card-foreground: 220 13% 91%;
 
-    --muted: 34 37 38;
-    --muted-foreground: 156 163 175;
+    --popover: 195 5.6% 14.1%;
+    --popover-foreground: 220 13% 91%;
 
-    --accent: 29 237 131;
-    --accent-foreground: 14 21 34;
-    
-    /* Brand accent - Vibrant neon green */
-    --color-accent-green: 29 237 131;
+    --primary: 149.4 85.2% 52.2%;
+    --primary-foreground: 219 41.7% 9.4%;
+
+    --secondary: 195 5.6% 14.1%;
+    --secondary-foreground: 220 13% 91%;
+
+    --muted: 195 5.6% 14.1%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+
+    --accent: 149.4 85.2% 52.2%;
+    --accent-foreground: 219 41.7% 9.4%;
+
+    --color-accent-green: 149.4 85.2% 52.2%;
     --color-accent-green-rgb: 29, 237, 131;
 
-    --destructive: 0 72 51;
-    --destructive-foreground: 229 231 235;
+    --destructive: 158.1 100% 14.1%;
+    --destructive-foreground: 220 13% 91%;
 
-    --success: 29 237 131;
-    --success-foreground: 14 21 34;
+    --success: 149.4 85.2% 52.2%;
+    --success-foreground: 219 41.7% 9.4%;
 
-    --warning: 38 92 50;
-    --warning-foreground: 255 255 255;
+    --warning: 138 42% 25%;
+    --warning-foreground: 0 0% 100%;
 
-    --border: 56 58 59;
-    --input: 56 58 59;
-    --ring: 29 237 131;
+    --border: 200 2.6% 22.5%;
+    --input: 200 2.6% 22.5%;
+    --ring: 149.4 85.2% 52.2%;
 
-    --chart-1: 29 237 131;
-    --chart-2: 156 163 175;
-    --chart-3: 142 71 45;
-    --chart-4: 38 92 50;
-    --chart-5: 198 93 60;
-    
-    /* Chart colors */
-    --color-chart-line: 29 237 131;
-    --color-chart-fill: 29 237 131 / 0.25;
-    --color-chart-accent: 29 237 131;
+    --chart-1: 149.4 85.2% 52.2%;
+    --chart-2: 217.9 10.6% 64.9%;
+    --chart-3: 18 52% 37%;
+    --chart-4: 138 42% 25%;
+    --chart-5: 18 60% 51%;
 
-    /* Node colors - Unified dark style */
-    --color-node-bg: 34 37 38;
-    --color-node-border: 56 58 59;
-    --color-line: 34 37 38;
-    --shadow-card: 0 0 0 / 0;
-    
-    /* Shadow/Glow */
+    --color-node-bg: 195 5.6% 14.1%;
+    --color-node-border: 200 2.6% 22.5%;
+    --color-line: 195 5.6% 14.1%;
+    --shadow-card: 0 0% 0% / 0;
+
     --shadow-glow: 0 0 15px rgba(var(--color-accent-green-rgb), 0.25);
     --shadow-glow-strong: 0 0 25px rgba(var(--color-accent-green-rgb), 0.4);
   }
 }
 
+/* =========================================
+   GLOBAL BASE STYLES / TYPO / TRANSITIONS
+   ========================================= */
 @layer base {
   * {
     @apply border-border;
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   body {
@@ -221,47 +232,65 @@ All colors MUST be HSL.
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
-  /* Smooth transitions for theme switching */
-  * {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-duration: 200ms;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-  
-  /* Liam ERD utilities */
+
+  /* Zöld kitöltés vagy szöveg */
   .brand-gradient {
     background: hsl(var(--color-accent-green));
   }
-  
+
   .brand-gradient-text {
     background: hsl(var(--color-accent-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
-  /* Tech glow effect */
+
+  /* Tech glow util a zöld highlight-hoz */
   .tech-glow {
     box-shadow: var(--shadow-glow);
   }
-  
+
   .tech-glow-strong {
     box-shadow: var(--shadow-glow-strong);
   }
-  
-  /* Canvas grid pattern */
+
+  /* ==========================
+     CANVAS GRID (háttér)
+     ========================== */
   .canvas-grid {
     background-color: hsl(var(--color-bg-canvas));
-    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
     background-size: 24px 24px;
   }
-  
+
+  /* Dark: pöttyök világosak sötét háttéren */
   .dark .canvas-grid {
     background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
   }
-  
+
+  /* Light: pöttyök feketés árnyalattal világos háttéren */
   :root:not(.dark) .canvas-grid {
     background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+  }
+}
+
+/* =========================================
+   REACT FLOW EDGE VISELKEDÉS
+   edge alap: solid
+   hover / selected: accent green + glow
+   ========================================= */
+@layer base {
+  .react-flow__edge-path {
+    transition: stroke-width 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+    /* alap vonalszín = token (line) */
+    stroke: hsl(var(--color-line)) !important;
+    stroke-width: 1.5px !important;
+  }
+
+  /* Hover / selected: zöld fény + subtle glow */
+  .react-flow__edge-path:hover,
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke-width: 3px !important;
+    stroke: hsl(var(--color-accent-green)) !important;
+    filter: drop-shadow(0 0 6px rgba(var(--color-accent-green-rgb), 0.4));
   }
 }
