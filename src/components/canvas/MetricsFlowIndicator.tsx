@@ -1,12 +1,15 @@
 import { memo } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Users, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, Coins } from 'lucide-react';
+import { RevenueMode } from '@/lib/types/canvas';
 
 interface MetricsFlowIndicatorProps {
   visits?: number;
   conversions?: number;
   revenue?: number;
   conversionRate?: number;
+  valuePerConversion?: number;
+  revenueMode?: RevenueMode;
   compact?: boolean;
 }
 
@@ -15,6 +18,8 @@ export const MetricsFlowIndicator = memo(({
   conversions,
   revenue,
   conversionRate,
+  valuePerConversion,
+  revenueMode,
   compact = false,
 }: MetricsFlowIndicatorProps) => {
   if (!visits && !conversions && !revenue) return null;
@@ -72,13 +77,28 @@ export const MetricsFlowIndicator = memo(({
         </div>
       )}
 
-      {revenue !== undefined && (
+      {valuePerConversion !== undefined && valuePerConversion > 0 && (
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-muted-foreground flex items-center gap-1 text-xs">
+            <Coins className="w-3 h-3" />
+            Value/conv
+          </span>
+          <span className="font-medium text-xs">{valuePerConversion.toLocaleString()} Ft</span>
+        </div>
+      )}
+
+      {revenue !== undefined && revenue > 0 && (
         <div className="flex items-center justify-between gap-2">
           <span className="text-muted-foreground flex items-center gap-1">
             <DollarSign className="w-3 h-3" />
-            Revenue
+            {revenueMode === 'direct' ? 'Revenue' : 'Est. Rev'}
           </span>
-          <span className="font-medium text-success">${revenue.toLocaleString()}</span>
+          <span className={`font-medium ${revenueMode === 'direct' ? 'text-success' : 'text-warning'}`}>
+            {revenue.toLocaleString()} Ft
+            {revenueMode === 'assisted' && (
+              <span className="text-xs text-muted-foreground ml-1">(assisted)</span>
+            )}
+          </span>
         </div>
       )}
     </div>

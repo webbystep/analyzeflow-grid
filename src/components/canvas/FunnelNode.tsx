@@ -27,7 +27,10 @@ interface FunnelNodeData {
   conversionRate?: number;
   conversions?: number;
   revenue?: number;
+  estimatedRevenue?: number;
   averageOrderValue?: number;
+  valuePerConversion?: number | { value: number; currency: string };
+  revenueMode?: 'direct' | 'assisted' | 'none';
   notes?: string;
   tags?: string[];
   customFields?: Record<string, any>;
@@ -180,8 +183,21 @@ export const FunnelNode = memo(({
           const nodeDef = getNodeDefinition(nodeType as any);
           const shouldShowMetrics = nodeDef?.metricsVisible !== false;
           
+          const valuePerConv = typeof data.valuePerConversion === 'object'
+            ? data.valuePerConversion.value
+            : data.valuePerConversion;
+          
+          const displayRevenue = data.revenue || data.estimatedRevenue;
+          
           return shouldShowMetrics && nodeType !== 'custom' && (
-            <MetricsFlowIndicator visits={data.visits} conversions={data.conversions} revenue={data.revenue} conversionRate={data.conversionRate} />
+            <MetricsFlowIndicator 
+              visits={data.visits} 
+              conversions={data.conversions} 
+              revenue={displayRevenue}
+              conversionRate={data.conversionRate}
+              valuePerConversion={valuePerConv}
+              revenueMode={data.revenueMode}
+            />
           );
         })()}
       </div>

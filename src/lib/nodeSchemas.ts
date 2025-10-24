@@ -1,6 +1,6 @@
-import { NodeType } from './types/canvas';
+import type { NodeType, RevenueMode } from './types/canvas';
 
-export type MetricRole = 
+export type MetricRole =
   | 'visits_input'      // Traffic / entry points
   | 'conversion_output' // Conversions (leads, sales, registrations)
   | 'revenue_output'    // Revenue generation
@@ -14,11 +14,27 @@ export interface FieldSchema {
   role?: MetricRole;
   placeholder?: string;
   help?: string;
+  helpText?: string; // Additional help text for calculated fields
   step?: number;
   required?: boolean;
+  suffix?: string; // Display suffix (e.g., "Ft", "%")
+  readOnly?: boolean; // For calculated fields
   options?: { value: string; label: string }[];
   calculate?: (data: Record<string, any>) => number | string;
   dependsOn?: string[];
+}
+
+// Helper function to determine default revenue mode based on node type
+export function getDefaultRevenueMode(nodeType: NodeType): RevenueMode {
+  const directNodes: NodeType[] = ['checkout', 'thankyou', 'contract', 'upsell', 'subscription-renewal'];
+  const assistedNodes: NodeType[] = [
+    'landing', 'lead-form', 'webinar-event', 'contact', 'sales-call', 
+    'proposal', 'referral', 'referral-campaign'
+  ];
+  
+  if (directNodes.includes(nodeType)) return 'direct';
+  if (assistedNodes.includes(nodeType)) return 'assisted';
+  return 'none';
 }
 
 export interface SectionSchema {

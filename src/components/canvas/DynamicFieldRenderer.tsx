@@ -41,14 +41,23 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
       case 'number':
       case 'currency':
         return (
-          <Input
-            id={field.id}
-            type="number"
-            step={field.step || 1}
-            value={value || ''}
-            onChange={(e) => onChange(Number(e.target.value) || 0)}
-            placeholder={field.placeholder}
-          />
+          <div className="relative">
+            <Input
+              id={field.id}
+              type="number"
+              step={field.step || 1}
+              value={value || ''}
+              onChange={(e) => onChange(Number(e.target.value) || 0)}
+              placeholder={field.placeholder}
+              disabled={field.readOnly}
+              className={field.readOnly ? 'bg-muted cursor-not-allowed' : ''}
+            />
+            {field.suffix && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                {field.suffix}
+              </span>
+            )}
+          </div>
         );
       
       case 'percentage':
@@ -113,11 +122,13 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
             </TooltipProvider>
           )}
         </div>
-        <div className="font-semibold text-lg">
-          {field.type === 'currency' && `${calculatedValue} Ft`}
-          {field.type === 'percentage' && `${calculatedValue}%`}
-          {!['currency', 'percentage'].includes(field.type) && calculatedValue}
+        <div className="font-semibold text-lg flex items-center gap-2">
+          {calculatedValue}
+          {field.suffix && <span className="text-sm text-muted-foreground">{field.suffix}</span>}
         </div>
+        {field.helpText && (
+          <p className="text-xs text-muted-foreground italic">{field.helpText}</p>
+        )}
       </div>
     );
   }

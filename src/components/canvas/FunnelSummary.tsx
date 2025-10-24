@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { Node } from '@xyflow/react';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, Users, DollarSign, Target } from 'lucide-react';
-import { getNodeSchema } from '@/lib/nodeSchemas';
-import { NodeType } from '@/lib/types/canvas';
+import { getNodeSchema, getDefaultRevenueMode } from '@/lib/nodeSchemas';
+import { NodeType, RevenueMode } from '@/lib/types/canvas';
 
 interface FunnelSummaryProps {
   nodes: Node[];
@@ -13,11 +13,12 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
   const metrics = useMemo(() => {
     let totalVisits = 0;
     let totalConversions = 0;
-    let totalRevenue = 0;
+    let directRevenue = 0;      // NEW: Only direct revenue
+    let assistedRevenue = 0;    // NEW: Only assisted revenue
     let totalCosts = 0;
     let nodeCount = 0;
 
-    // Role-based aggregation
+    // Role-based aggregation with revenue mode filtering
     nodes.forEach((node) => {
       const nodeType = node.type as NodeType;
       const schema = getNodeSchema(nodeType);
@@ -26,6 +27,9 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
       if (!schema) return;
 
       nodeCount++;
+
+      // Get revenueMode (use default if not set)
+      const revenueMode = (nodeData.revenueMode as RevenueMode) || getDefaultRevenueMode(nodeType);
 
       // Iterate through all sections and fields
       Object.values(schema.sections).forEach(section => {
@@ -42,7 +46,12 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
               totalConversions += value;
               break;
             case 'revenue_output':
-              totalRevenue += value;
+              // NEW: Revenue mode-based splitting
+              if (revenueMode === 'direct') {
+                directRevenue += value;
+              } else if (revenueMode === 'assisted') {
+                assistedRevenue += value;
+              }
               break;
             case 'cost_input':
               totalCosts += value;
@@ -52,6 +61,8 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
       });
     });
 
+    // Calculations
+    const totalRevenue = directRevenue; // Bottom bar shows only direct revenue
     const avgConversionRate =
       totalVisits > 0 ? ((totalConversions / totalVisits) * 100).toFixed(2) : '0.00';
     const avgOrderValue =
@@ -62,7 +73,8 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
     return {
       totalVisits,
       totalConversions,
-      totalRevenue,
+      totalRevenue,        // This is now only direct revenue
+      assistedRevenue,     // Prepared for future use
       totalCosts,
       netProfit,
       roas,

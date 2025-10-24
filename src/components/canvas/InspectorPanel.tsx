@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { X, Save, TrendingUp } from 'lucide-react';
 import { Node } from '@xyflow/react';
-import { getNodeSchema } from '@/lib/nodeSchemas';
+import { getNodeSchema, getDefaultRevenueMode } from '@/lib/nodeSchemas';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
 import { NodeType } from '@/lib/types/canvas';
@@ -56,6 +56,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
   const handleSave = () => {
     const updatedData = { ...formData };
     
+    // Recalculate all calculated fields
     Object.values(schema.sections).forEach(section => {
       section.fields.forEach(field => {
         if (field.calculate) {
@@ -63,6 +64,19 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
         }
       });
     });
+    
+    // Set default revenueMode if not set
+    if (!updatedData.revenueMode) {
+      updatedData.revenueMode = getDefaultRevenueMode(selectedNode.type as NodeType);
+    }
+    
+    // Convert valuePerConversion to object structure if it's a number
+    if (updatedData.valuePerConversion && typeof updatedData.valuePerConversion === 'number') {
+      updatedData.valuePerConversion = {
+        value: updatedData.valuePerConversion,
+        currency: 'HUF'
+      };
+    }
     
     onUpdateNode(selectedNode.id, updatedData);
   };
@@ -112,15 +126,51 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
 
           {hasMetrics && (
             <TabsContent value="metrics" className="space-y-4 mt-4">
-              {schema.sections.metrics!.fields.map(field => (
-                <DynamicFieldRenderer
-                  key={field.id}
-                  field={field}
-                  value={formData[field.id]}
-                  onChange={(val) => handleFieldChange(field.id, val)}
-                  allData={formData}
-                />
-              ))}
+              {schema.sections.metrics!.fields.map(field => {
+                // Special rendering for estimatedRevenue field
+                if (field.id === 'estimatedRevenue') {
+                  const convs = Number(formData.conversions) || Number(formData.submissions) || Number(formData.orders) || 0;
+                  const valuePerConv = typeof formData.valuePerConversion === 'object'
+                    ? Number(formData.valuePerConversion?.value) || 0
+                    : Number(formData.valuePerConversion) || 0;
+                  
+                  return (
+                    <div key={field.id} className="p-3 rounded-lg bg-success/5 border border-success/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <TrendingUp className="h-4 w-4 text-success" />
+                        <label className="text-sm font-semibold">{field.label}</label>
+                      </div>
+                      <DynamicFieldRenderer
+                        field={field}
+                        value={formData[field.id]}
+                        onChange={(val) => handleFieldChange(field.id, val)}
+                        allData={formData}
+                      />
+                      {/* Edge case messages */}
+                      {convs === 0 && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Jelenleg nincs konverzió. A becsült bevétel 0 Ft.
+                        </p>
+                      )}
+                      {valuePerConv === 0 && convs > 0 && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Adj meg konverzió értéket, hogy lásd a becsült bevételt.
+                        </p>
+                      )}
+                    </div>
+                  );
+                }
+                
+                return (
+                  <DynamicFieldRenderer
+                    key={field.id}
+                    field={field}
+                    value={formData[field.id]}
+                    onChange={(val) => handleFieldChange(field.id, val)}
+                    allData={formData}
+                  />
+                );
+              })}
             </TabsContent>
           )}
 

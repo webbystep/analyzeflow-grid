@@ -20,6 +20,13 @@ export interface NodeCategory {
   icon: string;
 }
 
+export type RevenueMode = 'direct' | 'assisted' | 'none';
+
+export interface ValuePerConversion {
+  value: number;
+  currency: string; // 'HUF', 'USD', 'EUR', etc.
+}
+
 export interface NodeCosts {
   // Direct costs for this specific node
   advertising?: number;    // e.g., Facebook Ads for this step
@@ -55,6 +62,12 @@ export interface NodeData extends NodeMetrics {
   notes?: string;
   tags?: string[];
   customFields?: Record<string, any>;
+  
+  // Revenue attribution fields
+  valuePerConversion?: ValuePerConversion | number; // Can be object or number for backwards compatibility
+  revenueMode?: RevenueMode;
+  estimatedRevenue?: number; // Auto-calculated
+  conversions?: number; // Unified conversion field
   
   // Dynamic metrics and costs (new flexible structure)
   // These override the deprecated fields above
