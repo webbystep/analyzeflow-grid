@@ -227,7 +227,9 @@ export function FlowCanvas({
           size={1}
           style={{ opacity: 0.3 }}
         />
-        <Controls showZoom={true} showFitView={true} showInteractive={true} />
+        <Panel position="bottom-right" className="mr-2 mb-2">
+          <Controls showZoom={true} showFitView={true} showInteractive={true} />
+        </Panel>
         <MiniMap />
         {!readonly && projectId && (
           <Panel position="top-left">
