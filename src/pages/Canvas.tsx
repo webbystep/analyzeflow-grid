@@ -34,7 +34,6 @@ export default function Canvas() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-  const [showExport, setShowExport] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showInsertDialog, setShowInsertDialog] = useState(false);
   const [pendingInsertData, setPendingInsertData] = useState<{
@@ -761,15 +760,6 @@ export default function Canvas() {
             <Share2 className="h-4 w-4 mr-2" />
             Megosztás
           </Button>
-          <div className="h-6 w-px bg-border" />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowExport(true)}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Exportálás
-          </Button>
           {selectedNode && (
             <Button
               variant="outline"
@@ -851,15 +841,6 @@ export default function Canvas() {
 
       <FunnelSummary nodes={nodes} />
 
-      <ExportDialog
-        open={showExport}
-        onOpenChange={setShowExport}
-        nodes={nodes}
-        edges={edges}
-        projectName={project?.name}
-        canvasRef={canvasRef}
-      />
-
       {project && (
         <ShareDialog
           open={showShare}
@@ -867,6 +848,9 @@ export default function Canvas() {
           workspaceId={project.workspace_id}
           projectId={projectId!}
           projectName={project.name}
+          nodes={nodes}
+          edges={edges}
+          canvasRef={canvasRef}
         />
       )}
 

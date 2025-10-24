@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, RefObject } from 'react';
+import { Node, Edge } from '@xyflow/react';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -9,8 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Link2, Copy, Trash2, Users, ExternalLink } from 'lucide-react';
+import { Mail, Link2, Copy, Trash2, Users, Download, FileJson, FileSpreadsheet, FileImage, FileText } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 interface ShareDialogProps {
@@ -19,6 +23,9 @@ interface ShareDialogProps {
   workspaceId: string;
   projectId: string;
   projectName: string;
+  nodes: Node[];
+  edges: Edge[];
+  canvasRef: RefObject<HTMLDivElement>;
 }
 
 interface Collaborator {
@@ -43,7 +50,7 @@ const getInitials = (name: string | null, email: string) => {
   return email.slice(0, 2).toUpperCase();
 };
 
-export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projectName }: ShareDialogProps) => {
+export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projectName, nodes, edges, canvasRef }: ShareDialogProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [inviteEmail, setInviteEmail] = useState('');
@@ -52,6 +59,7 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
   const [guestLink, setGuestLink] = useState<string>('');
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [loading, setLoading] = useState(false);
+  const [exportFormat, setExportFormat] = useState<'json' | 'csv' | 'png' | 'pdf'>('json');
 
   useEffect(() => {
     if (open) {
@@ -235,6 +243,162 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
     }
   };
 
+  const exportAsJSON = () => {
+    const data = {
+      project: projectName,
+      exportDate: new Date().toISOString(),
+      nodes: nodes.map((node) => {
+        const data = node.data as any;
+        return {
+          id: node.id,
+          type: node.type,
+          label: data.label,
+          metrics: {
+            visits: data.visits,
+            conversionRate: data.conversionRate,
+            conversions: data.conversions,
+            averageOrderValue: data.averageOrderValue,
+            revenue: data.revenue,
+          },
+        };
+      }),
+      edges: edges.map((edge) => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        dropOffRate: edge.data?.dropOffRate,
+      })),
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${projectName}-export-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportAsCSV = () => {
+    const headers = ['ID', 'Type', 'Label', 'Visits', 'Conversion Rate', 'Conversions', 'AOV', 'Revenue'];
+    const rows = nodes.map((node) => {
+      const data = node.data as any;
+      return [
+        node.id,
+        node.type || '',
+        data.label || '',
+        data.visits || 0,
+        data.conversionRate || 0,
+        data.conversions || 0,
+        data.averageOrderValue || 0,
+        data.revenue || 0,
+      ];
+    });
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${projectName}-export-${Date.now()}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportAsPNG = async () => {
+    if (!canvasRef.current) return;
+    
+    try {
+      const dataUrl = await toPng(canvasRef.current, {
+        filter: (node) => {
+          return !node?.classList?.contains('react-flow__minimap') &&
+                 !node?.classList?.contains('react-flow__controls');
+        },
+      });
+      
+      const link = document.createElement('a');
+      link.download = `${projectName}-canvas-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('PNG export error:', error);
+    }
+  };
+
+  const exportAsPDF = async () => {
+    if (!canvasRef.current) return;
+    
+    try {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) return;
+
+      const dataUrl = await toPng(canvasRef.current, {
+        filter: (node) => {
+          return !node?.classList?.contains('react-flow__minimap') &&
+                 !node?.classList?.contains('react-flow__controls');
+        },
+      });
+
+      const img = new Image();
+      img.src = dataUrl;
+      await new Promise((resolve) => { img.onload = resolve; });
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context.drawImage(img, 0, 0);
+
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (img.height * imgWidth) / img.width;
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      if (imgHeight <= pageHeight) {
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      } else {
+        let heightLeft = imgHeight;
+        let position = 0;
+        
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+      }
+      
+      pdf.save(`${projectName}-canvas-${Date.now()}.pdf`);
+    } catch (error) {
+      console.error('PDF export error:', error);
+    }
+  };
+
+  const handleExport = async () => {
+    if (exportFormat === 'json') {
+      exportAsJSON();
+    } else if (exportFormat === 'csv') {
+      exportAsCSV();
+    } else if (exportFormat === 'png') {
+      await exportAsPNG();
+    } else if (exportFormat === 'pdf') {
+      await exportAsPDF();
+    }
+
+    toast({
+      title: 'Export sikeres',
+      description: `Az adatok ${exportFormat.toUpperCase()} formátumban exportálva.`,
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -246,7 +410,7 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
         </DialogHeader>
 
         <Tabs defaultValue="link" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="link">
               <Link2 className="h-4 w-4 mr-2" />
               Link megosztás
@@ -254,6 +418,10 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
             <TabsTrigger value="invite">
               <Mail className="h-4 w-4 mr-2" />
               Email meghívó
+            </TabsTrigger>
+            <TabsTrigger value="export">
+              <Download className="h-4 w-4 mr-2" />
+              Exportálás
             </TabsTrigger>
           </TabsList>
 
@@ -320,6 +488,69 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
                 Meghívó küldése
               </Button>
             </form>
+          </TabsContent>
+
+          <TabsContent value="export" className="space-y-4">
+            <div className="space-y-4 py-4">
+              <RadioGroup value={exportFormat} onValueChange={(value) => setExportFormat(value as any)}>
+                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
+                  <RadioGroupItem value="json" id="json" />
+                  <Label htmlFor="json" className="flex items-center gap-2 cursor-pointer flex-1">
+                    <FileJson className="h-4 w-4" />
+                    <div>
+                      <div className="font-medium">JSON</div>
+                      <div className="text-xs text-muted-foreground">
+                        Teljes adatstruktúra node-okkal és edge-ekkel
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
+                  <RadioGroupItem value="csv" id="csv" />
+                  <Label htmlFor="csv" className="flex items-center gap-2 cursor-pointer flex-1">
+                    <FileSpreadsheet className="h-4 w-4" />
+                    <div>
+                      <div className="font-medium">CSV</div>
+                      <div className="text-xs text-muted-foreground">
+                        Táblázatos formátum Excel-hez
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
+                  <RadioGroupItem value="png" id="png" />
+                  <Label htmlFor="png" className="flex items-center gap-2 cursor-pointer flex-1">
+                    <FileImage className="h-4 w-4" />
+                    <div>
+                      <div className="font-medium">PNG kép</div>
+                      <div className="text-xs text-muted-foreground">
+                        Vizuális canvas prezentációhoz
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+
+                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-accent cursor-pointer">
+                  <RadioGroupItem value="pdf" id="pdf" />
+                  <Label htmlFor="pdf" className="flex items-center gap-2 cursor-pointer flex-1">
+                    <FileText className="h-4 w-4" />
+                    <div>
+                      <div className="font-medium">PDF dokumentum</div>
+                      <div className="text-xs text-muted-foreground">
+                        Nyomtatásra kész formátum
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <Button onClick={handleExport} className="w-full">
+              <Download className="h-4 w-4 mr-2" />
+              Exportálás
+            </Button>
           </TabsContent>
         </Tabs>
 
