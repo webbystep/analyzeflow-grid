@@ -66,15 +66,15 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
 
-    /* Node type colors - Liam ERD inspired pastel palette */
-    --node-traffic: 220 70% 65%;     /* Soft blue */
-    --node-email: 280 60% 65%;       /* Soft purple */
-    --node-landing: 160 55% 60%;     /* Soft green */
-    --node-checkout: 30 75% 60%;     /* Soft orange */
-    --node-thankyou: 340 70% 65%;    /* Soft pink */
-    --node-condition: 45 65% 60%;    /* Soft yellow */
-    --node-table: 200 60% 60%;       /* Soft cyan */
-    --node-custom: 215 16% 65%;      /* Neutral slate-400 gray */
+    /* Node type colors - Core nodes are gray, others follow category colors */
+    --node-traffic: 215 16% 65%;     /* Core - Gray */
+    --node-email: 215 16% 65%;       /* Core - Gray */
+    --node-landing: 215 16% 65%;     /* Core - Gray */
+    --node-checkout: 215 16% 65%;    /* Core - Gray */
+    --node-thankyou: 215 16% 65%;    /* Core - Gray */
+    --node-condition: 215 16% 65%;   /* Core - Gray */
+    --node-table: 215 16% 65%;       /* Core - Gray */
+    --node-custom: 215 16% 65%;      /* Core - Gray */
     
     /* Traffic / Acquisition - Blue tones */
     --node-meta-ads: 220 70% 65%;
@@ -176,15 +176,15 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
 
-    /* Node type colors - Liam ERD inspired pastel palette (dark mode) */
-    --node-traffic: 220 60% 55%;     /* Soft blue (darker) */
-    --node-email: 280 50% 55%;       /* Soft purple (darker) */
-    --node-landing: 160 45% 50%;     /* Soft green (darker) */
-    --node-checkout: 30 65% 55%;     /* Soft orange (darker) */
-    --node-thankyou: 340 60% 55%;    /* Soft pink (darker) */
-    --node-condition: 45 55% 50%;    /* Soft yellow (darker) */
-    --node-table: 200 50% 50%;       /* Soft cyan (darker) */
-    --node-custom: 215 20% 50%;      /* Darker neutral gray */
+    /* Node type colors - Core nodes are gray, others follow category colors (dark mode) */
+    --node-traffic: 215 20% 50%;     /* Core - Dark gray */
+    --node-email: 215 20% 50%;       /* Core - Dark gray */
+    --node-landing: 215 20% 50%;     /* Core - Dark gray */
+    --node-checkout: 215 20% 50%;    /* Core - Dark gray */
+    --node-thankyou: 215 20% 50%;    /* Core - Dark gray */
+    --node-condition: 215 20% 50%;   /* Core - Dark gray */
+    --node-table: 215 20% 50%;       /* Core - Dark gray */
+    --node-custom: 215 20% 50%;      /* Core - Dark gray */
     
     /* Traffic / Acquisition - Blue tones (dark mode) */
     --node-meta-ads: 220 60% 55%;
