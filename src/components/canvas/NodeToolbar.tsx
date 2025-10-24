@@ -29,10 +29,10 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
               key={node.type}
               draggable
               onDragStart={(e) => handleDragStart(e, node.type, node.label)}
-              className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:shadow-md cursor-move transition-all group"
+              className="flex items-center gap-3 p-3 rounded-lg border cursor-move transition-all group hover:bg-[#2e3031]"
               title={node.description}
               style={{
-                borderColor: `hsl(${color})`,
+                borderColor: '#383a3b',
                 backgroundColor: `hsl(${color} / 0.05)`
               }}
             >
