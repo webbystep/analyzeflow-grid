@@ -13,7 +13,7 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
   };
 
   return (
-    <Card className="w-72 shadow-xl max-h-[calc(100vh-120px)] flex flex-col">
+    <Card className="w-72 h-full flex flex-col rounded-none border-l-0 border-t-0 border-b-0">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg">Node könyvtár</CardTitle>
         <CardDescription className="text-xs">Húzd a node-okat a canvasra</CardDescription>
