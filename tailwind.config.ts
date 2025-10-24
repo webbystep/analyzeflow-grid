@@ -56,11 +56,12 @@ export default {
         },
         node: {
           traffic: "hsl(var(--node-traffic))",
-          email: "hsl(var(--node-email))",
           landing: "hsl(var(--node-landing))",
+          email: "hsl(var(--node-email))",
+          offer: "hsl(var(--node-offer))",
           checkout: "hsl(var(--node-checkout))",
-          thankyou: "hsl(var(--node-thankyou))",
-          condition: "hsl(var(--node-condition))",
+          thank_you: "hsl(var(--node-thank_you))",
+          custom: "hsl(var(--node-custom))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

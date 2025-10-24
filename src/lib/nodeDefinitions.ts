@@ -31,6 +31,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Rocket,
     description: 'Hirdetések, organikus forgalom, marketing kampányok',
     category: 'core',
+    color: '199 89% 48%',
     metricsVisible: true
   },
   {
@@ -39,6 +40,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: FileText,
     description: 'Értékesítési oldal, űrlap, regisztráció',
     category: 'core',
+    color: '145 50% 58%',
     metricsVisible: true
   },
   {
@@ -47,6 +49,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Mail,
     description: 'Email kampány, automatizáció, hírlevél',
     category: 'core',
+    color: '267 48% 63%',
     metricsVisible: true
   },
   {
@@ -55,6 +58,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: MessageSquare,
     description: 'Ajánlatküldés, proposal, deal',
     category: 'core',
+    color: '44 87% 61%',
     metricsVisible: true
   },
   {
@@ -63,6 +67,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: ShoppingCart,
     description: 'Fizetés, vásárlás, rendelés',
     category: 'core',
+    color: '0 79% 63%',
     metricsVisible: true
   },
   {
@@ -71,6 +76,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: PartyPopper,
     description: 'Megerősítés, sikeres vásárlás',
     category: 'core',
+    color: '195 91% 66%',
     metricsVisible: true
   },
   {
@@ -79,6 +85,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Box,
     description: 'Saját lépés, bármilyen más folyamat',
     category: 'core',
+    color: '0 0% 51%',
     metricsVisible: true
   }
 ];

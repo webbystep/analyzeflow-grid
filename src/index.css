@@ -66,15 +66,14 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
 
-    /* Node type colors - Core nodes are gray, others follow category colors */
-    --node-traffic: 215 16% 65%;     /* Core - Gray */
-    --node-email: 215 16% 65%;       /* Core - Gray */
-    --node-landing: 215 16% 65%;     /* Core - Gray */
-    --node-checkout: 215 16% 65%;    /* Core - Gray */
-    --node-thankyou: 215 16% 65%;    /* Core - Gray */
-    --node-condition: 215 16% 65%;   /* Core - Gray */
-    --node-table: 215 16% 65%;       /* Core - Gray */
-    --node-custom: 215 16% 65%;      /* Core - Gray */
+    /* Node type colors - Each core node has its unique color */
+    --node-traffic: 199 89% 48%;      /* #2D9CDB - Blue - Traffic sources */
+    --node-landing: 145 50% 58%;      /* #6FCF97 - Green - Conversion points */
+    --node-email: 267 48% 63%;        /* #BB6BD9 - Purple - Communication */
+    --node-offer: 44 87% 61%;         /* #F2C94C - Yellow - Sales interaction */
+    --node-checkout: 0 79% 63%;       /* #EB5757 - Red - Transaction */
+    --node-thank_you: 195 91% 66%;    /* #56CCF2 - Light blue - Confirmation */
+    --node-custom: 0 0% 51%;          /* #828282 - Gray - Custom step */
     
     /* Traffic / Acquisition - Blue tones */
     --node-meta-ads: 220 70% 65%;
@@ -176,15 +175,14 @@ All colors MUST be HSL.
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
 
-    /* Node type colors - Core nodes are gray, others follow category colors (dark mode) */
-    --node-traffic: 215 20% 50%;     /* Core - Dark gray */
-    --node-email: 215 20% 50%;       /* Core - Dark gray */
-    --node-landing: 215 20% 50%;     /* Core - Dark gray */
-    --node-checkout: 215 20% 50%;    /* Core - Dark gray */
-    --node-thankyou: 215 20% 50%;    /* Core - Dark gray */
-    --node-condition: 215 20% 50%;   /* Core - Dark gray */
-    --node-table: 215 20% 50%;       /* Core - Dark gray */
-    --node-custom: 215 20% 50%;      /* Core - Dark gray */
+    /* Node type colors - Each core node has its unique color (dark mode) */
+    --node-traffic: 199 89% 48%;      /* #2D9CDB - Blue - Traffic sources */
+    --node-landing: 145 50% 58%;      /* #6FCF97 - Green - Conversion points */
+    --node-email: 267 48% 63%;        /* #BB6BD9 - Purple - Communication */
+    --node-offer: 44 87% 61%;         /* #F2C94C - Yellow - Sales interaction */
+    --node-checkout: 0 79% 63%;       /* #EB5757 - Red - Transaction */
+    --node-thank_you: 195 91% 66%;    /* #56CCF2 - Light blue - Confirmation */
+    --node-custom: 0 0% 51%;          /* #828282 - Gray - Custom step */
     
     /* Traffic / Acquisition - Blue tones (dark mode) */
     --node-meta-ads: 220 60% 55%;

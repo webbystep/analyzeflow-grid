@@ -77,6 +77,8 @@ export const FunnelNode = memo(({
   }
 
   const iconColor = data.iconColor || 'white';
+  const nodeColor = data.color || `var(--node-${nodeType})`;
+  
   return <motion.div initial={{
     scale: 0.8,
     opacity: 0
@@ -92,9 +94,20 @@ export const FunnelNode = memo(({
   }} onMouseLeave={() => {
     setIsHovered(false);
     (data as any).onNodeHover?.(null);
-  }} className={`rounded-lg bg-card shadow-lg w-[200px] transition-all hover:shadow-xl overflow-visible relative z-10 ${selected ? 'border-[3px] shadow-2xl' : 'border-2'}`} style={{
-    borderColor: selected ? `hsl(var(--primary))` : isConnectedHighlighted ? `hsl(var(--primary) / 0.5)` : `hsl(var(--node-${nodeType}))`,
-    boxShadow: selected ? `0 10px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--primary) / 0.1)` : isConnectedHighlighted ? `0 10px 30px -10px hsl(var(--primary) / 0.6), 0 0 0 2px hsl(var(--primary) / 0.3)` : `0 2px 4px rgba(0,0,0,0.1)`
+  }} className={`rounded-lg shadow-lg w-[200px] transition-all hover:shadow-xl overflow-visible relative z-10 ${selected ? 'border-[3px] shadow-2xl' : 'border-2'}`} style={{
+    backgroundColor: selected || isConnectedHighlighted 
+      ? 'hsl(var(--card))' 
+      : `hsl(${nodeColor} / 0.05)`,
+    borderColor: selected 
+      ? `hsl(var(--primary))` 
+      : isConnectedHighlighted 
+      ? `hsl(var(--primary) / 0.5)` 
+      : `hsl(${nodeColor})`,
+    boxShadow: selected 
+      ? `0 10px 40px -10px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--primary) / 0.1)` 
+      : isConnectedHighlighted 
+      ? `0 10px 30px -10px hsl(var(--primary) / 0.6), 0 0 0 2px hsl(var(--primary) / 0.3)` 
+      : `0 2px 4px hsl(${nodeColor} / 0.2)`
   }}>
       <Handle type="target" position={Position.Top} className="!w-3 !h-3 !bg-transparent !border-0" style={{
       opacity: 0,
@@ -115,7 +128,7 @@ export const FunnelNode = memo(({
       
       {/* Colored header bar */}
       <div className="relative flex items-center justify-between px-3 py-2 rounded-t-md" style={{
-      backgroundColor: `hsl(var(--node-${nodeType}))`,
+      backgroundColor: `hsl(${nodeColor})`,
       color: 'white'
     }}>
         <div className="flex items-center gap-2">
