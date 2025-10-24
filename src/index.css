@@ -27,27 +27,17 @@
    - Light: "világos pár"
    - Dark: "neon cockpit"
    ======================================================= */
-
 @layer base {
   :root {
-    /* LIGHT MODE TOKENS
-       Canvas háttér: #F5F6F7 → hsl(210, 11.1%, 96.5%)
-       Panel / card / sidebar / bottom bar: #FFFFFF → hsl(0, 0%, 100%)
-       Border: rgba(0,0,0,0.12) → hsl(0 0% 0% / 0.12)
-       Edge alap: rgba(0,0,0,0.4) → hsl(0 0% 0% / 0.4)
-       Text Primary: #111827 → hsl(220.9,39.3%,11.0%)
-       Text Secondary: #6B7280 → hsl(220,8.9%,46.1%)
-       Text Dimmed: #9CA3AF → hsl(217.9,10.6%,64.9%)
-       Accent Green (#1EED83): hsl(149.4,85.2%,52.2%)
-       Dark text on green (#0E1522): hsl(219,41.7%,9.4%)
-    */
+    /* LIGHT MODE TOKENS */
 
-    --background: 210 11.1% 96.5%;         /* app body / canvas fallback bg */
-    --foreground: 220.9 39.3% 11.0%;       /* default text */
+    /* Alap háttér / szöveg */
+    --background: 210 11.1% 96.5%;         /* #F5F6F7 */
+    --foreground: 220.9 39.3% 11.0%;       /* #111827 */
 
     /* Felületek */
-    --color-bg-canvas: 210 11.1% 96.5%;    /* #F5F6F7 */
-    --color-bg-panel: 0 0% 100%;           /* #FFFFFF */
+    --color-bg-canvas: 210 11.1% 96.5%;    /* vászon / fő háttér */
+    --color-bg-panel: 0 0% 100%;           /* panelek, sidebar */
     --color-bg-card: 0 0% 100%;
     --color-bg-elevated: 0 0% 100%;
     --color-bg-sidebar: 0 0% 100%;
@@ -58,14 +48,14 @@
     /* Határvonalak / border */
     --color-border-default: 0 0% 0% / 0.12;    /* általános panel border */
     --color-border-muted: 0 0% 0% / 0.08;
-    --color-border-active: 149.4 85.2% 52.2%;  /* accent zöld kiemelés */
+    --color-border-active: 149.4 85.2% 52.2%;  /* #1EED83 */
     --color-border: 0 0% 0% / 0.12;
 
     /* Szöveg */
     --color-text-primary: 220.9 39.3% 11.0%;   /* #111827 */
     --color-text-secondary: 220 8.9% 46.1%;    /* #6B7280 */
     --color-text-dimmed: 217.9 10.6% 64.9%;    /* #9CA3AF */
-    --color-text-invert: 219 41.7% 9.4%;       /* #0E1522 (zöld CTA-n a szöveg) */
+    --color-text-invert: 219 41.7% 9.4%;       /* #0E1522 (zöld CTA gombon) */
 
     /* Tailwind-style semantic tokens */
     --card: 0 0% 100%;
@@ -86,11 +76,12 @@
     --accent: 149.4 85.2% 52.2%;
     --accent-foreground: 219 41.7% 9.4%;
 
-    /* Brand accent */
-    --color-accent-green: 149.4 85.2% 52.2%;           /* #1EED83 */
-    --color-accent-green-rgb: 29, 237, 131;            /* rgb for glow shadows */
+    /* Brand accent (neon zöld) */
+    --color-accent-green: 149.4 85.2% 52.2%;     /* #1EED83 */
+    --color-accent-green-rgb: 29, 237, 131;      /* rgb a glow-hoz */
 
-    --destructive: 158.1 100% 14.1%;                   /* sötétzöld-ish */
+    /* Egyéb semantic */
+    --destructive: 158.1 100% 14.1%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 149.4 85.2% 52.2%;
@@ -112,42 +103,36 @@
     --chart-4: 138 42% 25%;
     --chart-5: 18 60% 51%;
 
-    /* Node / edge */
+    /* Node / edge baseline light módban */
     --color-node-bg: 0 0% 100%;
     --color-node-border: 0 0% 0% / 0.12;
-    --color-line: 0 0% 0% / 0.4;            /* edge baseline szín (light) */
+    --color-line: 0 0% 0% / 0.4;            /* edge vonal alap */
     --shadow-card: 0 0% 0% / 0;
 
-    /* Header buttons + sidebar fixek világos módban is (alig fog látszani, inkább darkban fontos) */
+    /* Header gomb + sidebar aliasok (light módban kevésbé fontosak, de legyen konzisztens API) */
     --color-border-sidebar: 0 0% 0% / 0.12;
     --color-header-btn-border: 0 0% 0% / 0.12;
     --color-header-btn-bg: 0 0% 100% / 0;
-    --color-header-btn-hover-bg: 220 3% 18%;  /* fallback, világos módban ritkán használjuk */
+    --color-header-btn-hover-bg: 220 3% 18%;  /* fallback */
     --color-header-btn-text: 220.9 39.3% 11.0%;
+    --color-share-bg: 149.4 85.2% 52.2%;      /* #1EED83 */
+    --color-share-text: 219 41.7% 9.4%;       /* #0E1522 */
+    --color-share-bg-hover: 149.4 85.2% 48%;  /* picit sötétebb zöld */
 
-    --color-share-bg: 149.4 85.2% 52.2%;     /* #1EED83 */
-    --color-share-text: 219 41.7% 9.4%;      /* #0E1522 */
-    --color-share-bg-hover: 149.4 85.2% 48%; /* sötétebb zöld hoverre */
-
-    /* Glow / highlight light módban */
+    /* Glow / hover highlight light módban */
     --shadow-glow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.2);
     --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.28);
   }
 
-  /* DARK MODE TOKENS
-     Canvas: #141414 → hsl(0,0%,7.8%)
-     Panel/node/sidebar/bottom bar: #222526 → hsl(195,5.6%,14.1%)
-     Border: #383A3B → hsl(200,2.6%,22.5%)
-     Text primary: #E5E7EB → hsl(220,13%,91%)
-     Accent green: #1EED83 → hsl(149.4,85.2%,52.2%)
-     Header hover bg: #2e3031 → kb hsl(210,4%,18%)
-  */
   .dark {
-    --background: 0 0% 7.8%;
-    --foreground: 220 13% 91%;
+    /* DARK MODE TOKENS */
 
-    --color-bg-canvas: 0 0% 7.8%;            /* #141414 */
-    --color-bg-panel: 195 5.6% 14.1%;        /* #222526 */
+    --background: 0 0% 7.8%;               /* #141414 */
+    --foreground: 220 13% 91%;             /* #E5E7EB */
+
+    /* Felületek */
+    --color-bg-canvas: 0 0% 7.8%;          /* #141414 */
+    --color-bg-panel: 195 5.6% 14.1%;      /* #222526 */
     --color-bg-card: 195 5.6% 14.1%;
     --color-bg-elevated: 195 5.6% 14.1%;
     --color-bg-sidebar: 195 5.6% 14.1%;
@@ -155,16 +140,19 @@
     --color-bg-node-header: 195 5.6% 14.1%;
     --color-bg-node-body: 195 5.6% 14.1%;
 
+    /* Határvonalak */
     --color-border-default: 200 2.6% 22.5%;      /* #383a3b */
     --color-border-muted: 0 0% 100% / 0.05;
-    --color-border-active: 149.4 85.2% 52.2%;
+    --color-border-active: 149.4 85.2% 52.2%;    /* zöld highlight */
     --color-border: 200 2.6% 22.5%;
 
-    --color-text-primary: 220 13% 91%;
-    --color-text-secondary: 217.9 10.6% 64.9%;
-    --color-text-dimmed: 220 8.9% 46.1%;
-    --color-text-invert: 219 41.7% 9.4%;
+    /* Szöveg */
+    --color-text-primary: 220 13% 91%;          /* #E5E7EB */
+    --color-text-secondary: 217.9 10.6% 64.9%;  /* #9CA3AF */
+    --color-text-dimmed: 220 8.9% 46.1%;        /* #6B7280 */
+    --color-text-invert: 219 41.7% 9.4%;        /* #0E1522 */
 
+    /* Semantic */
     --card: 195 5.6% 14.1%;
     --card-foreground: 220 13% 91%;
 
@@ -205,17 +193,18 @@
     --chart-4: 138 42% 25%;
     --chart-5: 18 60% 51%;
 
-    --color-node-bg: 195 5.6% 14.1%;
-    --color-node-border: 200 2.6% 22.5%;
-    --color-line: 200 2.6% 22.5%;            /* default edge line = #383a3b look */
+    /* Node / Edge baseline dark módban */
+    --color-node-bg: 195 5.6% 14.1%;       /* #222526 */
+    --color-node-border: 200 2.6% 22.5%;   /* #383a3b */
+    --color-line: 200 2.6% 22.5%;          /* edge baseline: #383a3b */
     --shadow-card: 0 0% 0% / 0;
 
-    /* specifikus aliasok a header és sidebar kéréseidhez */
+    /* Header / sidebar aliasok (dark módban fontosak) */
     --color-border-sidebar: 200 2.6% 22.5%;   /* fix 1px #383a3b a node könyvtár kártyáknál */
-    --color-header-btn-border: 200 2.6% 22.5%;/* undo/redo/darkmode border */
+    --color-header-btn-border: 200 2.6% 22.5%;
     --color-header-btn-bg: 0 0% 100% / 0;     /* átlátszó */
     --color-header-btn-hover-bg: 210 4% 18%;  /* #2e3031 kb */
-    --color-header-btn-text: 220 13% 91%;
+    --color-header-btn-text: 220 13% 91%;     /* világos ikon/szöveg */
 
     --color-share-bg: 149.4 85.2% 52.2%;      /* #1EED83 */
     --color-share-text: 219 41.7% 9.4%;       /* #0E1522 */
@@ -244,7 +233,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Zöld util, ha kell full fill */
+  /* Brand utilok */
   .brand-gradient {
     background: hsl(var(--color-accent-green));
   }
@@ -256,7 +245,6 @@
     background-clip: text;
   }
 
-  /* Glow utilok */
   .tech-glow {
     box-shadow: var(--shadow-glow);
   }
@@ -266,29 +254,27 @@
   }
 
   /* ==========================
-     CANVAS GRID
+     CANVAS GRID HÁTTÉR
      ========================== */
   .canvas-grid {
     background-color: hsl(var(--color-bg-canvas));
     background-size: 24px 24px;
   }
 
-  /* Dark: pöttyök világosak sötét háttéren */
   .dark .canvas-grid {
+    /* pöttyök világosak sötét háttéren */
     background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
   }
 
-  /* Light: pöttyök sötét árnyalattal világos háttéren */
   :root:not(.dark) .canvas-grid {
+    /* pöttyök halvány feketés árnyalattal világos háttéren */
     background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
   }
 }
 
 /* =========================================
-   NODE STYLES
-   - border alapból panel border
-   - hover: zöld keret + glow akkor is, ha nincs bekötve
-   - active: erősebb glow
+   NODE KOMPONENS
+   - hover: mindig zöld keret + glow (függetlenül attól, hogy be van-e kötve)
    ========================================= */
 @layer base {
   .node {
@@ -367,14 +353,13 @@
     font-size: 12.5px;
   }
 
-  /* hover állapot: border legyen neon zöld (#1EED83), glow jelenjen meg
-     akkor is, ha nincs kapcsolata a node-nak */
+  /* hover: mindig kapjon zöld keretet + glow */
   .node:hover {
     border-color: hsl(var(--color-accent-green));
     box-shadow: var(--shadow-glow);
   }
 
-  /* kijelölt node (pl. kattintva) */
+  /* aktív (pl. kiválasztott) */
   .node.is-active {
     border-color: hsl(var(--color-accent-green));
     box-shadow: var(--shadow-glow-strong);
@@ -382,9 +367,9 @@
 }
 
 /* =========================================
-   SIDEBAR (Node könyvtár) itemek
-   - border fix #383a3b (darkban)
-   - hover: zöld border + glow
+   SIDEBAR (Node könyvtár) elemek
+   - border fix #383a3b darkban
+   - hover: zöld + glow
    ========================================= */
 @layer base {
   .sidebar-item {
@@ -423,16 +408,11 @@
 }
 
 /* =========================================
-   HEADER BUTTONS
-   - undo/redo/dark mode switcher → secondary
-   - Megosztás → primary CTA
+   HEADER GOMBOK
+   - undo / redo / dark mode switcher → .header-btn-secondary
+   - Megosztás → .header-btn-primary
    ========================================= */
 @layer base {
-  /* Secondary header controls:
-     - áttetsző bg
-     - 1px #383a3b border (darkban)
-     - hover: #2e3031 háttér + zöld glow
-  */
   .header-btn-secondary {
     background: hsl(var(--color-header-btn-bg));
     border: 1px solid hsl(var(--color-header-btn-border));
@@ -464,11 +444,6 @@
     flex-shrink: 0;
   }
 
-  /* Primary CTA: "Megosztás"
-     - mindig #1EED83 háttér
-     - sötét szöveg
-     - hover: picit sötétebb zöld + erősebb glow
-  */
   .header-btn-primary {
     background: hsl(var(--color-share-bg));
     border: 1px solid hsl(var(--color-share-bg));
@@ -506,22 +481,18 @@
    REACT FLOW EDGE VISELKEDÉS
    - Alap: solid, 1px, #383a3b (dark) / halvány fekete (light)
    - Hover / selected: neon zöld, 2px, glow
-   - Particle overlay: dashed neon highlight (2px)
+   - Particle overlay: dashed neon highlight (2px) csak aktív/hover állapotban
    ========================================= */
 @layer base {
-  /* edge baseline állapot */
+  /* baseline edge path */
   .react-flow__edge-path {
     transition: stroke-width 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
-    stroke: hsl(var(--color-border-default)) !important;
+    stroke: hsl(var(--color-line)) !important;
     stroke-width: 1px !important;
     filter: none;
   }
 
-  /* hover / selected / .is-active:
-     - vastagabb
-     - neon zöld
-     - glow
-  */
+  /* hover / selected / is-active */
   .react-flow__edge-path:hover,
   .react-flow__edge.selected .react-flow__edge-path,
   .react-flow__edge.is-active .react-flow__edge-path {
@@ -530,11 +501,11 @@
     filter: drop-shadow(0 0 6px rgba(var(--color-accent-green-rgb), 0.4));
   }
 
-  /* particle overlay path:
-     Ezt a path-ot csak akkor rajzold ki React Flow custom edge komponensben,
-     ha az edge aktív/hoverelt.
+  /* "particle overlay" path a hoverelt edge-re:
      - dashed neon
-     - animált "áramlás"
+     - animálva
+     - csak akkor rendereld React Flow custom edge komponensből,
+       ha tényleg hover / active az edge
   */
   .edge-particles-overlay {
     stroke: hsl(var(--color-accent-green));
@@ -549,8 +520,8 @@
 }
 
 /* =========================================
-   REACT FLOW EXTRA KONTROLLOK DARKBAN
-   (minimap, zoom-controls stb.)
+   REACT FLOW EXTRA KONTROLLOK (DARK)
+   minimap, zoom-controls stb.
    ========================================= */
 @layer base {
   .dark .react-flow__controls,
