@@ -102,7 +102,7 @@ All colors MUST be HSL.
     --color-node-bg: 255 255 255;
     --color-node-border: 0 0 0 / 0.12;
     --color-line: 0 0 0 / 0.4;
-    --shadow-card: 0 12 20 / rgba(0,0,0,0.04);
+    --shadow-card: 0 0 0 / 0;
     
     /* Shadow/Glow */
     --shadow-glow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.2);

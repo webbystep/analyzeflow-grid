@@ -54,15 +54,6 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        node: {
-          traffic: "hsl(var(--node-traffic))",
-          landing: "hsl(var(--node-landing))",
-          email: "hsl(var(--node-email))",
-          offer: "hsl(var(--node-offer))",
-          checkout: "hsl(var(--node-checkout))",
-          thank_you: "hsl(var(--node-thank_you))",
-          custom: "hsl(var(--node-custom))",
-        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
