@@ -27,6 +27,7 @@ import { FloatingEdge } from './FloatingEdge';
 import { CustomConnectionLine } from './CustomConnectionLine';
 
 const nodeTypes = {
+  // Core nodes
   traffic: FunnelNode,
   email: FunnelNode,
   landing: FunnelNode,
@@ -35,6 +36,48 @@ const nodeTypes = {
   condition: FunnelNode,
   custom: FunnelNode,
   table: TableNode,
+  
+  // Traffic / Acquisition
+  'meta-ads': FunnelNode,
+  'google-ads': FunnelNode,
+  'linkedin-ads': FunnelNode,
+  'youtube-ads': FunnelNode,
+  'organic-social': FunnelNode,
+  'seo-blog': FunnelNode,
+  'referral': FunnelNode,
+  'offline-campaign': FunnelNode,
+  
+  // Conversion / Sales
+  'lead-form': FunnelNode,
+  'contact': FunnelNode,
+  'sales-call': FunnelNode,
+  'proposal': FunnelNode,
+  'contract': FunnelNode,
+  'upsell': FunnelNode,
+  'partner-contact': FunnelNode,
+  
+  // Retention / Remarketing
+  'remarketing-ads': FunnelNode,
+  'loyalty-program': FunnelNode,
+  'reactivation': FunnelNode,
+  'subscription-renewal': FunnelNode,
+  'feedback-nps': FunnelNode,
+  'referral-campaign': FunnelNode,
+  'unsubscribe': FunnelNode,
+  
+  // Automation / Integrations
+  'webhook-api': FunnelNode,
+  'crm-sync': FunnelNode,
+  'automation-step': FunnelNode,
+  'ai-recommendation': FunnelNode,
+  'data-import': FunnelNode,
+  
+  // Brand / Support
+  'brand-awareness': FunnelNode,
+  'webinar-event': FunnelNode,
+  'customer-support': FunnelNode,
+  'review-testimonial': FunnelNode,
+  'community': FunnelNode,
 };
 
 const edgeTypes = {
