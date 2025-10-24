@@ -145,28 +145,49 @@ export function FloatingEdge({
         }}
       />
 
-      {/* Animated flow indicators - show on hover OR when highlighted */}
+      {/* Animated flow particles - enhanced with glow */}
       {(isHovering || isHighlighted) && (
         <>
-          {[0, 0.16, 0.33, 0.5, 0.66, 0.83].map((offset) => (
-            <circle
-              key={offset}
-              r={isHighlighted ? 4 : 3}
-              fill="hsl(var(--primary))"
-              opacity={0.7}
-              style={{ willChange: 'transform' }}
-            >
-              <animateMotion
-                dur="2s"
-                repeatCount="indefinite"
-                keyPoints="0;1"
-                keyTimes="0;1"
-                calcMode="linear"
-                begin={`${offset * 2}s`}
+          {/* Main particles */}
+          {[0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87].map((offset) => (
+            <g key={offset}>
+              {/* Glow effect */}
+              <circle
+                r={isHighlighted ? 6 : 5}
+                fill="hsl(var(--primary))"
+                opacity={0.2}
+                style={{ filter: 'blur(4px)' }}
               >
-                <mpath href={`#${id}`} />
-              </animateMotion>
-            </circle>
+                <animateMotion
+                  dur={isHighlighted ? "1.5s" : "2s"}
+                  repeatCount="indefinite"
+                  keyPoints="0;1"
+                  keyTimes="0;1"
+                  calcMode="linear"
+                  begin={`${offset * (isHighlighted ? 1.5 : 2)}s`}
+                >
+                  <mpath href={`#${id}`} />
+                </animateMotion>
+              </circle>
+              {/* Core particle */}
+              <circle
+                r={isHighlighted ? 3 : 2.5}
+                fill="hsl(var(--primary))"
+                opacity={0.9}
+                style={{ willChange: 'transform' }}
+              >
+                <animateMotion
+                  dur={isHighlighted ? "1.5s" : "2s"}
+                  repeatCount="indefinite"
+                  keyPoints="0;1"
+                  keyTimes="0;1"
+                  calcMode="linear"
+                  begin={`${offset * (isHighlighted ? 1.5 : 2)}s`}
+                >
+                  <mpath href={`#${id}`} />
+                </animateMotion>
+              </circle>
+            </g>
           ))}
         </>
       )}

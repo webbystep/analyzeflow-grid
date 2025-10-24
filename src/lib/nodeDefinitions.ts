@@ -1,7 +1,8 @@
 import { NodeType, NodeCategory } from './types/canvas';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Rocket, Mail, FileText, ShoppingCart, PartyPopper, MessageSquare, Box
+  Rocket, Mail, FileText, ShoppingCart, PartyPopper, MessageSquare, Box,
+  Target, Send, DollarSign
 } from 'lucide-react';
 
 export const nodeCategories: NodeCategory[] = [
@@ -31,25 +32,25 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Rocket,
     description: 'Hirdetések, organikus forgalom, marketing kampányok',
     category: 'core',
-    color: '199 89% 48%',
+    color: 'var(--node-traffic)',
     metricsVisible: true
   },
   {
     type: 'landing',
     label: 'Landoló oldal',
-    icon: FileText,
+    icon: Target,
     description: 'Értékesítési oldal, űrlap, regisztráció',
     category: 'core',
-    color: '145 50% 58%',
+    color: 'var(--node-landing)',
     metricsVisible: true
   },
   {
     type: 'email',
     label: 'Email',
-    icon: Mail,
+    icon: Send,
     description: 'Email kampány, automatizáció, hírlevél',
     category: 'core',
-    color: '267 48% 63%',
+    color: 'var(--node-email)',
     metricsVisible: true
   },
   {
@@ -58,16 +59,16 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: MessageSquare,
     description: 'Ajánlatküldés, proposal, deal',
     category: 'core',
-    color: '44 87% 61%',
+    color: 'var(--node-offer)',
     metricsVisible: true
   },
   {
     type: 'checkout',
     label: 'Pénztár',
-    icon: ShoppingCart,
+    icon: DollarSign,
     description: 'Fizetés, vásárlás, rendelés',
     category: 'core',
-    color: '0 79% 63%',
+    color: 'var(--node-checkout)',
     metricsVisible: true
   },
   {
@@ -76,7 +77,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: PartyPopper,
     description: 'Megerősítés, sikeres vásárlás',
     category: 'core',
-    color: '195 91% 66%',
+    color: 'var(--node-thank_you)',
     metricsVisible: true
   },
   {
@@ -85,7 +86,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Box,
     description: 'Saját lépés, bármilyen más folyamat',
     category: 'core',
-    color: '0 0% 51%',
+    color: 'var(--node-custom)',
     metricsVisible: true
   }
 ];

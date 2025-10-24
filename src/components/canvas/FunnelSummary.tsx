@@ -92,53 +92,68 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
   }
 
   return (
-    <Card className="border-t bg-card/95 backdrop-blur-sm">
-      <div className="px-6 py-3">
+    <Card className="border-t bg-card/95 backdrop-blur-md shadow-lg" style={{
+      borderTopColor: 'hsl(var(--color-border-active) / 0.2)',
+      boxShadow: '0 -4px 12px -4px hsl(var(--foreground) / 0.1)'
+    }}>
+      <div className="px-6 py-3.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Users className="h-4 w-4 text-primary" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg transition-all" style={{
+                backgroundColor: 'hsl(var(--node-traffic) / 0.12)',
+                boxShadow: '0 0 0 1px hsl(var(--node-traffic) / 0.2)'
+              }}>
+                <Users className="h-4 w-4" style={{ color: 'hsl(var(--node-traffic))' }} />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Összes látogatás</div>
-                <div className="text-lg font-semibold">{metrics.totalVisits.toLocaleString()}</div>
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Látogatások</div>
+                <div className="text-lg font-semibold tabular-nums">{metrics.totalVisits.toLocaleString()}</div>
               </div>
             </div>
 
             <div className="h-10 w-px bg-border" />
 
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-success/10">
-                <Target className="h-4 w-4 text-success" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg transition-all" style={{
+                backgroundColor: 'hsl(var(--node-landing) / 0.12)',
+                boxShadow: '0 0 0 1px hsl(var(--node-landing) / 0.2)'
+              }}>
+                <Target className="h-4 w-4" style={{ color: 'hsl(var(--node-landing))' }} />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Konverziók</div>
-                <div className="text-lg font-semibold">{metrics.totalConversions.toLocaleString()}</div>
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Konverziók</div>
+                <div className="text-lg font-semibold tabular-nums">{metrics.totalConversions.toLocaleString()}</div>
               </div>
             </div>
 
             <div className="h-10 w-px bg-border" />
 
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-accent/10">
-                <TrendingUp className="h-4 w-4 text-accent" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg transition-all" style={{
+                backgroundColor: 'hsl(var(--accent) / 0.12)',
+                boxShadow: '0 0 0 1px hsl(var(--accent) / 0.2)'
+              }}>
+                <TrendingUp className="h-4 w-4" style={{ color: 'hsl(var(--accent))' }} />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Átlag CR</div>
-                <div className="text-lg font-semibold">{metrics.avgConversionRate}%</div>
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Átlag CR</div>
+                <div className="text-lg font-semibold tabular-nums">{metrics.avgConversionRate}%</div>
               </div>
             </div>
 
             <div className="h-10 w-px bg-border" />
 
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-success/10">
-                <DollarSign className="h-4 w-4 text-success" />
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg transition-all" style={{
+                backgroundColor: 'hsl(var(--node-checkout) / 0.12)',
+                boxShadow: '0 0 0 1px hsl(var(--node-checkout) / 0.2)'
+              }}>
+                <DollarSign className="h-4 w-4" style={{ color: 'hsl(var(--node-checkout))' }} />
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Összes bevétel</div>
-                <div className="text-lg font-semibold text-success">
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Bevétel</div>
+                <div className="text-lg font-semibold tabular-nums" style={{ color: 'hsl(var(--node-checkout))' }}>
                   {metrics.totalRevenue.toLocaleString()} Ft
                 </div>
               </div>
