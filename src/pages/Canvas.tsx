@@ -771,10 +771,6 @@ export default function Canvas() {
               Törlés
             </Button>
           )}
-          <Button variant="default" size="sm" onClick={saveCanvas} disabled={saving}>
-            <Save className="h-4 w-4 mr-2" />
-            Mentés
-          </Button>
         </div>
       </header>
 
