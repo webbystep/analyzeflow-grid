@@ -66,7 +66,9 @@ export const MetricsFlowIndicator = memo(({
             <TrendingDown className="w-3 h-3" />
             Rate
           </span>
-          <span className="font-medium">{conversionRate.toFixed(1)}%</span>
+          <span className="font-medium">
+            {typeof conversionRate === 'number' ? conversionRate.toFixed(1) : conversionRate}%
+          </span>
         </div>
       )}
 
