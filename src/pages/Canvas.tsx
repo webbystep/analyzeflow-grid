@@ -728,14 +728,6 @@ export default function Canvas() {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-          <div className="h-6 w-px bg-border" />
-          <Button
-            variant="outline"
-            size="icon"
             onClick={handleUndo}
             disabled={!canUndo}
           >
@@ -757,6 +749,13 @@ export default function Canvas() {
           >
             <Share2 className="h-4 w-4 mr-2" />
             Megosztás
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           {selectedNode && (
             <Button
