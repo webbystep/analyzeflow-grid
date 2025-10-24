@@ -126,20 +126,24 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
                           key={node.type}
                           draggable
                           onDragStart={(e) => handleDragStart(e, node.type, node.label)}
-                          className="flex items-center gap-2 p-2 rounded-lg border bg-card hover:bg-accent/50 cursor-move transition-colors group"
+                          className="rounded-lg border-2 bg-card hover:shadow-md cursor-move transition-all overflow-hidden"
+                          style={{ borderColor: `hsl(${color})` }}
                           title={node.description}
                         >
-                          <div
-                            className="p-1.5 rounded flex-shrink-0"
-                            style={{ backgroundColor: `hsl(${color} / 0.2)` }}
+                          {/* Színes fejléc - mini változat */}
+                          <div 
+                            className="flex items-center gap-2 px-2 py-1.5"
+                            style={{ 
+                              backgroundColor: `hsl(${color})`,
+                              color: 'white'
+                            }}
                           >
-                            <Icon
-                              className="w-3.5 h-3.5"
-                              style={{ color: `hsl(${color})` }}
-                            />
+                            <Icon className="w-3.5 h-3.5" />
+                            <div className="font-medium text-xs truncate">{node.label}</div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium text-xs">{node.label}</div>
+                          
+                          {/* Tartalom rész */}
+                          <div className="px-2 py-1.5 bg-card">
                             <div className="text-[10px] text-muted-foreground truncate">
                               {node.description}
                             </div>
