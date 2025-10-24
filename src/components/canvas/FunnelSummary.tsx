@@ -31,9 +31,11 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
       // Get revenueMode (use default if not set)
       const revenueMode = (nodeData.revenueMode as RevenueMode) || getDefaultRevenueMode(nodeType);
 
-      // Iterate through all sections and fields
-      Object.values(schema.sections).forEach(section => {
-        if (!section.fields) return;
+      // Iterate through all schema sections (properties, meta, metrics)
+      const sections = [schema.properties, schema.meta, schema.metrics].filter(Boolean);
+      
+      sections.forEach(section => {
+        if (!section?.fields) return;
         
         section.fields.forEach(field => {
           const value = Number(nodeData[field.id]) || 0;
@@ -46,7 +48,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
               totalConversions += value;
               break;
             case 'revenue_output':
-              // NEW: Revenue mode-based splitting
+              // Revenue mode-based splitting
               if (revenueMode === 'direct') {
                 directRevenue += value;
               } else if (revenueMode === 'assisted') {
@@ -54,6 +56,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
               }
               break;
             case 'cost_input':
+            case 'cost_total':
               totalCosts += value;
               break;
           }

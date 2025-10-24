@@ -17,7 +17,7 @@ export type MetricRole =
 export interface FieldSchema {
   id: string;
   label: string;
-  type: 'text' | 'textarea' | 'number' | 'select' | 'currency' | 'percentage';
+  type: 'text' | 'textarea' | 'number' | 'select' | 'currency' | 'percentage' | 'toggle';
   role?: MetricRole;
   required?: boolean;
   readOnly?: boolean;

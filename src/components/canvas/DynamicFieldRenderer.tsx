@@ -126,9 +126,6 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
           {calculatedValue}
           {field.suffix && <span className="text-sm text-muted-foreground">{field.suffix}</span>}
         </div>
-        {field.helpText && (
-          <p className="text-xs text-muted-foreground italic">{field.helpText}</p>
-        )}
       </div>
     );
   }
