@@ -123,7 +123,7 @@
 
     /* Glow / hover highlight light módban (visszafogottabb) */
     --shadow-glow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.2);
-    --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.28);
+    --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.4);
   }
 
   /* DARK THEME TOKENS
