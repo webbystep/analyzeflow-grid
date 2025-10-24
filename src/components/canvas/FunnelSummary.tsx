@@ -92,7 +92,7 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
   }
 
   return (
-    <Card className="border-t backdrop-blur-md shadow-lg" style={{
+    <Card className="border-t backdrop-blur-md shadow-lg rounded-none" style={{
       background: 'hsl(var(--color-bg-panel) / 0.95)',
       borderColor: 'hsl(var(--color-border-default))',
       boxShadow: '0 8px 30px hsla(0, 0%, 0%, 0.3)'

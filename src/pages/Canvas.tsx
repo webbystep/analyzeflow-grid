@@ -702,7 +702,7 @@ export default function Canvas() {
 
   return (
     <div className="h-screen flex flex-col">
-      <header className="border-b bg-card/50 backdrop-blur-sm flex items-center justify-between px-4 py-2">
+      <header className="border-b bg-[#222526] flex items-center justify-between px-4 py-2">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -725,38 +725,34 @@ export default function Canvas() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
+          <button
             onClick={handleUndo}
             disabled={!canUndo}
+            className="header-btn-secondary"
           >
             <Undo2 className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
+          </button>
+          <button
             onClick={handleRedo}
             disabled={!canRedo}
+            className="header-btn-secondary"
           >
             <Redo2 className="h-4 w-4" />
-          </Button>
+          </button>
           <div className="h-6 w-px bg-border" />
-          <Button
-            variant="outline"
-            size="sm"
+          <button
+            className="header-btn-primary"
             onClick={() => setShowShare(true)}
           >
             <Share2 className="h-4 w-4 mr-2" />
             Megosztás
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
+          </button>
+          <button
+            className="header-btn-secondary"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           >
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
+          </button>
           {selectedNode && (
             <Button
               variant="outline"
