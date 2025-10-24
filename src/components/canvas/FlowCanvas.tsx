@@ -229,8 +229,10 @@ export function FlowCanvas({
           style={{ opacity: 0.3 }}
         />
         {!readonly && projectId && (
-          <Panel position="top-left">
-            <NodeToolbar projectId={projectId} />
+          <Panel position="top-left" className="p-0 m-0 z-50" style={{ top: 0, left: 0, bottom: 0 }}>
+            <div className="h-full">
+              <NodeToolbar projectId={projectId} />
+            </div>
           </Panel>
         )}
       </ReactFlow>
