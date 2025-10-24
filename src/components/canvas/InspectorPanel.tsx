@@ -5,13 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { X, Save, TrendingUp, Palette } from 'lucide-react';
 import { Node } from '@xyflow/react';
-import { getNodeSchema, getDefaultRevenueMode } from '@/lib/nodeSchemas';
-import { getNodeDefinition } from '@/lib/nodeDefinitions';
+import { toast } from 'sonner';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
-import { TemplateMetricsRenderer } from './TemplateMetricsRenderer';
 import { IconPicker } from './IconPicker';
-import { NodeType } from '@/lib/types/canvas';
-import { getMetricsTemplate, getDefaultIcon } from '@/lib/nodeMetricTemplates';
+import { getDefaultIcon } from '@/lib/nodeMetricTemplates';
+import type { NodeType } from '@/lib/types/canvas';
+import { getNodeSchema } from '@/lib/nodeSchemas';
+import { getNodeDefinition } from '@/lib/nodeDefinitions';
 
 interface InspectorPanelProps {
   selectedNode: Node | null;
@@ -21,12 +21,59 @@ interface InspectorPanelProps {
 
 export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: InspectorPanelProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const schema = getNodeSchema(selectedNode?.type as NodeType);
 
   useEffect(() => {
     if (selectedNode) {
       setFormData(selectedNode.data || {});
     }
   }, [selectedNode]);
+
+  const handleFieldChange = (fieldId: string, value: any) => {
+    setFormData(prev => ({ ...prev, [fieldId]: value }));
+  };
+
+  const handleSave = () => {
+    if (!selectedNode || !schema) return;
+    
+    const updates: any = {
+      label: formData.label,
+      customText: formData.customText,
+      notes: formData.notes,
+      revenueMode: formData.revenueMode,
+      icon: formData.icon || getDefaultIcon(selectedNode.type as NodeType),
+      iconColor: formData.iconColor,
+      customIconSvg: formData.customIconSvg,
+      meta: {} as Record<string, any>,
+      metrics: {} as Record<string, any>
+    };
+
+    // Collect meta fields
+    if (schema.meta) {
+      schema.meta.fields.forEach(field => {
+        if (formData[field.id] !== undefined) {
+          updates.meta[field.id] = formData[field.id];
+        }
+      });
+    }
+
+    // Collect and calculate metrics
+    if (schema.metrics) {
+      schema.metrics.fields.forEach(field => {
+        if (field.calculate) {
+          const value = field.calculate(formData);
+          updates.metrics[field.id] = { value, role: field.role };
+          updates[field.id] = value;
+        } else if (formData[field.id] !== undefined) {
+          updates.metrics[field.id] = { value: formData[field.id], role: field.role };
+          updates[field.id] = formData[field.id];
+        }
+      });
+    }
+
+    onUpdateNode(selectedNode.id, updates);
+    toast.success('Node frissítve');
+  };
 
   if (!selectedNode) {
     return (
@@ -39,55 +86,8 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
     );
   }
 
-  const schema = getNodeSchema(selectedNode.type as NodeType);
   const nodeDefinition = getNodeDefinition(selectedNode.type as NodeType);
-
-  if (!schema) {
-    return (
-      <Card className="w-80 h-full flex items-center justify-center">
-        <CardContent className="text-center text-muted-foreground">
-          <p className="text-sm">Schema nem található: {selectedNode.type}</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const handleFieldChange = (fieldId: string, value: any) => {
-    setFormData(prev => ({ ...prev, [fieldId]: value }));
-  };
-
-  const handleSave = () => {
-    const updatedData = { ...formData };
-    
-    // Recalculate all calculated fields
-    Object.values(schema.sections).forEach(section => {
-      section.fields.forEach(field => {
-        if (field.calculate) {
-          updatedData[field.id] = field.calculate(updatedData);
-        }
-      });
-    });
-    
-    // Set default revenueMode if not set
-    if (!updatedData.revenueMode) {
-      updatedData.revenueMode = getDefaultRevenueMode(selectedNode.type as NodeType);
-    }
-    
-    // Convert valuePerConversion to object structure if it's a number
-    if (updatedData.valuePerConversion && typeof updatedData.valuePerConversion === 'number') {
-      updatedData.valuePerConversion = {
-        value: updatedData.valuePerConversion,
-        currency: 'HUF'
-      };
-    }
-    
-    onUpdateNode(selectedNode.id, updatedData);
-  };
-
   const Icon = nodeDefinition?.icon;
-  const metricsTemplate = getMetricsTemplate(selectedNode.type as NodeType);
-  const hasMetrics = metricsTemplate.length > 0;
-  const hasCosts = schema.sections.costs && schema.sections.costs.fields.length > 0;
 
   return (
     <Card className="w-80 h-full flex flex-col shadow-xl border-l">
@@ -110,25 +110,50 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
 
       <CardContent className="flex-1 overflow-y-auto p-4">
         <Tabs defaultValue="properties" className="w-full">
-          <TabsList className={`grid w-full ${hasMetrics && hasCosts ? 'grid-cols-4' : hasMetrics || hasCosts ? 'grid-cols-3' : 'grid-cols-2'}`}>
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="properties">Tulajdonságok</TabsTrigger>
-            <TabsTrigger value="icon">
-              <Palette className="h-4 w-4" />
-            </TabsTrigger>
-            {hasMetrics && <TabsTrigger value="metrics">Mutatók</TabsTrigger>}
-            {hasCosts && <TabsTrigger value="costs">Költségek</TabsTrigger>}
+            <TabsTrigger value="icon"><Palette className="h-4 w-4" /></TabsTrigger>
+            {schema?.metrics && <TabsTrigger value="metrics">Mutatók</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="properties" className="space-y-4 mt-4">
-            {schema.sections.properties.fields.map(field => (
-              <DynamicFieldRenderer
-                key={field.id}
-                field={field}
-                value={formData[field.id]}
-                onChange={(val) => handleFieldChange(field.id, val)}
-                allData={formData}
-              />
-            ))}
+            {schema?.properties && (
+              <div className="space-y-4">
+                <h3 className="font-medium text-sm text-muted-foreground">{schema.properties.label}</h3>
+                {schema.properties.fields.map((field) => (
+                  <DynamicFieldRenderer
+                    key={field.id}
+                    field={field}
+                    value={formData[field.id]}
+                    onChange={(value) => handleFieldChange(field.id, value)}
+                    allData={formData}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {schema?.meta && (
+              <div className="space-y-4 mt-6">
+                <h3 className="font-medium text-sm text-muted-foreground">{schema.meta.label}</h3>
+                {schema.meta.fields.map((field) => (
+                  <DynamicFieldRenderer
+                    key={field.id}
+                    field={field}
+                    value={formData[field.id]}
+                    onChange={(value) => handleFieldChange(field.id, value)}
+                    allData={formData}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {schema?.dataSources && schema.dataSources.length > 0 && (
+              <div className="mt-6 p-3 bg-muted/50 rounded-md">
+                <p className="text-xs text-muted-foreground">
+                  Támogatott adatforrások: {schema.dataSources.map(ds => ds.label).join(', ')}
+                </p>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="icon" className="space-y-4 mt-4">
@@ -142,24 +167,15 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
             />
           </TabsContent>
 
-          {hasMetrics && (
+          {schema?.metrics && (
             <TabsContent value="metrics" className="space-y-4 mt-4">
-              <TemplateMetricsRenderer
-                metrics={metricsTemplate}
-                data={formData}
-                onChange={handleFieldChange}
-              />
-            </TabsContent>
-          )}
-
-          {hasCosts && (
-            <TabsContent value="costs" className="space-y-4 mt-4">
-              {schema.sections.costs!.fields.map(field => (
+              <h3 className="font-medium text-sm text-muted-foreground mb-4">{schema.metrics.label}</h3>
+              {schema.metrics.fields.map((field) => (
                 <DynamicFieldRenderer
                   key={field.id}
                   field={field}
                   value={formData[field.id]}
-                  onChange={(val) => handleFieldChange(field.id, val)}
+                  onChange={(value) => handleFieldChange(field.id, value)}
                   allData={formData}
                 />
               ))}
@@ -173,19 +189,6 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
             Változások mentése
           </Button>
         </div>
-
-        {schema.dataSourceOptions && schema.dataSourceOptions.length > 0 && (
-          <div className="mt-4 p-3 rounded-lg bg-muted/50 border">
-            <p className="text-xs font-medium mb-2">Elérhető adatforrások:</p>
-            <div className="flex flex-wrap gap-1">
-              {schema.dataSourceOptions.map(source => (
-                <Badge key={source} variant="secondary" className="text-xs">
-                  {source}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
