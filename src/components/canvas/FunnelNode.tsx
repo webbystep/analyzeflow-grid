@@ -80,37 +80,35 @@ export const FunnelNode = memo(({
   const nodeColor = data.color || `var(--node-${nodeType})`;
   
   return <motion.div initial={{
-    scale: 0.8,
+    scale: 0.95,
     opacity: 0
   }} animate={{
-    scale: selected ? 1.02 : isHovered ? 1.01 : 1,
+    scale: selected ? 1 : isHovered ? 1 : 1,
     opacity: 1,
-    y: isHovered ? -2 : 0
-  }} whileHover={{
-    scale: 1.02
+    y: isHovered ? -1 : 0
   }} transition={{
-    duration: 0.2,
-    ease: [0.25, 0.1, 0.25, 1]
+    duration: 0.15,
+    ease: "easeOut"
   }} onMouseEnter={() => {
     setIsHovered(true);
     (data as any).onNodeHover?.(id);
   }} onMouseLeave={() => {
     setIsHovered(false);
     (data as any).onNodeHover?.(null);
-  }} className={`rounded-xl w-[200px] overflow-visible relative z-10 transition-all duration-200 ${selected ? 'border-2' : 'border'}`} style={{
-    backgroundColor: 'hsl(var(--card))',
+  }} className={`rounded-xl w-[240px] overflow-hidden relative z-10 transition-all duration-200 border`} style={{
+    backgroundColor: 'hsl(var(--color-node-bg))',
     borderColor: selected 
-      ? `hsl(var(--primary))` 
+      ? `hsl(var(--color-accent-green))` 
       : isConnectedHighlighted 
-      ? `hsl(var(--primary) / 0.5)` 
-      : `hsl(${nodeColor} / 0.3)`,
+      ? `hsl(var(--color-accent-green) / 0.6)` 
+      : `hsl(var(--color-node-border))`,
     boxShadow: selected 
-      ? `0 20px 40px -10px hsl(${nodeColor} / 0.4), 0 0 0 2px hsl(var(--primary)), 0 0 20px hsl(var(--primary) / 0.3)` 
+      ? `0 0 20px hsla(var(--color-accent-green-rgb), 0.4), 0 16px 30px hsla(var(--shadow-card))` 
       : isConnectedHighlighted 
-      ? `0 15px 30px -10px hsl(${nodeColor} / 0.6), 0 0 0 2px hsl(var(--primary) / 0.3)` 
+      ? `0 0 15px hsla(var(--color-accent-green-rgb), 0.3), 0 12px 20px hsla(var(--shadow-card))` 
       : isHovered
-      ? `0 12px 24px -8px hsl(${nodeColor} / 0.35), 0 0 0 1px hsl(${nodeColor} / 0.4)`
-      : `0 4px 12px -4px hsl(${nodeColor} / 0.25)`,
+      ? `0 0 15px hsla(var(--color-accent-green-rgb), 0.3), 0 12px 20px hsla(var(--shadow-card))`
+      : `0 12px 20px hsla(var(--shadow-card))`,
     willChange: 'transform, box-shadow'
   }}>
       <Handle type="target" position={Position.Top} className="!w-3 !h-3 !bg-transparent !border-0" style={{
@@ -130,28 +128,21 @@ export const FunnelNode = memo(({
       pointerEvents: 'auto'
     }} />
       
-      {/* Colored header bar with gradient glow */}
-      <div className="relative flex items-center justify-between px-3 py-2.5 rounded-t-xl overflow-hidden" style={{
-      background: `linear-gradient(135deg, hsl(${nodeColor}) 0%, hsl(${nodeColor} / 0.85) 100%)`,
-      color: 'hsl(var(--color-text-invert))',
-      boxShadow: `inset 0 1px 0 hsl(${nodeColor} / 0.2), inset 0 -1px 2px hsl(${nodeColor} / 0.3)`
+      {/* Minimalist header */}
+      <div className="relative flex items-center justify-between px-3 py-2 border-b" style={{
+      background: `hsla(var(--color-accent-green-rgb), 0.05)`,
+      borderColor: 'hsl(var(--color-node-border))',
+      color: 'hsl(var(--color-text-primary))'
     }}>
-        {/* Subtle inner glow */}
-        <div className="absolute inset-0 opacity-30" style={{
-          background: `radial-gradient(circle at top left, hsl(${nodeColor} / 0.4) 0%, transparent 70%)`
-        }} />
         <div className="flex items-center gap-2 relative z-10">
-          <div className="flex items-center justify-center w-5 h-5 rounded-md" style={{
-            backgroundColor: 'hsla(0, 0%, 100%, 0.15)',
-            backdropFilter: 'blur(4px)'
-          }}>
+          <div className="flex items-center justify-center w-4 h-4">
             {data.customIconSvg ? (
               <div 
-                className="w-3.5 h-3.5" 
+                className="w-4 h-4 opacity-70" 
                 dangerouslySetInnerHTML={{ __html: data.customIconSvg }}
               />
             ) : (
-              IconComponent && <IconComponent className="w-3.5 h-3.5" style={{ color: iconColor }} />
+              IconComponent && <IconComponent className="w-4 h-4 opacity-70" style={{ color: 'hsl(var(--color-accent-green))' }} />
             )}
           </div>
           {isEditing ? <input type="text" value={label} onChange={e => setLabel(e.target.value)} onBlur={() => {
@@ -171,7 +162,7 @@ export const FunnelNode = memo(({
           setLabel(data.label);
           setIsEditing(false);
         }
-      }} className="nodrag font-semibold text-sm bg-transparent border-none outline-none focus:ring-0 text-white flex-1 min-w-0" autoFocus /> : <div className="font-semibold text-sm cursor-text break-words flex-1 min-w-0 tracking-tight" onClick={() => setIsEditing(true)}>
+      }} className="nodrag font-semibold text-[13px] bg-transparent border-none outline-none focus:ring-0 flex-1 min-w-0" style={{ color: 'hsl(var(--color-text-primary))' }} autoFocus /> : <div className="font-semibold text-[13px] cursor-text break-words flex-1 min-w-0" onClick={() => setIsEditing(true)} style={{ color: 'hsl(var(--color-text-primary))' }}>
             {data.label}
           </div>}
         </div>
@@ -183,8 +174,9 @@ export const FunnelNode = memo(({
       {/* Metrics section */}
       <div className="px-3 py-2.5 space-y-1.5">
         {data.customText && (
-          <div className="mb-2 text-xs text-muted-foreground italic border-l-2 pl-2 break-words" style={{
-            borderColor: `hsl(${nodeColor} / 0.3)`
+          <div className="mb-2 text-xs opacity-60 italic border-l pl-2 break-words" style={{
+            borderColor: `hsl(var(--color-accent-green))`,
+            color: 'hsl(var(--color-text-secondary))'
           }}>
             {data.customText}
           </div>

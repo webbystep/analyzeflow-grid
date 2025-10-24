@@ -128,34 +128,41 @@ export function FloatingEdge({
 
   return (
     <>
+      {/* Base line - subtle */}
       <path
         id={id}
         d={edgePath}
         markerEnd={markerEnd}
         style={{
-          strokeWidth: isHighlighted ? 3 : 2,
-          stroke: isHighlighted
-            ? 'hsl(var(--primary))'
-            : 'hsl(var(--muted-foreground) / 0.3)',
-          transition: 'all 0.2s ease',
+          strokeWidth: 2,
+          stroke: 'hsla(var(--color-accent-green-rgb), 0.2)',
           fill: 'none',
-          filter: isHighlighted
-            ? 'drop-shadow(0 0 4px hsl(var(--primary) / 0.3))'
-            : undefined,
+        }}
+      />
+      
+      {/* Particle flow line - Liam ERD style */}
+      <path
+        d={edgePath}
+        style={{
+          strokeWidth: 2,
+          stroke: 'hsl(var(--color-accent-green))',
+          fill: 'none',
+          strokeDasharray: '4 20',
+          animation: `flow ${isHighlighted ? '3s' : '5s'} linear infinite`,
+          opacity: isHighlighted ? 1 : 0.6,
         }}
       />
 
-      {/* Animated flow particles - enhanced with glow */}
+      {/* Animated particles on hover/highlight */}
       {(isHovering || isHighlighted) && (
         <>
-          {/* Main particles */}
           {[0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87].map((offset) => (
             <g key={offset}>
               {/* Glow effect */}
               <circle
                 r={isHighlighted ? 6 : 5}
-                fill="hsl(var(--primary))"
-                opacity={0.2}
+                fill="hsl(var(--color-accent-green))"
+                opacity={0.3}
                 style={{ filter: 'blur(4px)' }}
               >
                 <animateMotion
@@ -172,8 +179,8 @@ export function FloatingEdge({
               {/* Core particle */}
               <circle
                 r={isHighlighted ? 3 : 2.5}
-                fill="hsl(var(--primary))"
-                opacity={0.9}
+                fill="hsl(var(--color-accent-green))"
+                opacity={1}
                 style={{ willChange: 'transform' }}
               >
                 <animateMotion

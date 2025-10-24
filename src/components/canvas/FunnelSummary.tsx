@@ -92,68 +92,69 @@ export function FunnelSummary({ nodes }: FunnelSummaryProps) {
   }
 
   return (
-    <Card className="border-t bg-card/95 backdrop-blur-md shadow-lg" style={{
-      borderTopColor: 'hsl(var(--color-border-active) / 0.2)',
-      boxShadow: '0 -4px 12px -4px hsl(var(--foreground) / 0.1)'
+    <Card className="border-t backdrop-blur-md shadow-lg" style={{
+      background: 'hsl(var(--color-bg-panel) / 0.95)',
+      borderColor: 'hsl(var(--color-border-default))',
+      boxShadow: '0 8px 30px hsla(0, 0%, 0%, 0.3)'
     }}>
-      <div className="px-6 py-3.5">
+      <div className="px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg transition-all" style={{
-                backgroundColor: 'hsl(var(--node-traffic) / 0.12)',
-                boxShadow: '0 0 0 1px hsl(var(--node-traffic) / 0.2)'
+              <div className="p-2 rounded-lg border transition-all" style={{
+                backgroundColor: 'hsla(var(--color-accent-green-rgb), 0.1)',
+                borderColor: 'hsl(var(--color-accent-green) / 0.3)'
               }}>
-                <Users className="h-4 w-4" style={{ color: 'hsl(var(--node-traffic))' }} />
+                <Users className="h-4 w-4" style={{ color: 'hsl(var(--color-accent-green))' }} />
               </div>
               <div>
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Látogatások</div>
-                <div className="text-lg font-semibold tabular-nums">{metrics.totalVisits.toLocaleString()}</div>
+                <div className="text-xs font-medium uppercase tracking-wider" style={{ color: 'hsl(var(--color-text-secondary))' }}>Látogatások</div>
+                <div className="text-lg font-semibold tabular-nums" style={{ color: 'hsl(var(--color-text-primary))' }}>{metrics.totalVisits.toLocaleString()}</div>
               </div>
             </div>
 
-            <div className="h-10 w-px bg-border" />
+            <div className="h-10 w-px" style={{ background: 'hsl(var(--color-border-default))' }} />
 
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg transition-all" style={{
-                backgroundColor: 'hsl(var(--node-landing) / 0.12)',
-                boxShadow: '0 0 0 1px hsl(var(--node-landing) / 0.2)'
+              <div className="p-2 rounded-lg border transition-all" style={{
+                backgroundColor: 'hsla(var(--color-accent-green-rgb), 0.1)',
+                borderColor: 'hsl(var(--color-accent-green) / 0.3)'
               }}>
-                <Target className="h-4 w-4" style={{ color: 'hsl(var(--node-landing))' }} />
+                <Target className="h-4 w-4" style={{ color: 'hsl(var(--color-accent-green))' }} />
               </div>
               <div>
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Konverziók</div>
-                <div className="text-lg font-semibold tabular-nums">{metrics.totalConversions.toLocaleString()}</div>
+                <div className="text-xs font-medium uppercase tracking-wider" style={{ color: 'hsl(var(--color-text-secondary))' }}>Konverziók</div>
+                <div className="text-lg font-semibold tabular-nums" style={{ color: 'hsl(var(--color-text-primary))' }}>{metrics.totalConversions.toLocaleString()}</div>
               </div>
             </div>
 
-            <div className="h-10 w-px bg-border" />
+            <div className="h-10 w-px" style={{ background: 'hsl(var(--color-border-default))' }} />
 
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg transition-all" style={{
-                backgroundColor: 'hsl(var(--accent) / 0.12)',
-                boxShadow: '0 0 0 1px hsl(var(--accent) / 0.2)'
+              <div className="p-2 rounded-lg border transition-all" style={{
+                backgroundColor: 'hsla(var(--color-accent-green-rgb), 0.1)',
+                borderColor: 'hsl(var(--color-accent-green) / 0.3)'
               }}>
-                <TrendingUp className="h-4 w-4" style={{ color: 'hsl(var(--accent))' }} />
+                <TrendingUp className="h-4 w-4" style={{ color: 'hsl(var(--color-accent-green))' }} />
               </div>
               <div>
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Átlag CR</div>
-                <div className="text-lg font-semibold tabular-nums">{metrics.avgConversionRate}%</div>
+                <div className="text-xs font-medium uppercase tracking-wider" style={{ color: 'hsl(var(--color-text-secondary))' }}>Átlag CR</div>
+                <div className="text-lg font-semibold tabular-nums" style={{ color: 'hsl(var(--color-text-primary))' }}>{metrics.avgConversionRate}%</div>
               </div>
             </div>
 
-            <div className="h-10 w-px bg-border" />
+            <div className="h-10 w-px" style={{ background: 'hsl(var(--color-border-default))' }} />
 
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg transition-all" style={{
-                backgroundColor: 'hsl(var(--node-checkout) / 0.12)',
-                boxShadow: '0 0 0 1px hsl(var(--node-checkout) / 0.2)'
+              <div className="p-2 rounded-lg border transition-all" style={{
+                backgroundColor: 'hsla(var(--color-accent-green-rgb), 0.1)',
+                borderColor: 'hsl(var(--color-accent-green) / 0.3)'
               }}>
-                <DollarSign className="h-4 w-4" style={{ color: 'hsl(var(--node-checkout))' }} />
+                <DollarSign className="h-4 w-4" style={{ color: 'hsl(var(--color-accent-green))' }} />
               </div>
               <div>
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Bevétel</div>
-                <div className="text-lg font-semibold tabular-nums" style={{ color: 'hsl(var(--node-checkout))' }}>
+                <div className="text-xs font-medium uppercase tracking-wider" style={{ color: 'hsl(var(--color-text-secondary))' }}>Bevétel</div>
+                <div className="text-lg font-semibold tabular-nums" style={{ color: 'hsl(var(--color-accent-green))' }}>
                   {metrics.totalRevenue.toLocaleString()} Ft
                 </div>
               </div>

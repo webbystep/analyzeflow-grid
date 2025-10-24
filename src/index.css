@@ -25,82 +25,79 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Light Mode - Clean & Professional */
-    --background: 220 17% 97%;
-    --foreground: 26 6% 10%;
+    --background: 0 0% 97%;
+    --foreground: 222 47% 11%;
     
-    /* Surfaces */
-    --color-bg-canvas: 220 17% 97%;
-    --color-bg-panel: 0 0% 100%;
+    /* Surfaces - Liam ERD Light */
+    --color-bg-canvas: 0 0% 97%;
+    --color-bg-panel: 0 0% 98%;
     --color-bg-card: 0 0% 100%;
     --color-bg-elevated: 0 0% 100%;
     
     /* Borders */
-    --color-border-default: 220 13% 91%;
-    --color-border-active: 231 48% 48%;
-    --color-border-muted: 220 13% 95%;
+    --color-border-default: 0 0% 91%;
+    --color-border-active: 145 85% 52%;
+    --color-border-muted: 0 0% 95%;
     
     /* Text */
-    --color-text-primary: 26 6% 10%;
+    --color-text-primary: 222 47% 11%;
     --color-text-secondary: 220 9% 46%;
     --color-text-dimmed: 220 9% 65%;
     --color-text-invert: 0 0% 100%;
 
     --card: 0 0% 100%;
-    --card-foreground: 26 6% 10%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 26 6% 10%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 231 48% 48%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 145 85% 52%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 220 13% 91%;
-    --secondary-foreground: 26 6% 10%;
+    --secondary: 0 0% 91%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 220 13% 91%;
+    --muted: 0 0% 91%;
     --muted-foreground: 220 9% 46%;
 
-    --accent: 280 65% 60%;
+    --accent: 145 85% 40%;
     --accent-foreground: 0 0% 100%;
     
-    /* Brand gradient */
-    --color-accent-primary: 204 100% 50%;
-    --color-accent-glow: 162 91% 56%;
+    /* Brand accent - Single vibrant green */
+    --color-accent-green: 145 85% 40%;
+    --color-accent-green-rgb: 18 194 103;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 142 71% 45%;
+    --success: 145 85% 40%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 231 48% 48%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 145 85% 52%;
 
     --radius: 0.75rem;
 
-    --chart-1: 231 48% 48%;
-    --chart-2: 280 65% 60%;
+    --chart-1: 145 85% 40%;
+    --chart-2: 220 9% 46%;
     --chart-3: 142 71% 45%;
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
     
     /* Chart colors */
-    --color-chart-line: 231 48% 48%;
-    --color-chart-fill: 231 48% 88%;
-    --color-chart-accent: 280 65% 60%;
+    --color-chart-line: 145 85% 40%;
+    --color-chart-fill: 145 85% 88%;
+    --color-chart-accent: 145 85% 52%;
 
-    /* Node type colors - Harmonized palette */
-    --node-traffic: 199 89% 48%;      /* Electric blue */
-    --node-landing: 160 84% 39%;      /* Teal green */
-    --node-email: 258 90% 66%;        /* Purple */
-    --node-offer: 43 96% 56%;         /* Gold */
-    --node-checkout: 4 90% 58%;       /* Ruby/coral */
-    --node-thank_you: 189 94% 43%;    /* Cyan */
-    --node-custom: 220 9% 46%;        /* Neutral gray */
+    /* Node colors - Unified minimalist style */
+    --color-node-bg: 0 0% 100%;
+    --color-node-border: 0 0% 91%;
+    --color-line: 0 0% 88%;
+    --shadow-card: 0deg 0% 0% / 0.04;
   }
 
   /* React Flow Edge Hover Effects */
@@ -120,81 +117,78 @@ All colors MUST be HSL.
 
 
   .dark {
-    /* Dark Mode - Premium Control Panel */
-    --background: 222 47% 11%;
+    /* Dark Mode - Liam ERD "Neon Cockpit" */
+    --background: 222 47% 9%;
     --foreground: 210 40% 98%;
     
-    /* Surfaces - Layered depth */
-    --color-bg-canvas: 222 47% 11%;
-    --color-bg-panel: 217 33% 17%;
-    --color-bg-card: 217 33% 17%;
-    --color-bg-elevated: 215 28% 20%;
+    /* Surfaces - Tech dark */
+    --color-bg-canvas: 222 47% 9%;
+    --color-bg-panel: 217 33% 13%;
+    --color-bg-card: 217 33% 15%;
+    --color-bg-elevated: 215 28% 17%;
     
     /* Borders */
-    --color-border-default: 217 33% 23%;
-    --color-border-active: 231 70% 65%;
-    --color-border-muted: 217 33% 19%;
+    --color-border-default: 0 0% 100% / 0.08;
+    --color-border-active: 145 85% 52%;
+    --color-border-muted: 0 0% 100% / 0.05;
     
     /* Text */
     --color-text-primary: 210 40% 98%;
     --color-text-secondary: 215 20% 65%;
     --color-text-dimmed: 217 20% 50%;
-    --color-text-invert: 222 47% 11%;
+    --color-text-invert: 222 47% 9%;
 
-    --card: 217 33% 17%;
+    --card: 217 33% 15%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 217 33% 17%;
+    --popover: 217 33% 15%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 231 70% 65%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 145 85% 52%;
+    --primary-foreground: 222 47% 9%;
 
-    --secondary: 217 33% 23%;
+    --secondary: 217 33% 20%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217 33% 23%;
+    --muted: 217 33% 20%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 280 65% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 145 85% 52%;
+    --accent-foreground: 222 47% 9%;
     
-    /* Brand gradient */
-    --color-accent-primary: 204 100% 50%;
-    --color-accent-glow: 162 91% 56%;
+    /* Brand accent - Vibrant neon green */
+    --color-accent-green: 145 85% 52%;
+    --color-accent-green-rgb: 30 237 131;
 
-    --destructive: 0 63% 31%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
+    --success: 145 85% 52%;
+    --success-foreground: 222 47% 9%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 217 33% 23%;
-    --input: 217 33% 23%;
-    --ring: 231 70% 65%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.08;
+    --ring: 145 85% 52%;
 
-    --chart-1: 231 70% 65%;
-    --chart-2: 280 65% 60%;
+    --chart-1: 145 85% 52%;
+    --chart-2: 215 20% 65%;
     --chart-3: 142 71% 45%;
     --chart-4: 38 92% 50%;
     --chart-5: 198 93% 60%;
     
     /* Chart colors */
-    --color-chart-line: 231 70% 65%;
-    --color-chart-fill: 231 70% 25%;
-    --color-chart-accent: 280 65% 60%;
+    --color-chart-line: 145 85% 52%;
+    --color-chart-fill: 145 85% 25%;
+    --color-chart-accent: 145 85% 60%;
 
-    /* Node type colors - Vibrant on dark */
-    --node-traffic: 199 89% 55%;
-    --node-landing: 160 84% 45%;
-    --node-email: 258 90% 70%;
-    --node-offer: 43 96% 60%;
-    --node-checkout: 4 90% 65%;
-    --node-thank_you: 189 94% 50%;
-    --node-custom: 220 9% 60%;
+    /* Node colors - Unified dark style */
+    --color-node-bg: 217 33% 15%;
+    --color-node-border: 0 0% 100% / 0.1;
+    --color-line: 0 0% 100% / 0.08;
+    --shadow-card: 0deg 0% 0% / 0.6;
   }
 }
 
@@ -217,15 +211,24 @@ All colors MUST be HSL.
     transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
   
-  /* Brand gradient utility */
+  /* Liam ERD utilities */
   .brand-gradient {
-    background: linear-gradient(90deg, hsl(var(--color-accent-primary)), hsl(var(--color-accent-glow)));
+    background: hsl(var(--color-accent-green));
   }
   
   .brand-gradient-text {
-    background: linear-gradient(90deg, hsl(var(--color-accent-primary)), hsl(var(--color-accent-glow)));
+    background: hsl(var(--color-accent-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  
+  /* Tech glow effect */
+  .tech-glow {
+    box-shadow: 0 0 15px rgba(var(--color-accent-green-rgb), 0.3);
+  }
+  
+  .tech-glow-strong {
+    box-shadow: 0 0 20px rgba(var(--color-accent-green-rgb), 0.4);
   }
 }
