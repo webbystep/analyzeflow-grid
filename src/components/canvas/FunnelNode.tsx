@@ -83,32 +83,28 @@ export const FunnelNode = memo(({
     scale: 0.95,
     opacity: 0
   }} animate={{
-    scale: selected ? 1 : isHovered ? 1 : 1,
+    scale: 1,
     opacity: 1,
     y: isHovered ? -1 : 0
   }} transition={{
-    duration: 0.15,
-    ease: "easeOut"
+    duration: 0.2,
+    ease: [0.25, 0.1, 0.25, 1]
   }} onMouseEnter={() => {
     setIsHovered(true);
     (data as any).onNodeHover?.(id);
   }} onMouseLeave={() => {
     setIsHovered(false);
     (data as any).onNodeHover?.(null);
-  }} className={`rounded-xl w-[240px] overflow-hidden relative z-10 transition-all duration-200 border`} style={{
+  }} className={`rounded-lg w-[240px] overflow-hidden relative z-10 transition-all duration-200 border ${selected || isConnectedHighlighted ? 'is-active' : ''}`} style={{
     backgroundColor: 'hsl(var(--color-node-bg))',
-    borderColor: selected 
+    borderColor: selected || isConnectedHighlighted
       ? `hsl(var(--color-accent-green))` 
-      : isConnectedHighlighted 
-      ? `hsl(var(--color-accent-green) / 0.6)` 
       : `hsl(var(--color-node-border))`,
-    boxShadow: selected 
-      ? `0 0 20px hsla(var(--color-accent-green-rgb), 0.4), 0 16px 30px hsla(var(--shadow-card))` 
-      : isConnectedHighlighted 
-      ? `0 0 15px hsla(var(--color-accent-green-rgb), 0.3), 0 12px 20px hsla(var(--shadow-card))` 
+    boxShadow: selected || isConnectedHighlighted
+      ? `var(--shadow-glow-strong)` 
       : isHovered
-      ? `0 0 15px hsla(var(--color-accent-green-rgb), 0.3), 0 12px 20px hsla(var(--shadow-card))`
-      : `0 12px 20px hsla(var(--shadow-card))`,
+      ? `var(--shadow-glow)`
+      : 'none',
     willChange: 'transform, box-shadow'
   }}>
       <Handle type="target" position={Position.Top} className="!w-3 !h-3 !bg-transparent !border-0" style={{
@@ -129,20 +125,21 @@ export const FunnelNode = memo(({
     }} />
       
       {/* Minimalist header */}
-      <div className="relative flex items-center justify-between px-3 py-2 border-b" style={{
-      background: `hsla(var(--color-accent-green-rgb), 0.05)`,
-      borderColor: 'hsl(var(--color-node-border))',
+      <div className="relative flex items-center justify-between px-2.5 py-2 border-b" style={{
+      backgroundColor: 'hsl(var(--color-bg-node-header))',
+      borderColor: 'hsl(var(--color-border))',
       color: 'hsl(var(--color-text-primary))'
     }}>
         <div className="flex items-center gap-2 relative z-10">
-          <div className="flex items-center justify-center w-4 h-4">
+          <div className="flex items-center justify-center w-3.5 h-3.5">
             {data.customIconSvg ? (
               <div 
-                className="w-4 h-4 opacity-70" 
+                className="w-3.5 h-3.5" 
+                style={{ color: 'hsl(var(--color-text-primary))' }}
                 dangerouslySetInnerHTML={{ __html: data.customIconSvg }}
               />
             ) : (
-              IconComponent && <IconComponent className="w-4 h-4 opacity-70" style={{ color: 'hsl(var(--color-accent-green))' }} />
+              IconComponent && <IconComponent className="w-3.5 h-3.5" style={{ color: 'hsl(var(--color-text-primary))' }} />
             )}
           </div>
           {isEditing ? <input type="text" value={label} onChange={e => setLabel(e.target.value)} onBlur={() => {
@@ -162,7 +159,7 @@ export const FunnelNode = memo(({
           setLabel(data.label);
           setIsEditing(false);
         }
-      }} className="nodrag font-semibold text-[13px] bg-transparent border-none outline-none focus:ring-0 flex-1 min-w-0" style={{ color: 'hsl(var(--color-text-primary))' }} autoFocus /> : <div className="font-semibold text-[13px] cursor-text break-words flex-1 min-w-0" onClick={() => setIsEditing(true)} style={{ color: 'hsl(var(--color-text-primary))' }}>
+      }} className="nodrag font-semibold text-[13px] leading-tight bg-transparent border-none outline-none focus:ring-0 flex-1 min-w-0" style={{ color: 'hsl(var(--color-text-primary))' }} autoFocus /> : <div className="font-semibold text-[13px] leading-tight cursor-text break-words flex-1 min-w-0" onClick={() => setIsEditing(true)} style={{ color: 'hsl(var(--color-text-primary))' }}>
             {data.label}
           </div>}
         </div>
@@ -172,9 +169,11 @@ export const FunnelNode = memo(({
       </div>
       
       {/* Metrics section */}
-      <div className="px-3 py-2.5 space-y-1.5">
+      <div className="px-3 py-2.5 space-y-1.5" style={{
+        backgroundColor: 'hsl(var(--color-bg-node-body))'
+      }}>
         {data.customText && (
-          <div className="mb-2 text-xs opacity-60 italic border-l pl-2 break-words" style={{
+          <div className="mb-2 text-xs leading-snug italic border-l-2 pl-2 break-words" style={{
             borderColor: `hsl(var(--color-accent-green))`,
             color: 'hsl(var(--color-text-secondary))'
           }}>

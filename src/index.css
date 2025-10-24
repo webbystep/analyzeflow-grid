@@ -24,80 +24,89 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light Mode - Clean & Professional */
-    --background: 0 0% 97%;
-    --foreground: 222 47% 11%;
+    /* Light Mode - Liam ERD Light */
+    --background: 245 246 247;
+    --foreground: 17 24 39;
     
     /* Surfaces - Liam ERD Light */
-    --color-bg-canvas: 0 0% 97%;
-    --color-bg-panel: 0 0% 98%;
-    --color-bg-card: 0 0% 100%;
-    --color-bg-elevated: 0 0% 100%;
+    --color-bg-canvas: 245 246 247;
+    --color-bg-panel: 255 255 255;
+    --color-bg-card: 255 255 255;
+    --color-bg-elevated: 255 255 255;
+    --color-bg-sidebar: 255 255 255;
+    --color-bg-bottom-bar: 255 255 255;
+    --color-bg-node-header: 255 255 255;
+    --color-bg-node-body: 255 255 255;
     
     /* Borders */
-    --color-border-default: 0 0% 91%;
-    --color-border-active: 145 85% 52%;
-    --color-border-muted: 0 0% 95%;
+    --color-border-default: 0 0 0 / 0.12;
+    --color-border-active: 29 237 131;
+    --color-border-muted: 0 0 0 / 0.08;
+    --color-border: 0 0 0 / 0.12;
     
     /* Text */
-    --color-text-primary: 222 47% 11%;
-    --color-text-secondary: 220 9% 46%;
-    --color-text-dimmed: 220 9% 65%;
-    --color-text-invert: 0 0% 100%;
+    --color-text-primary: 17 24 39;
+    --color-text-secondary: 107 114 128;
+    --color-text-dimmed: 156 163 175;
+    --color-text-invert: 255 255 255;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 255 255 255;
+    --card-foreground: 17 24 39;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 255 255 255;
+    --popover-foreground: 17 24 39;
 
-    --primary: 145 85% 52%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 29 237 131;
+    --primary-foreground: 14 21 34;
 
-    --secondary: 0 0% 91%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 0 0 0 / 0.12;
+    --secondary-foreground: 17 24 39;
 
-    --muted: 0 0% 91%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 0 0 0 / 0.08;
+    --muted-foreground: 107 114 128;
 
-    --accent: 145 85% 40%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 29 237 131;
+    --accent-foreground: 14 21 34;
     
     /* Brand accent - Single vibrant green */
-    --color-accent-green: 145 85% 40%;
-    --color-accent-green-rgb: 18 194 103;
+    --color-accent-green: 29 237 131;
+    --color-accent-green-rgb: 29, 237, 131;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 72 51;
+    --destructive-foreground: 255 255 255;
 
-    --success: 145 85% 40%;
-    --success-foreground: 0 0% 100%;
+    --success: 29 237 131;
+    --success-foreground: 14 21 34;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning: 38 92 50;
+    --warning-foreground: 255 255 255;
 
-    --border: 0 0% 91%;
-    --input: 0 0% 91%;
-    --ring: 145 85% 52%;
+    --border: 0 0 0 / 0.12;
+    --input: 0 0 0 / 0.12;
+    --ring: 29 237 131;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --chart-1: 145 85% 40%;
-    --chart-2: 220 9% 46%;
-    --chart-3: 142 71% 45%;
-    --chart-4: 38 92% 50%;
-    --chart-5: 198 93% 60%;
+    --chart-1: 29 237 131;
+    --chart-2: 107 114 128;
+    --chart-3: 142 71 45;
+    --chart-4: 38 92 50;
+    --chart-5: 198 93 60;
     
     /* Chart colors */
-    --color-chart-line: 145 85% 40%;
-    --color-chart-fill: 145 85% 88%;
-    --color-chart-accent: 145 85% 52%;
+    --color-chart-line: 29 237 131;
+    --color-chart-fill: 29 237 131 / 0.2;
+    --color-chart-accent: 29 237 131;
 
     /* Node colors - Unified minimalist style */
-    --color-node-bg: 0 0% 100%;
-    --color-node-border: 0 0% 91%;
-    --color-line: 0 0% 88%;
-    --shadow-card: 0deg 0% 0% / 0.04;
+    --color-node-bg: 255 255 255;
+    --color-node-border: 0 0 0 / 0.12;
+    --color-line: 0 0 0 / 0.4;
+    --shadow-card: 0 12 20 / rgba(0,0,0,0.04);
+    
+    /* Shadow/Glow */
+    --shadow-glow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.2);
+    --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.28);
   }
 
   /* React Flow Edge Hover Effects */
@@ -118,77 +127,86 @@ All colors MUST be HSL.
 
   .dark {
     /* Dark Mode - Liam ERD "Neon Cockpit" */
-    --background: 222 47% 9%;
-    --foreground: 210 40% 98%;
+    --background: 20 20 20;
+    --foreground: 229 231 235;
     
-    /* Surfaces - Tech dark */
-    --color-bg-canvas: 222 47% 9%;
-    --color-bg-panel: 217 33% 13%;
-    --color-bg-card: 217 33% 15%;
-    --color-bg-elevated: 215 28% 17%;
+    /* Surfaces - Liam ERD Dark */
+    --color-bg-canvas: 20 20 20;
+    --color-bg-panel: 34 37 38;
+    --color-bg-card: 34 37 38;
+    --color-bg-elevated: 34 37 38;
+    --color-bg-sidebar: 34 37 38;
+    --color-bg-bottom-bar: 34 37 38;
+    --color-bg-node-header: 34 37 38;
+    --color-bg-node-body: 34 37 38;
     
-    /* Borders */
-    --color-border-default: 0 0% 100% / 0.08;
-    --color-border-active: 145 85% 52%;
-    --color-border-muted: 0 0% 100% / 0.05;
+    /* Borders - Liam ERD Dark */
+    --color-border-default: 56 58 59;
+    --color-border-active: 29 237 131;
+    --color-border-muted: 255 255 255 / 0.05;
+    --color-border: 56 58 59;
     
     /* Text */
-    --color-text-primary: 210 40% 98%;
-    --color-text-secondary: 215 20% 65%;
-    --color-text-dimmed: 217 20% 50%;
-    --color-text-invert: 222 47% 9%;
+    --color-text-primary: 229 231 235;
+    --color-text-secondary: 156 163 175;
+    --color-text-dimmed: 107 114 128;
+    --color-text-invert: 14 21 34;
 
-    --card: 217 33% 15%;
-    --card-foreground: 210 40% 98%;
+    --card: 34 37 38;
+    --card-foreground: 229 231 235;
 
-    --popover: 217 33% 15%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 34 37 38;
+    --popover-foreground: 229 231 235;
 
-    --primary: 145 85% 52%;
-    --primary-foreground: 222 47% 9%;
+    --primary: 29 237 131;
+    --primary-foreground: 14 21 34;
 
-    --secondary: 217 33% 20%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 34 37 38;
+    --secondary-foreground: 229 231 235;
 
-    --muted: 217 33% 20%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 34 37 38;
+    --muted-foreground: 156 163 175;
 
-    --accent: 145 85% 52%;
-    --accent-foreground: 222 47% 9%;
+    --accent: 29 237 131;
+    --accent-foreground: 14 21 34;
     
     /* Brand accent - Vibrant neon green */
-    --color-accent-green: 145 85% 52%;
-    --color-accent-green-rgb: 30 237 131;
+    --color-accent-green: 29 237 131;
+    --color-accent-green-rgb: 29, 237, 131;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72 51;
+    --destructive-foreground: 229 231 235;
 
-    --success: 145 85% 52%;
-    --success-foreground: 222 47% 9%;
+    --success: 29 237 131;
+    --success-foreground: 14 21 34;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning: 38 92 50;
+    --warning-foreground: 255 255 255;
 
-    --border: 0 0% 100% / 0.08;
-    --input: 0 0% 100% / 0.08;
-    --ring: 145 85% 52%;
+    --border: 56 58 59;
+    --input: 56 58 59;
+    --ring: 29 237 131;
 
-    --chart-1: 145 85% 52%;
-    --chart-2: 215 20% 65%;
-    --chart-3: 142 71% 45%;
-    --chart-4: 38 92% 50%;
-    --chart-5: 198 93% 60%;
+    --chart-1: 29 237 131;
+    --chart-2: 156 163 175;
+    --chart-3: 142 71 45;
+    --chart-4: 38 92 50;
+    --chart-5: 198 93 60;
     
     /* Chart colors */
-    --color-chart-line: 145 85% 52%;
-    --color-chart-fill: 145 85% 25%;
-    --color-chart-accent: 145 85% 60%;
+    --color-chart-line: 29 237 131;
+    --color-chart-fill: 29 237 131 / 0.25;
+    --color-chart-accent: 29 237 131;
 
     /* Node colors - Unified dark style */
-    --color-node-bg: 217 33% 15%;
-    --color-node-border: 0 0% 100% / 0.1;
-    --color-line: 0 0% 100% / 0.08;
-    --shadow-card: 0deg 0% 0% / 0.6;
+    --color-node-bg: 34 37 38;
+    --color-node-border: 56 58 59;
+    --color-line: 34 37 38;
+    --shadow-card: 0 0 0 / 0;
+    
+    /* Shadow/Glow */
+    --shadow-glow: 0 0 15px rgba(var(--color-accent-green-rgb), 0.25);
+    --shadow-glow-strong: 0 0 25px rgba(var(--color-accent-green-rgb), 0.4);
   }
 }
 
@@ -225,10 +243,25 @@ All colors MUST be HSL.
   
   /* Tech glow effect */
   .tech-glow {
-    box-shadow: 0 0 15px rgba(var(--color-accent-green-rgb), 0.3);
+    box-shadow: var(--shadow-glow);
   }
   
   .tech-glow-strong {
-    box-shadow: 0 0 20px rgba(var(--color-accent-green-rgb), 0.4);
+    box-shadow: var(--shadow-glow-strong);
+  }
+  
+  /* Canvas grid pattern */
+  .canvas-grid {
+    background-color: hsl(var(--color-bg-canvas));
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  
+  .dark .canvas-grid {
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  }
+  
+  :root:not(.dark) .canvas-grid {
+    background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
   }
 }
