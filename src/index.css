@@ -23,10 +23,9 @@
 
 /* =======================================================
    DESIGN SYSTEM TOKENEK
-   - Minden szín HSL-ben van megadva
-   - Mindent ezekből a tokenekből kell építeni
-   - Light: Liam ERD "világos párja"
-   - Dark: Liam ERD "neon cockpit"
+   - Minden szín HSL-ben
+   - Light: "világos pár"
+   - Dark: "neon cockpit"
    ======================================================= */
 
 @layer base {
@@ -35,21 +34,20 @@
        Canvas háttér: #F5F6F7 → hsl(210, 11.1%, 96.5%)
        Panel / card / sidebar / bottom bar: #FFFFFF → hsl(0, 0%, 100%)
        Border: rgba(0,0,0,0.12) → hsl(0 0% 0% / 0.12)
-       Vonal (edge alap): rgba(0,0,0,0.4) → hsl(0 0% 0% / 0.4)
-       Szövegek:
-         Primary: #111827 → hsl(220.9,39.3%,11.0%)
-         Secondary: #6B7280 → hsl(220,8.9%,46.1%)
-         Dimmed: #9CA3AF → hsl(217.9,10.6%,64.9%)
-       Akcentus zöld: #1DED83 → hsl(149.4,85.2%,52.2%)
-       "Invert" (szöveg a zöld gombon): #0E1522 → hsl(219,41.7%,9.4%)
+       Edge alap: rgba(0,0,0,0.4) → hsl(0 0% 0% / 0.4)
+       Text Primary: #111827 → hsl(220.9,39.3%,11.0%)
+       Text Secondary: #6B7280 → hsl(220,8.9%,46.1%)
+       Text Dimmed: #9CA3AF → hsl(217.9,10.6%,64.9%)
+       Accent Green (#1EED83): hsl(149.4,85.2%,52.2%)
+       Dark text on green (#0E1522): hsl(219,41.7%,9.4%)
     */
 
-    --background: 210 11.1% 96.5%;         /* app body bg / canvas bg fallback */
-    --foreground: 220.9 39.3% 11.0%;       /* default text on light bg */
+    --background: 210 11.1% 96.5%;         /* app body / canvas fallback bg */
+    --foreground: 220.9 39.3% 11.0%;       /* default text */
 
     /* Felületek */
     --color-bg-canvas: 210 11.1% 96.5%;    /* #F5F6F7 */
-    --color-bg-panel: 0 0% 100%;          /* #FFFFFF */
+    --color-bg-panel: 0 0% 100%;           /* #FFFFFF */
     --color-bg-card: 0 0% 100%;
     --color-bg-elevated: 0 0% 100%;
     --color-bg-sidebar: 0 0% 100%;
@@ -58,28 +56,28 @@
     --color-bg-node-body: 0 0% 100%;
 
     /* Határvonalak / border */
-    --color-border-default: 0 0% 0% / 0.12;  /* általános panel border */
+    --color-border-default: 0 0% 0% / 0.12;    /* általános panel border */
     --color-border-muted: 0 0% 0% / 0.08;
-    --color-border-active: 149.4 85.2% 52.2%; /* accent green */
+    --color-border-active: 149.4 85.2% 52.2%;  /* accent zöld kiemelés */
     --color-border: 0 0% 0% / 0.12;
 
-    /* Szövegek */
-    --color-text-primary: 220.9 39.3% 11.0%;  /* #111827 */
-    --color-text-secondary: 220 8.9% 46.1%;   /* #6B7280 */
-    --color-text-dimmed: 217.9 10.6% 64.9%;   /* #9CA3AF */
-    --color-text-invert: 219 41.7% 9.4%;      /* #0E1522 (megy a zöld gombra, dark text on neon) */
+    /* Szöveg */
+    --color-text-primary: 220.9 39.3% 11.0%;   /* #111827 */
+    --color-text-secondary: 220 8.9% 46.1%;    /* #6B7280 */
+    --color-text-dimmed: 217.9 10.6% 64.9%;    /* #9CA3AF */
+    --color-text-invert: 219 41.7% 9.4%;       /* #0E1522 (zöld CTA-n a szöveg) */
 
-    /* Semantic tokens Tailwind-style */
-    --card: 0 0% 100%;                /* panel/card bg */
+    /* Tailwind-style semantic tokens */
+    --card: 0 0% 100%;
     --card-foreground: 220.9 39.3% 11.0%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 220.9 39.3% 11.0%;
 
-    --primary: 149.4 85.2% 52.2%;          /* #1DED83 */
-    --primary-foreground: 219 41.7% 9.4%;  /* #0E1522 */
+    --primary: 149.4 85.2% 52.2%;           /* #1EED83 */
+    --primary-foreground: 219 41.7% 9.4%;   /* #0E1522 */
 
-    --secondary: 0 0% 0% / 0.12;           /* subtle surface / stroke style */
+    --secondary: 0 0% 0% / 0.12;
     --secondary-foreground: 220.9 39.3% 11.0%;
 
     --muted: 0 0% 0% / 0.08;
@@ -89,17 +87,16 @@
     --accent-foreground: 219 41.7% 9.4%;
 
     /* Brand accent */
-    --color-accent-green: 149.4 85.2% 52.2%;
-    /* külön RGB-re nincs szükség Tailwind-ben, de a glow miatt megtartjuk */
-    --color-accent-green-rgb: 29, 237, 131;
+    --color-accent-green: 149.4 85.2% 52.2%;           /* #1EED83 */
+    --color-accent-green-rgb: 29, 237, 131;            /* rgb for glow shadows */
 
-    --destructive: 158.1 100% 14.1%;           /* #004833-ish sötétzöld; közelítőleg */
+    --destructive: 158.1 100% 14.1%;                   /* sötétzöld-ish */
     --destructive-foreground: 0 0% 100%;
 
     --success: 149.4 85.2% 52.2%;
     --success-foreground: 219 41.7% 9.4%;
 
-    --warning: 138 42% 25%;                    /* közelítés #265c32 jellegéhez */
+    --warning: 138 42% 25%;
     --warning-foreground: 0 0% 100%;
 
     --border: 0 0% 0% / 0.12;
@@ -109,40 +106,46 @@
     --radius: 0.5rem;
 
     /* Chart / data-viz */
-    --chart-1: 149.4 85.2% 52.2%;  /* accent green */
-    --chart-2: 220 8.9% 46.1%;     /* #6B7280 */
-    --chart-3: 18 52% 37%;         /* közelítés #8e472d meleg barna */
-    --chart-4: 138 42% 25%;        /* #265c32 */
-    --chart-5: 18 60% 51%;         /* #c65d3c-szerű narancs */
+    --chart-1: 149.4 85.2% 52.2%;
+    --chart-2: 220 8.9% 46.1%;
+    --chart-3: 18 52% 37%;
+    --chart-4: 138 42% 25%;
+    --chart-5: 18 60% 51%;
 
-    /* Node-specifikus */
+    /* Node / edge */
     --color-node-bg: 0 0% 100%;
     --color-node-border: 0 0% 0% / 0.12;
-    --color-line: 0 0% 0% / 0.4;   /* összekötő vonal alapértelmezett light módban */
-    --shadow-card: 0 0% 0% / 0;    /* nem használunk nagy doboz-shadow-ot, console vibe */
+    --color-line: 0 0% 0% / 0.4;            /* edge baseline szín (light) */
+    --shadow-card: 0 0% 0% / 0;
 
-    /* Glow / hover highlight light módban (visszafogottabb) */
+    /* Header buttons + sidebar fixek világos módban is (alig fog látszani, inkább darkban fontos) */
+    --color-border-sidebar: 0 0% 0% / 0.12;
+    --color-header-btn-border: 0 0% 0% / 0.12;
+    --color-header-btn-bg: 0 0% 100% / 0;
+    --color-header-btn-hover-bg: 220 3% 18%;  /* fallback, világos módban ritkán használjuk */
+    --color-header-btn-text: 220.9 39.3% 11.0%;
+
+    --color-share-bg: 149.4 85.2% 52.2%;     /* #1EED83 */
+    --color-share-text: 219 41.7% 9.4%;      /* #0E1522 */
+    --color-share-bg-hover: 149.4 85.2% 48%; /* sötétebb zöld hoverre */
+
+    /* Glow / highlight light módban */
     --shadow-glow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.2);
-    --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.4);
+    --shadow-glow-strong: 0 0 16px rgba(var(--color-accent-green-rgb), 0.28);
   }
 
-  /* DARK THEME TOKENS
-     Canvas háttér: #141414 → hsl(0,0%,7.8%)
-     Panelek / node / sidebar / bottom bar: #222526 → hsl(195,5.6%,14.1%)
+  /* DARK MODE TOKENS
+     Canvas: #141414 → hsl(0,0%,7.8%)
+     Panel/node/sidebar/bottom bar: #222526 → hsl(195,5.6%,14.1%)
      Border: #383A3B → hsl(200,2.6%,22.5%)
-     Vonal (edge alap): #222526 → ugyanaz, tehát beleolvad
-     Szövegek:
-       Primary: #E5E7EB → hsl(220,13.0%,91.0%)
-       Secondary: #9CA3AF → hsl(217.9,10.6%,64.9%)
-       Dimmed: #6B7280 → hsl(220,8.9%,46.1%)
-     Accent green marad #1DED83 → hsl(149.4,85.2%,52.2%)
-     Invert text a zöldön: #0E1522 → hsl(219,41.7%,9.4%)
+     Text primary: #E5E7EB → hsl(220,13%,91%)
+     Accent green: #1EED83 → hsl(149.4,85.2%,52.2%)
+     Header hover bg: #2e3031 → kb hsl(210,4%,18%)
   */
   .dark {
     --background: 0 0% 7.8%;
     --foreground: 220 13% 91%;
 
-    /* Felületek */
     --color-bg-canvas: 0 0% 7.8%;            /* #141414 */
     --color-bg-panel: 195 5.6% 14.1%;        /* #222526 */
     --color-bg-card: 195 5.6% 14.1%;
@@ -152,19 +155,16 @@
     --color-bg-node-header: 195 5.6% 14.1%;
     --color-bg-node-body: 195 5.6% 14.1%;
 
-    /* Határvonalak */
-    --color-border-default: 200 2.6% 22.5%;      /* #383A3B */
-    --color-border-muted: 0 0% 100% / 0.05;      /* finom belső elválasztók */
-    --color-border-active: 149.4 85.2% 52.2%;    /* zöld highlight */
+    --color-border-default: 200 2.6% 22.5%;      /* #383a3b */
+    --color-border-muted: 0 0% 100% / 0.05;
+    --color-border-active: 149.4 85.2% 52.2%;
     --color-border: 200 2.6% 22.5%;
 
-    /* Szöveg */
-    --color-text-primary: 220 13% 91%;          /* #E5E7EB */
-    --color-text-secondary: 217.9 10.6% 64.9%;  /* #9CA3AF */
-    --color-text-dimmed: 220 8.9% 46.1%;        /* #6B7280 */
-    --color-text-invert: 219 41.7% 9.4%;        /* #0E1522 */
+    --color-text-primary: 220 13% 91%;
+    --color-text-secondary: 217.9 10.6% 64.9%;
+    --color-text-dimmed: 220 8.9% 46.1%;
+    --color-text-invert: 219 41.7% 9.4%;
 
-    /* Tailwind-style semantic tokens */
     --card: 195 5.6% 14.1%;
     --card-foreground: 220 13% 91%;
 
@@ -183,7 +183,7 @@
     --accent: 149.4 85.2% 52.2%;
     --accent-foreground: 219 41.7% 9.4%;
 
-    --color-accent-green: 149.4 85.2% 52.2%;
+    --color-accent-green: 149.4 85.2% 52.2%;    /* #1EED83 */
     --color-accent-green-rgb: 29, 237, 131;
 
     --destructive: 158.1 100% 14.1%;
@@ -207,8 +207,19 @@
 
     --color-node-bg: 195 5.6% 14.1%;
     --color-node-border: 200 2.6% 22.5%;
-    --color-line: 195 5.6% 14.1%;
+    --color-line: 200 2.6% 22.5%;            /* default edge line = #383a3b look */
     --shadow-card: 0 0% 0% / 0;
+
+    /* specifikus aliasok a header és sidebar kéréseidhez */
+    --color-border-sidebar: 200 2.6% 22.5%;   /* fix 1px #383a3b a node könyvtár kártyáknál */
+    --color-header-btn-border: 200 2.6% 22.5%;/* undo/redo/darkmode border */
+    --color-header-btn-bg: 0 0% 100% / 0;     /* átlátszó */
+    --color-header-btn-hover-bg: 210 4% 18%;  /* #2e3031 kb */
+    --color-header-btn-text: 220 13% 91%;
+
+    --color-share-bg: 149.4 85.2% 52.2%;      /* #1EED83 */
+    --color-share-text: 219 41.7% 9.4%;       /* #0E1522 */
+    --color-share-bg-hover: 149.4 85.2% 48%;  /* picit sötétebb hover */
 
     --shadow-glow: 0 0 15px rgba(var(--color-accent-green-rgb), 0.25);
     --shadow-glow-strong: 0 0 25px rgba(var(--color-accent-green-rgb), 0.4);
@@ -233,7 +244,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Zöld kitöltés vagy szöveg */
+  /* Zöld util, ha kell full fill */
   .brand-gradient {
     background: hsl(var(--color-accent-green));
   }
@@ -245,7 +256,7 @@
     background-clip: text;
   }
 
-  /* Tech glow util a zöld highlight-hoz */
+  /* Glow utilok */
   .tech-glow {
     box-shadow: var(--shadow-glow);
   }
@@ -255,7 +266,7 @@
   }
 
   /* ==========================
-     CANVAS GRID (háttér)
+     CANVAS GRID
      ========================== */
   .canvas-grid {
     background-color: hsl(var(--color-bg-canvas));
@@ -267,30 +278,322 @@
     background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
   }
 
-  /* Light: pöttyök feketés árnyalattal világos háttéren */
+  /* Light: pöttyök sötét árnyalattal világos háttéren */
   :root:not(.dark) .canvas-grid {
     background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
   }
 }
 
 /* =========================================
-   REACT FLOW EDGE VISELKEDÉS
-   edge alap: solid
-   hover / selected: accent green + glow
+   NODE STYLES
+   - border alapból panel border
+   - hover: zöld keret + glow akkor is, ha nincs bekötve
+   - active: erősebb glow
    ========================================= */
 @layer base {
-  .react-flow__edge-path {
-    transition: stroke-width 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
-    /* alap vonalszín = token (line) */
-    stroke: hsl(var(--color-line)) !important;
-    stroke-width: 1.5px !important;
+  .node {
+    background: hsl(var(--color-bg-node-body));
+    border: 1px solid hsl(var(--color-border-default));
+    border-radius: 8px;
+    color: hsl(var(--color-text-primary));
+    min-width: 240px;
+    max-width: 260px;
+    box-shadow: none;
+    transition: all 0.2s ease;
   }
 
-  /* Hover / selected: zöld fény + subtle glow */
+  .node-header {
+    background: hsl(var(--color-bg-node-header));
+    border-bottom: 1px solid hsl(var(--color-border-default));
+    color: hsl(var(--color-text-primary));
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .node-header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .node-add-btn {
+    background: transparent;
+    border: 1px solid hsl(var(--color-border-default));
+    border-radius: 4px;
+    color: hsl(var(--color-text-primary));
+    font-size: 12px;
+    line-height: 1;
+    padding: 2px 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .node-add-btn:hover {
+    border-color: hsl(var(--color-accent-green));
+    color: hsl(var(--color-accent-green));
+    box-shadow: var(--shadow-glow);
+  }
+
+  .node-body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: hsl(var(--color-text-secondary));
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .metric-label {
+    color: hsl(var(--color-text-secondary));
+    font-weight: 500;
+  }
+
+  .metric-value {
+    color: hsl(var(--color-text-primary));
+    font-weight: 600;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12.5px;
+  }
+
+  /* hover állapot: border legyen neon zöld (#1EED83), glow jelenjen meg
+     akkor is, ha nincs kapcsolata a node-nak */
+  .node:hover {
+    border-color: hsl(var(--color-accent-green));
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* kijelölt node (pl. kattintva) */
+  .node.is-active {
+    border-color: hsl(var(--color-accent-green));
+    box-shadow: var(--shadow-glow-strong);
+  }
+}
+
+/* =========================================
+   SIDEBAR (Node könyvtár) itemek
+   - border fix #383a3b (darkban)
+   - hover: zöld border + glow
+   ========================================= */
+@layer base {
+  .sidebar-item {
+    background: hsl(var(--color-bg-panel));
+    border: 1px solid hsl(var(--color-border-sidebar));
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: hsl(var(--color-text-primary));
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.15s ease;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .sidebar-item-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: hsl(var(--color-text-primary));
+  }
+
+  .sidebar-item-desc {
+    color: hsl(var(--color-text-secondary));
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .sidebar-item:hover {
+    border-color: hsl(var(--color-accent-green));
+    color: hsl(var(--color-accent-green));
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+/* =========================================
+   HEADER BUTTONS
+   - undo/redo/dark mode switcher → secondary
+   - Megosztás → primary CTA
+   ========================================= */
+@layer base {
+  /* Secondary header controls:
+     - áttetsző bg
+     - 1px #383a3b border (darkban)
+     - hover: #2e3031 háttér + zöld glow
+  */
+  .header-btn-secondary {
+    background: hsl(var(--color-header-btn-bg));
+    border: 1px solid hsl(var(--color-header-btn-border));
+    border-radius: 6px;
+    color: hsl(var(--color-header-btn-text));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .header-btn-secondary:hover {
+    background: hsl(var(--color-header-btn-hover-bg));
+    border-color: hsl(var(--color-header-btn-border));
+    color: hsl(var(--color-accent-green));
+    box-shadow: 0 0 8px rgba(var(--color-accent-green-rgb), 0.4);
+  }
+
+  .header-btn-secondary svg {
+    width: 14px;
+    height: 14px;
+    color: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* Primary CTA: "Megosztás"
+     - mindig #1EED83 háttér
+     - sötét szöveg
+     - hover: picit sötétebb zöld + erősebb glow
+  */
+  .header-btn-primary {
+    background: hsl(var(--color-share-bg));
+    border: 1px solid hsl(var(--color-share-bg));
+    border-radius: 6px;
+    color: hsl(var(--color-share-text));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.25);
+  }
+
+  .header-btn-primary:hover {
+    background: hsl(var(--color-share-bg-hover));
+    border-color: hsl(var(--color-share-bg-hover));
+    box-shadow: 0 0 14px rgba(var(--color-accent-green-rgb), 0.4);
+    transform: translateY(-1px);
+  }
+
+  .header-btn-primary svg {
+    width: 14px;
+    height: 14px;
+    color: currentColor;
+    flex-shrink: 0;
+  }
+}
+
+/* =========================================
+   REACT FLOW EDGE VISELKEDÉS
+   - Alap: solid, 1px, #383a3b (dark) / halvány fekete (light)
+   - Hover / selected: neon zöld, 2px, glow
+   - Particle overlay: dashed neon highlight (2px)
+   ========================================= */
+@layer base {
+  /* edge baseline állapot */
+  .react-flow__edge-path {
+    transition: stroke-width 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+    stroke: hsl(var(--color-border-default)) !important;
+    stroke-width: 1px !important;
+    filter: none;
+  }
+
+  /* hover / selected / .is-active:
+     - vastagabb
+     - neon zöld
+     - glow
+  */
   .react-flow__edge-path:hover,
-  .react-flow__edge.selected .react-flow__edge-path {
-    stroke-width: 3px !important;
+  .react-flow__edge.selected .react-flow__edge-path,
+  .react-flow__edge.is-active .react-flow__edge-path {
     stroke: hsl(var(--color-accent-green)) !important;
+    stroke-width: 2px !important;
     filter: drop-shadow(0 0 6px rgba(var(--color-accent-green-rgb), 0.4));
+  }
+
+  /* particle overlay path:
+     Ezt a path-ot csak akkor rajzold ki React Flow custom edge komponensben,
+     ha az edge aktív/hoverelt.
+     - dashed neon
+     - animált "áramlás"
+  */
+  .edge-particles-overlay {
+    stroke: hsl(var(--color-accent-green));
+    stroke-width: 2px;
+    stroke-dasharray: 6 8;
+    stroke-linecap: round;
+    animation: edge-flow 1.2s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(var(--color-accent-green-rgb), 0.6));
+    pointer-events: none;
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   REACT FLOW EXTRA KONTROLLOK DARKBAN
+   (minimap, zoom-controls stb.)
+   ========================================= */
+@layer base {
+  .dark .react-flow__controls,
+  .dark .react-flow__minimap {
+    background: hsl(var(--color-bg-panel));
+    border: 1px solid hsl(var(--color-border-default));
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px rgba(var(--color-accent-green-rgb), 0.05);
+  }
+
+  .dark .react-flow__controls-button {
+    background: hsl(var(--color-bg-card));
+    border-bottom: 1px solid hsl(var(--color-border-default));
+    color: hsl(var(--color-text-primary));
+    fill: hsl(var(--color-text-primary));
+    transition: all 0.2s ease;
+  }
+
+  .dark .react-flow__controls-button:hover {
+    background: hsl(var(--color-accent-green));
+    color: hsl(var(--color-text-invert));
+    fill: hsl(var(--color-text-invert));
+    box-shadow: 0 0 8px rgba(var(--color-accent-green-rgb), 0.4);
+  }
+
+  .dark .react-flow__controls-button svg {
+    fill: currentColor;
+  }
+
+  .dark .react-flow__minimap-mask {
+    fill: hsl(var(--color-bg-panel));
+  }
+
+  .dark .react-flow__minimap-node {
+    fill: hsl(var(--muted));
+    stroke: hsl(var(--color-border-default));
+  }
+
+  .dark .react-flow__attribution {
+    background: hsl(var(--color-bg-card));
+    color: hsl(var(--muted-foreground));
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    box-shadow: 0 0 6px rgba(var(--color-accent-green-rgb), 0.1);
   }
 }
