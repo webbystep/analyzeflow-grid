@@ -5,16 +5,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { FlowCanvas } from '@/components/canvas/FlowCanvas';
 import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { FunnelSummary } from '@/components/canvas/FunnelSummary';
-import { TemplateDialog } from '@/components/canvas/TemplateDialog';
+
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { SelectionToolbar } from '@/components/canvas/SelectionToolbar';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Sparkles, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
 import { useDebounce } from 'use-debounce';
-import { createNodesFromTemplate, FunnelTemplate } from '@/lib/templates/funnelTemplates';
+
 import { ExportDialog } from '@/components/canvas/ExportDialog';
 import { ShareDialog } from '@/components/canvas/ShareDialog';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
@@ -35,7 +35,6 @@ export default function Canvas() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
   const [showInspector, setShowInspector] = useState(false);
-  const [showTemplates, setShowTemplates] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showInsertDialog, setShowInsertDialog] = useState(false);
@@ -134,11 +133,6 @@ export default function Canvas() {
     }
 
     setLoading(false);
-    
-    // Show templates on first load if no nodes
-    if (!nodesData || nodesData.length === 0) {
-      setShowTemplates(true);
-    }
   };
 
   const saveCanvas = async () => {
@@ -292,15 +286,6 @@ export default function Canvas() {
     handleUpdateNode(nodeId, { label: newLabel });
   }, [handleUpdateNode]);
 
-  const handleSelectTemplate = useCallback((template: FunnelTemplate) => {
-    const { nodes: templateNodes, edges: templateEdges } = createNodesFromTemplate(template);
-    setNodes(templateNodes);
-    setEdges(templateEdges);
-    toast({
-      title: 'Sablon betöltve',
-      description: `${template.name} hozzáadva a canvashoz.`,
-    });
-  }, [toast]);
 
   const handleSelectionChange = useCallback((selected: Node[]) => {
     setSelectedNodes(selected);
@@ -791,15 +776,6 @@ export default function Canvas() {
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowTemplates(true)}
-          >
-            <Sparkles className="h-4 w-4 mr-2" />
-            Sablonok
-          </Button>
-          <div className="h-6 w-px bg-border" />
-          <Button
             variant={showInspector ? 'default' : 'outline'}
             size="sm"
             onClick={() => setShowInspector(!showInspector)}
@@ -887,12 +863,6 @@ export default function Canvas() {
       </div>
 
       <FunnelSummary nodes={nodes} />
-
-      <TemplateDialog
-        open={showTemplates}
-        onOpenChange={setShowTemplates}
-        onSelectTemplate={handleSelectTemplate}
-      />
 
       <ExportDialog
         open={showExport}
