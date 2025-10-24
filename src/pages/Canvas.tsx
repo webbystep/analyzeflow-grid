@@ -34,7 +34,6 @@ export default function Canvas() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-  const [showInspector, setShowInspector] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showInsertDialog, setShowInsertDialog] = useState(false);
@@ -238,7 +237,6 @@ export default function Canvas() {
 
   const handleNodeClick = useCallback((node: Node) => {
     setSelectedNode(node);
-    setShowInspector(true);
   }, []);
 
   const handleUpdateNode = useCallback((nodeId: string, updates: Partial<Node['data']>) => {
@@ -304,12 +302,11 @@ export default function Canvas() {
     const updatedNodes = nodes.filter((n) => !selectedIds.has(n.id));
     const updatedEdges = edges.filter((e) => !selectedIds.has(e.source) && !selectedIds.has(e.target));
     
-    setNodes(updatedNodes);
-    setEdges(updatedEdges);
-    setSelectedNodes([]);
-    setSelectedNode(null);
-    setShowInspector(false);
-    pushHistory(updatedNodes, updatedEdges);
+      setNodes(updatedNodes);
+      setEdges(updatedEdges);
+      setSelectedNodes([]);
+      setSelectedNode(null);
+      pushHistory(updatedNodes, updatedEdges);
     
     toast({
       title: 'Node-ok törölve',
@@ -425,7 +422,6 @@ export default function Canvas() {
       setNodes(updatedNodes);
       setEdges(updatedEdges);
       setSelectedNode(null);
-      setShowInspector(false);
       
       toast({
         title: 'Node törölve',
@@ -774,15 +770,6 @@ export default function Canvas() {
             <Download className="h-4 w-4 mr-2" />
             Exportálás
           </Button>
-          <div className="h-6 w-px bg-border" />
-          <Button
-            variant={showInspector ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setShowInspector(!showInspector)}
-          >
-            <Info className="h-4 w-4 mr-2" />
-            Tulajdonságok
-          </Button>
           {selectedNode && (
             <Button
               variant="outline"
@@ -851,12 +838,12 @@ export default function Canvas() {
           </div>
         </CanvasContextMenu>
 
-        {showInspector && (
+        {selectedNode && (
           <div className="border-l">
             <InspectorPanel
               selectedNode={selectedNode}
               onUpdateNode={handleUpdateNode}
-              onClose={() => setShowInspector(false)}
+              onClose={() => setSelectedNode(null)}
             />
           </div>
         )}
