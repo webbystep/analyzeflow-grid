@@ -1,4 +1,24 @@
-export type NodeType = 'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition' | 'custom';
+export type NodeType = 
+  // Core nodes
+  'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition' | 'custom' |
+  // Traffic / Acquisition
+  'meta-ads' | 'google-ads' | 'linkedin-ads' | 'youtube-ads' | 'organic-social' | 'seo-blog' | 'referral' | 'offline-campaign' |
+  // Conversion / Sales
+  'lead-form' | 'contact' | 'sales-call' | 'proposal' | 'contract' | 'upsell' | 'partner-contact' |
+  // Retention / Remarketing
+  'remarketing-ads' | 'loyalty-program' | 'reactivation' | 'subscription-renewal' | 'feedback-nps' | 'referral-campaign' | 'unsubscribe' |
+  // Automation / Integrations
+  'webhook-api' | 'crm-sync' | 'automation-step' | 'ai-recommendation' | 'data-import' |
+  // Brand / Support
+  'brand-awareness' | 'webinar-event' | 'customer-support' | 'review-testimonial' | 'community';
+
+export interface NodeCategory {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  icon: string;
+}
 
 export interface NodeCosts {
   // Direct costs for this specific node

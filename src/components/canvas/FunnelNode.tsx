@@ -1,7 +1,21 @@
 import { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Mail, FileText, ShoppingCart, PartyPopper, GitBranch, Box } from 'lucide-react';
+import {
+  // Core icons
+  TrendingUp, Mail, FileText, ShoppingCart, PartyPopper, GitBranch, Box,
+  // Traffic icons
+  Facebook, Chrome, Linkedin, Youtube, Share2, BookOpen, Link2, Store,
+  // Conversion icons
+  ClipboardList, Phone, Headphones, FileOutput, CheckSquare, TrendingUpIcon, Handshake,
+  // Retention icons
+  RotateCcw, Gift, Zap, RefreshCw, MessageSquare, Users, XCircle,
+  // Automation icons
+  Webhook, Database, Settings, Sparkles, Upload,
+  // Brand icons
+  Globe, Video, HeadphonesIcon, Star, MessageCircle
+} from 'lucide-react';
+import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { MetricsFlowIndicator } from './MetricsFlowIndicator';
 import { ConnectionHandle } from './ConnectionHandle';
 interface FunnelNodeData {
@@ -18,15 +32,58 @@ interface FunnelNodeData {
   tags?: string[];
   customFields?: Record<string, any>;
 }
-const nodeIcons = {
-  traffic: TrendingUp,
-  email: Mail,
-  landing: FileText,
-  checkout: ShoppingCart,
-  thankyou: PartyPopper,
-  condition: GitBranch,
-  table: FileText,
-  custom: Box
+const nodeIcons: Record<string, any> = {
+  // Core nodes
+  'traffic': TrendingUp,
+  'email': Mail,
+  'landing': FileText,
+  'checkout': ShoppingCart,
+  'thankyou': PartyPopper,
+  'condition': GitBranch,
+  'table': FileText,
+  'custom': Box,
+  
+  // Traffic / Acquisition
+  'meta-ads': Facebook,
+  'google-ads': Chrome,
+  'linkedin-ads': Linkedin,
+  'youtube-ads': Youtube,
+  'organic-social': Share2,
+  'seo-blog': BookOpen,
+  'referral': Link2,
+  'offline-campaign': Store,
+  
+  // Conversion / Sales
+  'lead-form': ClipboardList,
+  'contact': Phone,
+  'sales-call': Headphones,
+  'proposal': FileOutput,
+  'contract': CheckSquare,
+  'upsell': TrendingUpIcon,
+  'partner-contact': Handshake,
+  
+  // Retention / Remarketing
+  'remarketing-ads': RotateCcw,
+  'loyalty-program': Gift,
+  'reactivation': Zap,
+  'subscription-renewal': RefreshCw,
+  'feedback-nps': MessageSquare,
+  'referral-campaign': Users,
+  'unsubscribe': XCircle,
+  
+  // Automation / Integrations
+  'webhook-api': Webhook,
+  'crm-sync': Database,
+  'automation-step': Settings,
+  'ai-recommendation': Sparkles,
+  'data-import': Upload,
+  
+  // Brand / Support
+  'brand-awareness': Globe,
+  'webinar-event': Video,
+  'customer-support': HeadphonesIcon,
+  'review-testimonial': Star,
+  'community': MessageCircle
 };
 export const FunnelNode = memo(({
   data,
@@ -119,9 +176,14 @@ export const FunnelNode = memo(({
             {data.customText}
           </div>
         )}
-        {nodeType !== 'custom' && (
-          <MetricsFlowIndicator visits={data.visits} conversions={data.conversions} revenue={data.revenue} conversionRate={data.conversionRate} />
-        )}
+        {(() => {
+          const nodeDef = getNodeDefinition(nodeType as any);
+          const shouldShowMetrics = nodeDef?.metricsVisible !== false;
+          
+          return shouldShowMetrics && nodeType !== 'custom' && (
+            <MetricsFlowIndicator visits={data.visits} conversions={data.conversions} revenue={data.revenue} conversionRate={data.conversionRate} />
+          );
+        })()}
       </div>
     </motion.div>;
 });

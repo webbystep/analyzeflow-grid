@@ -75,6 +75,48 @@ All colors MUST be HSL.
     --node-condition: 45 65% 60%;    /* Soft yellow */
     --node-table: 200 60% 60%;       /* Soft cyan */
     --node-custom: 215 16% 65%;      /* Neutral slate-400 gray */
+    
+    /* Traffic / Acquisition - Blue tones */
+    --node-meta-ads: 220 70% 65%;
+    --node-google-ads: 220 70% 65%;
+    --node-linkedin-ads: 220 70% 65%;
+    --node-youtube-ads: 220 70% 65%;
+    --node-organic-social: 220 70% 65%;
+    --node-seo-blog: 220 70% 65%;
+    --node-referral: 220 70% 65%;
+    --node-offline-campaign: 220 70% 65%;
+    
+    /* Conversion / Sales - Green tones */
+    --node-lead-form: 160 55% 60%;
+    --node-contact: 160 55% 60%;
+    --node-sales-call: 160 55% 60%;
+    --node-proposal: 160 55% 60%;
+    --node-contract: 160 55% 60%;
+    --node-upsell: 160 55% 60%;
+    --node-partner-contact: 160 55% 60%;
+    
+    /* Retention / Remarketing - Purple tones */
+    --node-remarketing-ads: 280 60% 65%;
+    --node-loyalty-program: 280 60% 65%;
+    --node-reactivation: 280 60% 65%;
+    --node-subscription-renewal: 280 60% 65%;
+    --node-feedback-nps: 280 60% 65%;
+    --node-referral-campaign: 280 60% 65%;
+    --node-unsubscribe: 280 60% 65%;
+    
+    /* Automation / Integrations - Gray/Blue tones */
+    --node-webhook-api: 200 60% 60%;
+    --node-crm-sync: 200 60% 60%;
+    --node-automation-step: 200 60% 60%;
+    --node-ai-recommendation: 200 60% 60%;
+    --node-data-import: 200 60% 60%;
+    
+    /* Brand / Support - Orange tones */
+    --node-brand-awareness: 30 75% 60%;
+    --node-webinar-event: 30 75% 60%;
+    --node-customer-support: 30 75% 60%;
+    --node-review-testimonial: 30 75% 60%;
+    --node-community: 30 75% 60%;
   }
 
   /* React Flow Edge Hover Effects */
@@ -143,6 +185,48 @@ All colors MUST be HSL.
     --node-condition: 45 55% 50%;    /* Soft yellow (darker) */
     --node-table: 200 50% 50%;       /* Soft cyan (darker) */
     --node-custom: 215 20% 50%;      /* Darker neutral gray */
+    
+    /* Traffic / Acquisition - Blue tones (dark mode) */
+    --node-meta-ads: 220 60% 55%;
+    --node-google-ads: 220 60% 55%;
+    --node-linkedin-ads: 220 60% 55%;
+    --node-youtube-ads: 220 60% 55%;
+    --node-organic-social: 220 60% 55%;
+    --node-seo-blog: 220 60% 55%;
+    --node-referral: 220 60% 55%;
+    --node-offline-campaign: 220 60% 55%;
+    
+    /* Conversion / Sales - Green tones (dark mode) */
+    --node-lead-form: 160 45% 50%;
+    --node-contact: 160 45% 50%;
+    --node-sales-call: 160 45% 50%;
+    --node-proposal: 160 45% 50%;
+    --node-contract: 160 45% 50%;
+    --node-upsell: 160 45% 50%;
+    --node-partner-contact: 160 45% 50%;
+    
+    /* Retention / Remarketing - Purple tones (dark mode) */
+    --node-remarketing-ads: 280 50% 55%;
+    --node-loyalty-program: 280 50% 55%;
+    --node-reactivation: 280 50% 55%;
+    --node-subscription-renewal: 280 50% 55%;
+    --node-feedback-nps: 280 50% 55%;
+    --node-referral-campaign: 280 50% 55%;
+    --node-unsubscribe: 280 50% 55%;
+    
+    /* Automation / Integrations - Gray/Blue tones (dark mode) */
+    --node-webhook-api: 200 50% 50%;
+    --node-crm-sync: 200 50% 50%;
+    --node-automation-step: 200 50% 50%;
+    --node-ai-recommendation: 200 50% 50%;
+    --node-data-import: 200 50% 50%;
+    
+    /* Brand / Support - Orange tones (dark mode) */
+    --node-brand-awareness: 30 65% 55%;
+    --node-webinar-event: 30 65% 55%;
+    --node-customer-support: 30 65% 55%;
+    --node-review-testimonial: 30 65% 55%;
+    --node-community: 30 65% 55%;
   }
 }
 
