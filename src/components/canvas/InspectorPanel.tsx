@@ -3,12 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { X, Save, TrendingUp } from 'lucide-react';
+import { X, Save, TrendingUp, Palette } from 'lucide-react';
 import { Node } from '@xyflow/react';
 import { getNodeSchema, getDefaultRevenueMode } from '@/lib/nodeSchemas';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
+import { TemplateMetricsRenderer } from './TemplateMetricsRenderer';
+import { IconPicker } from './IconPicker';
 import { NodeType } from '@/lib/types/canvas';
+import { getMetricsTemplate, getDefaultIcon } from '@/lib/nodeMetricTemplates';
 
 interface InspectorPanelProps {
   selectedNode: Node | null;
@@ -82,7 +85,8 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
   };
 
   const Icon = nodeDefinition?.icon;
-  const hasMetrics = schema.sections.metrics && schema.sections.metrics.fields.length > 0;
+  const metricsTemplate = getMetricsTemplate(selectedNode.type as NodeType);
+  const hasMetrics = metricsTemplate.length > 0;
   const hasCosts = schema.sections.costs && schema.sections.costs.fields.length > 0;
 
   return (
@@ -106,8 +110,11 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
 
       <CardContent className="flex-1 overflow-y-auto p-4">
         <Tabs defaultValue="properties" className="w-full">
-          <TabsList className={`grid w-full ${hasMetrics && hasCosts ? 'grid-cols-3' : hasMetrics || hasCosts ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          <TabsList className={`grid w-full ${hasMetrics && hasCosts ? 'grid-cols-4' : hasMetrics || hasCosts ? 'grid-cols-3' : 'grid-cols-2'}`}>
             <TabsTrigger value="properties">Tulajdonságok</TabsTrigger>
+            <TabsTrigger value="icon">
+              <Palette className="h-4 w-4" />
+            </TabsTrigger>
             {hasMetrics && <TabsTrigger value="metrics">Mutatók</TabsTrigger>}
             {hasCosts && <TabsTrigger value="costs">Költségek</TabsTrigger>}
           </TabsList>
@@ -124,53 +131,24 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
             ))}
           </TabsContent>
 
+          <TabsContent value="icon" className="space-y-4 mt-4">
+            <IconPicker
+              currentIcon={formData.icon || getDefaultIcon(selectedNode.type as NodeType)}
+              currentColor={formData.iconColor || '#ffffff'}
+              customSvg={formData.customIconSvg}
+              onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
+              onColorChange={(color) => handleFieldChange('iconColor', color)}
+              onCustomSvgChange={(svg) => handleFieldChange('customIconSvg', svg)}
+            />
+          </TabsContent>
+
           {hasMetrics && (
             <TabsContent value="metrics" className="space-y-4 mt-4">
-              {schema.sections.metrics!.fields.map(field => {
-                // Special rendering for estimatedRevenue field
-                if (field.id === 'estimatedRevenue') {
-                  const convs = Number(formData.conversions) || Number(formData.submissions) || Number(formData.orders) || 0;
-                  const valuePerConv = typeof formData.valuePerConversion === 'object'
-                    ? Number(formData.valuePerConversion?.value) || 0
-                    : Number(formData.valuePerConversion) || 0;
-                  
-                  return (
-                    <div key={field.id} className="p-3 rounded-lg bg-success/5 border border-success/20">
-                      <div className="flex items-center gap-2 mb-2">
-                        <TrendingUp className="h-4 w-4 text-success" />
-                        <label className="text-sm font-semibold">{field.label}</label>
-                      </div>
-                      <DynamicFieldRenderer
-                        field={field}
-                        value={formData[field.id]}
-                        onChange={(val) => handleFieldChange(field.id, val)}
-                        allData={formData}
-                      />
-                      {/* Edge case messages */}
-                      {convs === 0 && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Jelenleg nincs konverzió. A becsült bevétel 0 Ft.
-                        </p>
-                      )}
-                      {valuePerConv === 0 && convs > 0 && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Adj meg konverzió értéket, hogy lásd a becsült bevételt.
-                        </p>
-                      )}
-                    </div>
-                  );
-                }
-                
-                return (
-                  <DynamicFieldRenderer
-                    key={field.id}
-                    field={field}
-                    value={formData[field.id]}
-                    onChange={(val) => handleFieldChange(field.id, val)}
-                    allData={formData}
-                  />
-                );
-              })}
+              <TemplateMetricsRenderer
+                metrics={metricsTemplate}
+                data={formData}
+                onChange={handleFieldChange}
+              />
             </TabsContent>
           )}
 

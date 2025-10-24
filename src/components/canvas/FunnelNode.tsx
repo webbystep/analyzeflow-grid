@@ -22,6 +22,8 @@ interface FunnelNodeData {
   label: string;
   customText?: string;
   icon?: string;
+  iconColor?: string;
+  customIconSvg?: string;
   color?: string;
   visits?: number;
   conversionRate?: number;
@@ -35,58 +37,17 @@ interface FunnelNodeData {
   tags?: string[];
   customFields?: Record<string, any>;
 }
+import * as LucideIcons from 'lucide-react';
+import { getDefaultIcon } from '@/lib/nodeMetricTemplates';
+
 const nodeIcons: Record<string, any> = {
-  // Core nodes
   'traffic': TrendingUp,
-  'email': Mail,
   'landing': FileText,
+  'email': Mail,
+  'offer': MessageSquare,
   'checkout': ShoppingCart,
-  'thankyou': PartyPopper,
-  'condition': GitBranch,
-  'table': FileText,
-  'custom': Box,
-  
-  // Traffic / Acquisition
-  'meta-ads': Facebook,
-  'google-ads': Chrome,
-  'linkedin-ads': Linkedin,
-  'youtube-ads': Youtube,
-  'organic-social': Share2,
-  'seo-blog': BookOpen,
-  'referral': Link2,
-  'offline-campaign': Store,
-  
-  // Conversion / Sales
-  'lead-form': ClipboardList,
-  'contact': Phone,
-  'sales-call': Headphones,
-  'proposal': FileOutput,
-  'contract': CheckSquare,
-  'upsell': TrendingUpIcon,
-  'partner-contact': Handshake,
-  
-  // Retention / Remarketing
-  'remarketing-ads': RotateCcw,
-  'loyalty-program': Gift,
-  'reactivation': Zap,
-  'subscription-renewal': RefreshCw,
-  'feedback-nps': MessageSquare,
-  'referral-campaign': Users,
-  'unsubscribe': XCircle,
-  
-  // Automation / Integrations
-  'webhook-api': Webhook,
-  'crm-sync': Database,
-  'automation-step': Settings,
-  'ai-recommendation': Sparkles,
-  'data-import': Upload,
-  
-  // Brand / Support
-  'brand-awareness': Globe,
-  'webinar-event': Video,
-  'customer-support': HeadphonesIcon,
-  'review-testimonial': Star,
-  'community': MessageCircle
+  'thank_you': PartyPopper,
+  'custom': Box
 };
 export const FunnelNode = memo(({
   data,
@@ -99,12 +60,23 @@ export const FunnelNode = memo(({
   selected?: boolean;
   id: string;
 }) => {
-  const Icon = nodeIcons[type as keyof typeof nodeIcons] || FileText;
   const nodeType = type as keyof typeof nodeIcons;
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [label, setLabel] = useState(data.label);
   const isConnectedHighlighted = (data as any).isConnectedHighlighted || false;
+
+  // Determine icon to use
+  let IconComponent: any;
+  if (data.customIconSvg) {
+    IconComponent = null; // Will render SVG directly
+  } else if (data.icon && (LucideIcons as any)[data.icon]) {
+    IconComponent = (LucideIcons as any)[data.icon];
+  } else {
+    IconComponent = nodeIcons[nodeType] || FileText;
+  }
+
+  const iconColor = data.iconColor || 'white';
   return <motion.div initial={{
     scale: 0.8,
     opacity: 0
@@ -147,7 +119,14 @@ export const FunnelNode = memo(({
       color: 'white'
     }}>
         <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4" />
+          {data.customIconSvg ? (
+            <div 
+              className="w-4 h-4" 
+              dangerouslySetInnerHTML={{ __html: data.customIconSvg }}
+            />
+          ) : (
+            IconComponent && <IconComponent className="w-4 h-4" style={{ color: iconColor }} />
+          )}
           {isEditing ? <input type="text" value={label} onChange={e => setLabel(e.target.value)} onBlur={() => {
         setIsEditing(false);
         if (label.trim() && label !== data.label) {

@@ -1,16 +1,6 @@
+// Simplified node types - 7 core types
 export type NodeType = 
-  // Core nodes
-  'traffic' | 'email' | 'landing' | 'checkout' | 'thankyou' | 'condition' | 'custom' |
-  // Traffic / Acquisition
-  'meta-ads' | 'google-ads' | 'linkedin-ads' | 'youtube-ads' | 'organic-social' | 'seo-blog' | 'referral' | 'offline-campaign' |
-  // Conversion / Sales
-  'lead-form' | 'contact' | 'sales-call' | 'proposal' | 'contract' | 'upsell' | 'partner-contact' |
-  // Retention / Remarketing
-  'remarketing-ads' | 'loyalty-program' | 'reactivation' | 'subscription-renewal' | 'feedback-nps' | 'referral-campaign' | 'unsubscribe' |
-  // Automation / Integrations
-  'webhook-api' | 'crm-sync' | 'automation-step' | 'ai-recommendation' | 'data-import' |
-  // Brand / Support
-  'brand-awareness' | 'webinar-event' | 'customer-support' | 'review-testimonial' | 'community';
+  'traffic' | 'landing' | 'email' | 'offer' | 'checkout' | 'thank_you' | 'custom';
 
 export interface NodeCategory {
   id: string;
@@ -57,7 +47,9 @@ export interface NodeMetrics {
 export interface NodeData extends NodeMetrics {
   label: string;
   customText?: string;
-  icon?: string;
+  icon?: string; // Lucide icon name
+  iconColor?: string; // Custom color for icon
+  customIconSvg?: string; // Custom SVG override
   color?: string;
   notes?: string;
   tags?: string[];
