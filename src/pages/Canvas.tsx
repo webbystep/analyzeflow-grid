@@ -735,21 +735,19 @@ export default function Canvas() {
           <div className="h-6 w-px bg-border" />
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={handleUndo}
             disabled={!canUndo}
           >
-            <Undo2 className="h-4 w-4 mr-2" />
-            Visszavonás
+            <Undo2 className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={handleRedo}
             disabled={!canRedo}
           >
-            <Redo2 className="h-4 w-4 mr-2" />
-            Újra
+            <Redo2 className="h-4 w-4" />
           </Button>
           <div className="h-6 w-px bg-border" />
           <Button
