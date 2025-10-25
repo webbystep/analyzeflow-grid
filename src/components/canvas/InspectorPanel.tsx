@@ -148,7 +148,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
   const Icon = nodeDefinition?.icon;
 
   return (
-    <Card className="w-80 flex flex-col shadow-xl border-l rounded-none fixed right-0 top-14 bottom-16 z-10">
+    <Card className="w-80 flex flex-col shadow-xl border-l rounded-none fixed right-0 top-14 bottom-[88px] z-10">
       <CardHeader className="pb-3 border-b shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex-1">
