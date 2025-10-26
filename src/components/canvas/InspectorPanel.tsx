@@ -11,6 +11,7 @@ import type { NodeType } from '@/lib/types/canvas';
 import { getNodeSchema } from '@/lib/nodeSchemas';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { cn } from '@/lib/utils';
+import * as LucideIcons from 'lucide-react';
 interface InspectorPanelProps {
   selectedNode: Node | null;
   onUpdateNode: (nodeId: string, updates: Partial<Node['data']>) => void;
@@ -71,14 +72,38 @@ export function InspectorPanel({
       </Card>;
   }
   const nodeDefinition = getNodeDefinition(selectedNode.type as NodeType);
-  const Icon = nodeDefinition?.icon;
+  
+  // Ugyanazt az ikont mutatjuk, mint a canvason
+  const getDisplayIcon = () => {
+    // Ha van custom SVG, azt használjuk
+    if (formData.customIconSvg) {
+      return (
+        <div 
+          className="h-5 w-5"
+          style={{ color: formData.iconColor || 'currentColor' }}
+          dangerouslySetInnerHTML={{ __html: formData.customIconSvg }}
+        />
+      );
+    }
+    
+    // Ha van egyéni ikon kiválasztva
+    if (formData.icon && formData.icon in LucideIcons) {
+      const IconComponent = (LucideIcons as any)[formData.icon];
+      return <IconComponent className="h-5 w-5" style={{ color: formData.iconColor || 'currentColor' }} />;
+    }
+    
+    // Alapértelmezett node típus ikon
+    const Icon = nodeDefinition?.icon;
+    return Icon ? <Icon className="h-5 w-5 text-primary" /> : null;
+  };
+
   return <Card className="w-80 flex flex-col shadow-xl border-t-0 border-b-0 rounded-none h-full bg-card text-card-foreground" style={{
     borderLeftWidth: '1px'
   }}>
       <CardHeader className="pb-3 border-b shrink-0 flex-row items-start justify-between">
         <div className="flex flex-1 flex-col">
           <div className="flex items-center gap-2">
-            {Icon && <Icon className="h-5 w-5 text-primary" />}
+            {getDisplayIcon()}
             <CardTitle className="text-lg">{nodeDefinition?.label || selectedNode.type}</CardTitle>
           </div>
           
