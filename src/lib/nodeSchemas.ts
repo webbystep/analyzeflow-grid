@@ -376,3 +376,10 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
 export function getNodeSchema(nodeType: NodeType): NodeSchema | undefined {
   return nodeSchemas[nodeType];
 }
+
+// Segédfüggvény alapértelmezett leírás lekéréséhez
+export function getDefaultDescription(nodeType: NodeType): string {
+  const schema = nodeSchemas[nodeType];
+  const descriptionField = schema?.properties?.fields.find(f => f.id === 'customText');
+  return descriptionField?.placeholder || '';
+}

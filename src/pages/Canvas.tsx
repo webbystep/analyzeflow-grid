@@ -16,6 +16,8 @@ import { ShareDialog } from '@/components/canvas/ShareDialog';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
 import { useHistory } from '@/hooks/useHistory';
 import { InsertNodeDialog, NodeType } from '@/components/canvas/InsertNodeDialog';
+import { getDefaultDescription } from '@/lib/nodeSchemas';
+import type { NodeType as CanvasNodeType } from '@/lib/types/canvas';
 export default function Canvas() {
   const {
     projectId
@@ -436,6 +438,7 @@ export default function Canvas() {
       },
       data: {
         label: labels[type] || 'New Node',
+        customText: getDefaultDescription(type as CanvasNodeType),
         visits: 1000,
         conversionRate: 10
       }
@@ -511,6 +514,7 @@ export default function Canvas() {
       },
       data: {
         label: `New ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+        customText: getDefaultDescription(type as CanvasNodeType),
         visits: 1000,
         conversionRate: 10
       }
@@ -630,6 +634,7 @@ export default function Canvas() {
       position,
       data: {
         label,
+        customText: getDefaultDescription(nodeType as CanvasNodeType),
         visits: 1000,
         conversionRate: 10
       }
