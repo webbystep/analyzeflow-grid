@@ -1,10 +1,6 @@
 import { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { motion } from 'framer-motion';
-import {
-  TrendingUp, Mail, FileText, ShoppingCart, PartyPopper, MessageSquare, Box,
-  Target, Send, DollarSign
-} from 'lucide-react';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { ConnectionHandle } from './ConnectionHandle';
 import * as LucideIcons from 'lucide-react';
@@ -22,16 +18,6 @@ interface FunnelNodeData {
   customFields?: Record<string, any>;
 }
 
-const nodeIcons: Record<string, any> = {
-  'traffic': TrendingUp,
-  'landing': FileText,
-  'email': Mail,
-  'offer': MessageSquare,
-  'checkout': ShoppingCart,
-  'thank_you': PartyPopper,
-  'custom': Box
-};
-
 export const FunnelNode = memo(({
   data,
   type,
@@ -43,11 +29,15 @@ export const FunnelNode = memo(({
   selected?: boolean;
   id: string;
 }) => {
-  const nodeType = type as keyof typeof nodeIcons;
+  const nodeType = type as NodeType;
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [label, setLabel] = useState(data.label);
   const isConnectedHighlighted = (data as any).isConnectedHighlighted || false;
+
+  // Get the node definition to use its icon
+  const nodeDefinition = getNodeDefinition(nodeType);
+  const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
 
   // Determine icon to use
   let IconComponent: any;
@@ -56,15 +46,12 @@ export const FunnelNode = memo(({
   } else if (data.icon && (LucideIcons as any)[data.icon]) {
     IconComponent = (LucideIcons as any)[data.icon];
   } else {
-    IconComponent = nodeIcons[nodeType] || FileText;
+    // Use the icon from nodeDefinition instead of the old nodeIcons mapping
+    IconComponent = nodeDefinition?.icon || null;
   }
 
   const iconColor = data.iconColor || 'white';
   const nodeColor = data.color || `var(--node-${nodeType})`;
-  
-  // Get the node definition color for icon display
-  const nodeDefinition = getNodeDefinition(nodeType as NodeType);
-  const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
   
   return (
     <motion.div 
