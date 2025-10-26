@@ -691,7 +691,6 @@ export default function Canvas() {
           <button className="header-btn-secondary" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          {selectedNode}
         </div>
       </header>
 
