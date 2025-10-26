@@ -73,14 +73,14 @@ export function InspectorPanel({
   }
   const nodeDefinition = getNodeDefinition(selectedNode.type as NodeType);
   
-  // Ugyanazt az ikont mutatjuk, mint a canvason
+  // Pontosan ugyanaz a logika, mint a FunnelNode-ban
   const getDisplayIcon = () => {
     // Ha van custom SVG, azt használjuk
     if (formData.customIconSvg) {
       return (
         <div 
           className="h-5 w-5"
-          style={{ color: formData.iconColor || 'currentColor' }}
+          style={{ color: 'hsl(var(--color-text-primary))' }}
           dangerouslySetInnerHTML={{ __html: formData.customIconSvg }}
         />
       );
@@ -89,12 +89,12 @@ export function InspectorPanel({
     // Ha van egyéni ikon kiválasztva
     if (formData.icon && formData.icon in LucideIcons) {
       const IconComponent = (LucideIcons as any)[formData.icon];
-      return <IconComponent className="h-5 w-5" style={{ color: formData.iconColor || 'currentColor' }} />;
+      return <IconComponent className="h-5 w-5" style={{ color: 'hsl(var(--color-text-primary))' }} />;
     }
     
     // Alapértelmezett node típus ikon
     const Icon = nodeDefinition?.icon;
-    return Icon ? <Icon className="h-5 w-5 text-primary" /> : null;
+    return Icon ? <Icon className="h-5 w-5" style={{ color: 'hsl(var(--color-text-primary))' }} /> : null;
   };
 
   return <Card className="w-80 flex flex-col shadow-xl border-t-0 border-b-0 rounded-none h-full bg-card text-card-foreground" style={{
