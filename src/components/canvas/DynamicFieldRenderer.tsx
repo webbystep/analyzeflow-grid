@@ -24,6 +24,7 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder}
+            style={{ backgroundColor: '#2f3031' }}
           />
         );
       
@@ -35,6 +36,7 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
             onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder}
             rows={3}
+            style={{ backgroundColor: '#2f3031' }}
           />
         );
       
@@ -51,6 +53,7 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
               placeholder={field.placeholder}
               disabled={field.readOnly}
               className={field.readOnly ? 'bg-muted cursor-not-allowed' : ''}
+              style={!field.readOnly ? { backgroundColor: '#2f3031' } : undefined}
             />
             {field.suffix && (
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
@@ -69,6 +72,7 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
             value={value || ''}
             onChange={(e) => onChange(Number(e.target.value) || 0)}
             placeholder={field.placeholder}
+            style={{ backgroundColor: '#2f3031' }}
           />
         );
       
@@ -84,7 +88,7 @@ export function DynamicFieldRenderer({ field, value, onChange, allData }: Dynami
       case 'select':
         return (
           <Select value={value} onValueChange={onChange}>
-            <SelectTrigger id={field.id}>
+            <SelectTrigger id={field.id} style={{ backgroundColor: '#2f3031' }}>
               <SelectValue placeholder={field.placeholder} />
             </SelectTrigger>
             <SelectContent>
