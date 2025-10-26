@@ -8,6 +8,7 @@ import {
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { ConnectionHandle } from './ConnectionHandle';
 import * as LucideIcons from 'lucide-react';
+import type { NodeType } from '@/lib/types/canvas';
 
 interface FunnelNodeData {
   label: string;
@@ -60,6 +61,10 @@ export const FunnelNode = memo(({
 
   const iconColor = data.iconColor || 'white';
   const nodeColor = data.color || `var(--node-${nodeType})`;
+  
+  // Get the node definition color for icon display
+  const nodeDefinition = getNodeDefinition(nodeType as NodeType);
+  const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
   
   return (
     <motion.div 
@@ -129,11 +134,11 @@ export const FunnelNode = memo(({
             {data.customIconSvg ? (
               <div 
                 className="w-3.5 h-3.5" 
-                style={{ color: 'hsl(var(--color-text-primary))' }}
+                style={{ color: `hsl(${nodeDefinitionColor})` }}
                 dangerouslySetInnerHTML={{ __html: data.customIconSvg }}
               />
             ) : (
-              IconComponent && <IconComponent className="w-3.5 h-3.5" style={{ color: 'hsl(var(--color-text-primary))' }} />
+              IconComponent && <IconComponent className="w-3.5 h-3.5" style={{ color: `hsl(${nodeDefinitionColor})` }} />
             )}
           </div>
           {isEditing ? (
