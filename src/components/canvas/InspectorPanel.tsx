@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { X, Save, TrendingUp, Palette, ChevronDown } from 'lucide-react';
 import { Node } from '@xyflow/react';
 import { toast } from 'sonner';
@@ -24,10 +23,7 @@ export function InspectorPanel({
 }: InspectorPanelProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [hasChanges, setHasChanges] = useState(false);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    basic: true,
-    icon: false
-  });
+  const [iconSectionOpen, setIconSectionOpen] = useState(false);
   const schema = getNodeSchema(selectedNode?.type as NodeType);
   useEffect(() => {
     if (selectedNode) {
@@ -42,18 +38,11 @@ export function InspectorPanel({
     }));
     setHasChanges(true);
   };
-  const toggleSection = (section: string) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
   const handleSave = () => {
     if (!selectedNode || !schema) return;
     const updates: any = {
       label: formData.label,
       customText: formData.customText,
-      notes: formData.notes,
       icon: formData.icon,
       iconColor: formData.iconColor,
       customIconSvg: formData.customIconSvg
@@ -101,20 +90,12 @@ export function InspectorPanel({
 
       <CardContent className="flex-1 overflow-y-auto p-4 pb-24">
         <div className="space-y-4">
-          {/* Alapadatok Section */}
-          <Collapsible open={openSections.basic} onOpenChange={() => toggleSection('basic')}>
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-              <h3 className="font-semibold text-sm">Alapadatok</h3>
-              <ChevronDown className={cn("h-4 w-4 transition-transform", openSections.basic && "rotate-180")} />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-4 mt-4 px-1">
-              {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
-              {schema?.meta?.fields.map(field => {})}
-            </CollapsibleContent>
-          </Collapsible>
-
-          {/* Ikon testreszabás Section */}
-          
+          {/* Alapadatok */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-sm text-muted-foreground">Alapadatok</h3>
+            {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
+            {schema?.meta?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
+          </div>
         </div>
       </CardContent>
 

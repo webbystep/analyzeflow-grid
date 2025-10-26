@@ -41,13 +41,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'Rövid leírás erről a forgalomforrásról...',
           help: 'Részletes információk a node-ról'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Belső jegyzetek, megjegyzések...',
-          help: 'Privát jegyzetek a saját használatodra'
         }
       ]
     },
@@ -99,13 +92,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'A landing oldal célja és tartalma...',
           help: 'Részletes leírás'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Jegyzetek...',
-          help: 'Belső megjegyzések'
         }
       ]
     },
@@ -157,13 +143,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'Az email célja és tartalma...',
           help: 'Email leírása'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Jegyzetek...',
-          help: 'Belső jegyzetek'
         }
       ]
     },
@@ -215,13 +194,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'Az ajánlat részletei...',
           help: 'Ajánlat leírása'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Jegyzetek...',
-          help: 'Belső jegyzetek'
         }
       ]
     },
@@ -273,13 +245,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'A checkout folyamat leírása...',
           help: 'Checkout részletei'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Jegyzetek...',
-          help: 'Belső jegyzetek'
         }
       ]
     },
@@ -331,13 +296,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'Az oldal tartalma...',
           help: 'Thank you page részletei'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Jegyzetek...',
-          help: 'Belső jegyzetek'
         }
       ]
     },
@@ -389,13 +347,6 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           type: 'textarea',
           placeholder: 'Ennek a lépésnek a leírása...',
           help: 'Részletes leírás'
-        },
-        { 
-          id: 'notes', 
-          label: 'Jegyzetek', 
-          type: 'textarea',
-          placeholder: 'Jegyzetek...',
-          help: 'Belső jegyzetek'
         }
       ]
     },
