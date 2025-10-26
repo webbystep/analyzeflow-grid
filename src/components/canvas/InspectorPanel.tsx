@@ -135,11 +135,13 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
 
   if (!selectedNode) {
     return (
-      <Card className="w-80 h-full flex items-center justify-center">
-        <CardContent className="text-center text-muted-foreground">
-          <TrendingUp className="h-12 w-12 mx-auto mb-3 opacity-50" />
-          <p className="text-sm">Válassz egy node-ot a szerkesztéshez</p>
-        </CardContent>
+      <Card className="flex h-full w-80 flex-col rounded-none border-l bg-card text-card-foreground">
+        <div className="flex flex-1 items-center justify-center p-6 text-center text-muted-foreground">
+          <div>
+            <TrendingUp className="mx-auto mb-3 h-12 w-12 opacity-50" />
+            <p className="text-sm">Válassz egy node-ot a szerkesztéshez</p>
+          </div>
+        </div>
       </Card>
     );
   }
@@ -148,22 +150,20 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
   const Icon = nodeDefinition?.icon;
 
   return (
-    <Card className="w-80 flex flex-col shadow-xl border-l rounded-none fixed right-0 top-14 bottom-[88px] z-10">
-      <CardHeader className="pb-3 border-b shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              {Icon && <Icon className="h-5 w-5 text-primary" />}
-              <CardTitle className="text-lg">{nodeDefinition?.label || selectedNode.type}</CardTitle>
-            </div>
-            <CardDescription className="text-xs mt-1">
-              <Badge variant="outline" className="text-xs">{selectedNode.type}</Badge>
-            </CardDescription>
+    <Card className="w-80 flex flex-col shadow-xl border-l rounded-none h-full bg-card text-card-foreground">
+      <CardHeader className="pb-3 border-b shrink-0 flex-row items-start justify-between">
+        <div className="flex flex-1 flex-col">
+          <div className="flex items-center gap-2">
+            {Icon && <Icon className="h-5 w-5 text-primary" />}
+            <CardTitle className="text-lg">{nodeDefinition?.label || selectedNode.type}</CardTitle>
           </div>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
+          <CardDescription className="text-xs mt-1">
+            <Badge variant="outline" className="text-xs">{selectedNode.type}</Badge>
+          </CardDescription>
         </div>
+        <Button variant="ghost" size="sm" onClick={onClose} className="h-6 w-6 p-0">
+          <X className="h-4 w-4" />
+        </Button>
       </CardHeader>
 
       <CardContent className="flex-1 overflow-y-auto p-4 pb-24">
@@ -364,12 +364,14 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
       </CardContent>
 
       {/* Sticky Save Button */}
-      <div className="shrink-0 p-4 bg-background border-t mt-auto">
+      <div className="shrink-0 p-4 bg-background border-t">
         <Button 
           onClick={handleSave} 
           className={cn(
             "w-full transition-colors",
-            hasChanges ? "bg-primary hover:bg-primary/90" : "bg-muted text-muted-foreground hover:bg-muted/80"
+            hasChanges 
+              ? "bg-primary text-[hsl(var(--color-text-invert))] hover:bg-primary/90" 
+              : "bg-muted text-muted-foreground hover:bg-muted/80"
           )}
         >
           <Save className="mr-2 h-4 w-4" />
