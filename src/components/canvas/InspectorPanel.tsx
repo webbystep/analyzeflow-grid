@@ -150,7 +150,7 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
   const Icon = nodeDefinition?.icon;
 
   return (
-    <Card className="w-80 flex flex-col shadow-xl border-l rounded-none h-full bg-card text-card-foreground">
+    <Card className="w-80 flex flex-col shadow-xl border-l border-t-0 border-b-0 rounded-none h-full bg-card text-card-foreground">
       <CardHeader className="pb-3 border-b shrink-0 flex-row items-start justify-between">
         <div className="flex flex-1 flex-col">
           <div className="flex items-center gap-2">
@@ -364,15 +364,14 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
       </CardContent>
 
       {/* Sticky Save Button */}
-      <div className="shrink-0 p-4 bg-background border-t">
+      <div className="shrink-0 p-4 border-t" style={{ backgroundColor: '#222526' }}>
         <Button 
           onClick={handleSave} 
           className={cn(
-            "w-full transition-colors",
-            hasChanges 
-              ? "bg-primary text-[hsl(var(--color-text-invert))] hover:bg-primary/90" 
-              : "bg-muted text-muted-foreground hover:bg-muted/80"
+            "w-full transition-colors header-btn-primary",
+            !hasChanges && "opacity-50 cursor-not-allowed"
           )}
+          disabled={!hasChanges}
         >
           <Save className="mr-2 h-4 w-4" />
           Változások mentése
