@@ -22,7 +22,6 @@ export interface NodeDefinition {
   description: string;
   category: string;
   color?: string;
-  metricsVisible: boolean;
 }
 
 export const nodeDefinitions: NodeDefinition[] = [
@@ -32,8 +31,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Rocket,
     description: 'Hirdetések, organikus forgalom, marketing kampányok',
     category: 'core',
-    color: 'var(--node-traffic)',
-    metricsVisible: true
+    color: 'var(--node-traffic)'
   },
   {
     type: 'landing',
@@ -41,8 +39,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Target,
     description: 'Értékesítési oldal, űrlap, regisztráció',
     category: 'core',
-    color: 'var(--node-landing)',
-    metricsVisible: true
+    color: 'var(--node-landing)'
   },
   {
     type: 'email',
@@ -50,8 +47,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Send,
     description: 'Email kampány, automatizáció, hírlevél',
     category: 'core',
-    color: 'var(--node-email)',
-    metricsVisible: true
+    color: 'var(--node-email)'
   },
   {
     type: 'offer',
@@ -59,8 +55,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: MessageSquare,
     description: 'Ajánlatküldés, proposal, deal',
     category: 'core',
-    color: 'var(--node-offer)',
-    metricsVisible: true
+    color: 'var(--node-offer)'
   },
   {
     type: 'checkout',
@@ -68,8 +63,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: DollarSign,
     description: 'Fizetés, vásárlás, rendelés',
     category: 'core',
-    color: 'var(--node-checkout)',
-    metricsVisible: true
+    color: 'var(--node-checkout)'
   },
   {
     type: 'thank_you',
@@ -77,8 +71,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: PartyPopper,
     description: 'Megerősítés, sikeres vásárlás',
     category: 'core',
-    color: 'var(--node-thank_you)',
-    metricsVisible: true
+    color: 'var(--node-thank_you)'
   },
   {
     type: 'custom',
@@ -86,8 +79,7 @@ export const nodeDefinitions: NodeDefinition[] = [
     icon: Box,
     description: 'Saját lépés, bármilyen más folyamat',
     category: 'core',
-    color: 'var(--node-custom)',
-    metricsVisible: true
+    color: 'var(--node-custom)'
   }
 ];
 

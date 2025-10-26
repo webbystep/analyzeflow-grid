@@ -4,7 +4,6 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { FlowCanvas } from '@/components/canvas/FlowCanvas';
 import { InspectorPanel } from '@/components/canvas/InspectorPanel';
-import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun } from 'lucide-react';
@@ -16,7 +15,6 @@ import { ExportDialog } from '@/components/canvas/ExportDialog';
 import { ShareDialog } from '@/components/canvas/ShareDialog';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
 import { useHistory } from '@/hooks/useHistory';
-import { useMetricsFlow } from '@/lib/hooks/useMetricsFlow';
 import { InsertNodeDialog, NodeType } from '@/components/canvas/InsertNodeDialog';
 export default function Canvas() {
   const {
@@ -71,9 +69,6 @@ export default function Canvas() {
     canUndo,
     canRedo
   } = useHistory([], []);
-  const {
-    calculateMetricsFlow
-  } = useMetricsFlow();
   useEffect(() => {
     if (!authLoading && !user) {
       navigate('/auth');
@@ -232,23 +227,13 @@ export default function Canvas() {
     setSelectedNode(node);
   }, []);
   const handleUpdateNode = useCallback((nodeId: string, updates: Partial<Node['data']>) => {
-    setNodes(nds => {
-      // First update the node with new data
-      const updatedNodes = nds.map(node => node.id === nodeId ? {
-        ...node,
-        data: {
-          ...node.data,
-          ...updates
-        }
-      } : node);
-
-      // Then propagate metrics downstream if metrics were updated
-      const metricsChanged = updates.visits !== undefined || updates.conversionRate !== undefined || updates.averageOrderValue !== undefined;
-      if (metricsChanged) {
-        return calculateMetricsFlow(updatedNodes, edges, nodeId);
+    setNodes(nds => nds.map(node => node.id === nodeId ? {
+      ...node,
+      data: {
+        ...node.data,
+        ...updates
       }
-      return updatedNodes;
-    });
+    } : node));
 
     // Update selected node if it's the one being edited
     setSelectedNode(current => current?.id === nodeId ? {
@@ -258,7 +243,7 @@ export default function Canvas() {
         ...updates
       }
     } : current);
-  }, [edges, calculateMetricsFlow]);
+  }, []);
   const handleLabelChange = useCallback((nodeId: string, newLabel: string) => {
     handleUpdateNode(nodeId, {
       label: newLabel
@@ -725,8 +710,6 @@ export default function Canvas() {
             <InspectorPanel selectedNode={selectedNode} onUpdateNode={handleUpdateNode} onClose={() => setSelectedNode(null)} />
           </div>}
       </div>
-
-      <FunnelSummary nodes={nodes} />
 
       {project && <ShareDialog open={showShare} onOpenChange={setShowShare} workspaceId={project.workspace_id} projectId={projectId!} projectName={project.name} nodes={nodes} edges={edges} canvasRef={canvasRef} />}
 

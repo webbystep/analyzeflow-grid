@@ -45,20 +45,17 @@ export function ExportDialog({
           id: node.id,
           type: node.type,
           label: data.label,
-          metrics: {
-            visits: data.visits,
-            conversionRate: data.conversionRate,
-            conversions: data.conversions,
-            averageOrderValue: data.averageOrderValue,
-            revenue: data.revenue,
-          },
+          customText: data.customText,
+          notes: data.notes,
+          icon: data.icon,
+          iconColor: data.iconColor,
         };
       }),
       edges: edges.map((edge) => ({
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        dropOffRate: edge.data?.dropOffRate,
+        label: edge.label,
       })),
     };
 
@@ -72,24 +69,21 @@ export function ExportDialog({
   };
 
   const exportAsCSV = () => {
-    const headers = ['ID', 'Type', 'Label', 'Visits', 'Conversion Rate', 'Conversions', 'AOV', 'Revenue'];
+    const headers = ['ID', 'Type', 'Label', 'Description', 'Notes'];
     const rows = nodes.map((node) => {
       const data = node.data as any;
       return [
         node.id,
         node.type || '',
         data.label || '',
-        data.visits || 0,
-        data.conversionRate || 0,
-        data.conversions || 0,
-        data.averageOrderValue || 0,
-        data.revenue || 0,
+        data.customText || '',
+        data.notes || '',
       ];
     });
 
     const csvContent = [
       headers.join(','),
-      ...rows.map((row) => row.join(',')),
+      ...rows.map((row) => row.map(cell => `"${cell}"`).join(',')),
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -212,7 +206,7 @@ export function ExportDialog({
                 <div>
                   <div className="font-medium">JSON</div>
                   <div className="text-xs text-muted-foreground">
-                    Teljes adatstruktúra node-okkal és edge-ekkel
+                    Teljes adatstruktúra node-okkal és kapcsolatokkal
                   </div>
                 </div>
               </Label>
@@ -225,7 +219,7 @@ export function ExportDialog({
                 <div>
                   <div className="font-medium">CSV</div>
                   <div className="text-xs text-muted-foreground">
-                    Táblázatos formátum Excel-hez
+                    Táblázatos formátum Excel-hez (csak node adatok)
                   </div>
                 </div>
               </Label>
