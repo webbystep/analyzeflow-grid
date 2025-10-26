@@ -7,7 +7,7 @@ import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { FunnelSummary } from '@/components/canvas/FunnelSummary';
 
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
-import { SelectionToolbar } from '@/components/canvas/SelectionToolbar';
+
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -807,12 +807,6 @@ export default function Canvas() {
               onDeleteEdge={handleDeleteEdge}
               onSelectionChange={handleSelectionChange}
               onInit={handleReactFlowInit}
-            />
-            <SelectionToolbar
-              selectedCount={selectedNodes.length}
-              onDelete={handleBulkDelete}
-              onDuplicate={handleBulkDuplicate}
-              onAlign={handleBulkAlign}
             />
           </div>
         </CanvasContextMenu>
