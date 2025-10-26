@@ -12,14 +12,16 @@ import type { NodeType } from '@/lib/types/canvas';
 import { getNodeSchema } from '@/lib/nodeSchemas';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { cn } from '@/lib/utils';
-
 interface InspectorPanelProps {
   selectedNode: Node | null;
   onUpdateNode: (nodeId: string, updates: Partial<Node['data']>) => void;
   onClose: () => void;
 }
-
-export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: InspectorPanelProps) {
+export function InspectorPanel({
+  selectedNode,
+  onUpdateNode,
+  onClose
+}: InspectorPanelProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [hasChanges, setHasChanges] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -27,26 +29,27 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
     icon: false
   });
   const schema = getNodeSchema(selectedNode?.type as NodeType);
-
   useEffect(() => {
     if (selectedNode) {
       setFormData(selectedNode.data || {});
       setHasChanges(false);
     }
   }, [selectedNode]);
-
   const handleFieldChange = (fieldId: string, value: any) => {
-    setFormData(prev => ({ ...prev, [fieldId]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [fieldId]: value
+    }));
     setHasChanges(true);
   };
-
   const toggleSection = (section: string) => {
-    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
-
   const handleSave = () => {
     if (!selectedNode || !schema) return;
-    
     const updates: any = {
       label: formData.label,
       customText: formData.customText,
@@ -64,39 +67,32 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
         }
       });
     }
-
     onUpdateNode(selectedNode.id, updates);
     toast.success('Node frissítve');
     setHasChanges(false);
   };
-
   if (!selectedNode) {
-    return (
-      <Card className="flex h-full w-80 flex-col rounded-none border-l bg-card text-card-foreground">
+    return <Card className="flex h-full w-80 flex-col rounded-none border-l bg-card text-card-foreground">
         <div className="flex flex-1 items-center justify-center p-6 text-center text-muted-foreground">
           <div>
             <TrendingUp className="mx-auto mb-3 h-12 w-12 opacity-50" />
             <p className="text-sm">Válassz egy node-ot a szerkesztéshez</p>
           </div>
         </div>
-      </Card>
-    );
+      </Card>;
   }
-
   const nodeDefinition = getNodeDefinition(selectedNode.type as NodeType);
   const Icon = nodeDefinition?.icon;
-
-  return (
-    <Card className="w-80 flex flex-col shadow-xl border-t-0 border-b-0 rounded-none h-full bg-card text-card-foreground" style={{ borderLeftWidth: '1px' }}>
+  return <Card className="w-80 flex flex-col shadow-xl border-t-0 border-b-0 rounded-none h-full bg-card text-card-foreground" style={{
+    borderLeftWidth: '1px'
+  }}>
       <CardHeader className="pb-3 border-b shrink-0 flex-row items-start justify-between">
         <div className="flex flex-1 flex-col">
           <div className="flex items-center gap-2">
             {Icon && <Icon className="h-5 w-5 text-primary" />}
             <CardTitle className="text-lg">{nodeDefinition?.label || selectedNode.type}</CardTitle>
           </div>
-          <CardDescription className="text-xs mt-1">
-            <Badge variant="outline" className="text-xs">{selectedNode.type}</Badge>
-          </CardDescription>
+          
         </div>
         <Button variant="ghost" size="sm" onClick={onClose} className="h-6 w-6 p-0">
           <X className="h-4 w-4" />
@@ -112,62 +108,24 @@ export function InspectorPanel({ selectedNode, onUpdateNode, onClose }: Inspecto
               <ChevronDown className={cn("h-4 w-4 transition-transform", openSections.basic && "rotate-180")} />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-4 mt-4 px-1">
-              {schema?.properties?.fields.map((field) => (
-                <DynamicFieldRenderer
-                  key={field.id}
-                  field={field}
-                  value={formData[field.id]}
-                  onChange={(value) => handleFieldChange(field.id, value)}
-                />
-              ))}
-              {schema?.meta?.fields.map((field) => (
-                <DynamicFieldRenderer
-                  key={field.id}
-                  field={field}
-                  value={formData[field.id]}
-                  onChange={(value) => handleFieldChange(field.id, value)}
-                />
-              ))}
+              {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
+              {schema?.meta?.fields.map(field => {})}
             </CollapsibleContent>
           </Collapsible>
 
           {/* Ikon testreszabás Section */}
-          <Collapsible open={openSections.icon} onOpenChange={() => toggleSection('icon')}>
-            <CollapsibleTrigger className="flex items-center justify-between w-full p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-              <div className="flex items-center gap-2">
-                <Palette className="h-4 w-4" />
-                <h3 className="font-semibold text-sm">Ikon testreszabás</h3>
-              </div>
-              <ChevronDown className={cn("h-4 w-4 transition-transform", openSections.icon && "rotate-180")} />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="mt-4">
-              <IconPicker
-                currentIcon={formData.icon || 'Box'}
-                currentColor={formData.iconColor || '#ffffff'}
-                customSvg={formData.customIconSvg}
-                onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
-                onColorChange={(color) => handleFieldChange('iconColor', color)}
-                onCustomSvgChange={(svg) => handleFieldChange('customIconSvg', svg)}
-              />
-            </CollapsibleContent>
-          </Collapsible>
+          
         </div>
       </CardContent>
 
       {/* Sticky Save Button */}
-      <div className="shrink-0 p-4 border-t" style={{ backgroundColor: '#222526' }}>
-        <Button 
-          onClick={handleSave} 
-          className={cn(
-            "w-full transition-colors header-btn-primary",
-            !hasChanges && "opacity-50 cursor-not-allowed"
-          )}
-          disabled={!hasChanges}
-        >
+      <div className="shrink-0 p-4 border-t" style={{
+      backgroundColor: '#222526'
+    }}>
+        <Button onClick={handleSave} className={cn("w-full transition-colors header-btn-primary", !hasChanges && "opacity-50 cursor-not-allowed")} disabled={!hasChanges}>
           <Save className="mr-2 h-4 w-4" />
           Változások mentése
         </Button>
       </div>
-    </Card>
-  );
+    </Card>;
 }
