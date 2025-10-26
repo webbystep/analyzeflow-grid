@@ -121,7 +121,6 @@ export function InspectorPanel({
           <div className="space-y-4">
             
             {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
-            {schema?.meta?.fields.map(field => {})}
           </div>
         </div>
       </CardContent>

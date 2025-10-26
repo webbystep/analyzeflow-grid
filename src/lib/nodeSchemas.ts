@@ -39,7 +39,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Rövid leírás erről a forgalomforrásról...',
+          placeholder: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
           help: 'Részletes információk a node-ról'
         }
       ]
@@ -90,7 +90,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'A landing oldal célja és tartalma...',
+          placeholder: 'Az oldal, ahol a látogatók először érkeznek. Célja a figyelem megragadása és az érdeklődők konvertálása.',
           help: 'Részletes leírás'
         }
       ]
@@ -141,7 +141,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Az email célja és tartalma...',
+          placeholder: 'Automatizált vagy kampány e-mail, amely a kapcsolatfelvétel után ápolja vagy ösztönzi a leadeket.',
           help: 'Email leírása'
         }
       ]
@@ -192,7 +192,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Az ajánlat részletei...',
+          placeholder: 'Ajánlatküldés vagy promóciós lépés, amely a potenciális ügyfelet döntési helyzetbe hozza.',
           help: 'Ajánlat leírása'
         }
       ]
@@ -243,7 +243,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'A checkout folyamat leírása...',
+          placeholder: 'A vásárlási folyamat utolsó lépése. Itt történik a konverzió – rendelés vagy fizetés leadása.',
           help: 'Checkout részletei'
         }
       ]
@@ -294,7 +294,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Az oldal tartalma...',
+          placeholder: 'Visszajelző oldal sikeres művelet után. Megerősíti a bizalmat és lehetőséget ad upsell-re.',
           help: 'Thank you page részletei'
         }
       ]
@@ -345,7 +345,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Ennek a lépésnek a leírása...',
+          placeholder: 'Saját lépés, ami nem illik a standard funnel elemek közé. Használd egyedi célokra.',
           help: 'Részletes leírás'
         }
       ]
