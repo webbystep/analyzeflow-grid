@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { X, Save, TrendingUp, Palette, ChevronDown } from 'lucide-react';
 import { Node } from '@xyflow/react';
 import { toast } from 'sonner';
@@ -122,6 +123,39 @@ export function InspectorPanel({
           <div className="space-y-4">
             
             {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
+          </div>
+
+          {/* Ikon testreszabása */}
+          <div className="space-y-2 border-t pt-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Ikon testreszabása</Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIconSectionOpen(!iconSectionOpen)}
+                className="h-8 px-2"
+              >
+                <Palette className="h-4 w-4 mr-2" />
+                {iconSectionOpen ? 'Bezár' : 'Megnyit'}
+                <ChevronDown 
+                  className={cn(
+                    "h-4 w-4 ml-2 transition-transform",
+                    iconSectionOpen && "rotate-180"
+                  )} 
+                />
+              </Button>
+            </div>
+
+            {iconSectionOpen && (
+              <IconPicker
+                currentIcon={formData.icon || 'Rocket'}
+                currentColor={formData.iconColor || '#000000'}
+                customSvg={formData.customIconSvg}
+                onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
+                onColorChange={(color) => handleFieldChange('iconColor', color)}
+                onCustomSvgChange={(svg) => handleFieldChange('customIconSvg', svg)}
+              />
+            )}
           </div>
         </div>
       </CardContent>
