@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { X, Save, TrendingUp, Palette, ChevronDown } from 'lucide-react';
+import { X, Save, TrendingUp } from 'lucide-react';
 import { Node } from '@xyflow/react';
 import { toast } from 'sonner';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
@@ -25,7 +25,6 @@ export function InspectorPanel({
 }: InspectorPanelProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [hasChanges, setHasChanges] = useState(false);
-  const [iconSectionOpen, setIconSectionOpen] = useState(false);
   const schema = getNodeSchema(selectedNode?.type as NodeType);
   useEffect(() => {
     if (selectedNode) {
@@ -46,9 +45,7 @@ export function InspectorPanel({
       label: formData.label,
       description: formData.description,
       customText: formData.customText,
-      icon: formData.icon,
-      iconColor: formData.iconColor,
-      customIconSvg: formData.customIconSvg
+      icon: formData.icon
     };
 
     // Collect meta fields
@@ -125,37 +122,13 @@ export function InspectorPanel({
             {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
           </div>
 
-          {/* Ikon testreszabása */}
+          {/* Ikon választása */}
           <div className="space-y-2 border-t pt-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Ikon testreszabása</Label>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIconSectionOpen(!iconSectionOpen)}
-                className="h-8 px-2"
-              >
-                <Palette className="h-4 w-4 mr-2" />
-                {iconSectionOpen ? 'Bezár' : 'Megnyit'}
-                <ChevronDown 
-                  className={cn(
-                    "h-4 w-4 ml-2 transition-transform",
-                    iconSectionOpen && "rotate-180"
-                  )} 
-                />
-              </Button>
-            </div>
-
-            {iconSectionOpen && (
-              <IconPicker
-                currentIcon={formData.icon || 'Rocket'}
-                currentColor={formData.iconColor || '#000000'}
-                customSvg={formData.customIconSvg}
-                onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
-                onColorChange={(color) => handleFieldChange('iconColor', color)}
-                onCustomSvgChange={(svg) => handleFieldChange('customIconSvg', svg)}
-              />
-            )}
+            <Label className="text-sm font-medium">Ikon választása</Label>
+            <IconPicker
+              currentIcon={formData.icon || 'Rocket'}
+              onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
+            />
           </div>
         </div>
       </CardContent>
