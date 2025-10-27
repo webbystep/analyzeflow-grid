@@ -1,6 +1,6 @@
 import { EdgeLabelRenderer, EdgeProps, getBezierPath, useStore, Node, Position } from '@xyflow/react';
 import { useState, useCallback } from 'react';
-import { Trash2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { EdgeContextMenu } from './EdgeContextMenu';
 
 interface CustomEdgeProps extends EdgeProps {
@@ -216,10 +216,11 @@ export function FloatingEdge({
               {(isHovering || selected) && onDeleteEdge && (
                 <button
                   onClick={handleDeleteClick}
-                  className="w-8 h-8 bg-destructive text-destructive-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-300 border-2 border-background animate-fade-in-scale"
+                  className="w-6 h-6 bg-muted text-muted-foreground rounded-full shadow-sm flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 border border-border animate-fade-in"
                   title="Összekötés törlése"
+                  aria-label="Delete edge"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" strokeWidth={2.5} />
                 </button>
               )}
             </div>
