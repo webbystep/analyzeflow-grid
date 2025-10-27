@@ -28,7 +28,8 @@ import { CustomConnectionLine } from './CustomConnectionLine';
 
 const nodeTypes = {
   // Core nodes
-  traffic: FunnelNode,
+  source: FunnelNode,        // Forrás node típus
+  traffic: FunnelNode,       // Backward compatibility
   email: FunnelNode,
   landing: FunnelNode,
   checkout: FunnelNode,
