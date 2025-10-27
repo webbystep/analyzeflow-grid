@@ -200,10 +200,10 @@ export function FloatingEdge({
             labelPosition={{ x: labelX, y: labelY }}
           >
             <div className="relative">
-              {isHovering && onDeleteEdge && (
+              {onDeleteEdge && (
                 <button
                   onClick={handleDeleteClick}
-                  className="w-6 h-6 bg-muted text-muted-foreground rounded-full shadow-sm flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 border border-border animate-fade-in"
+                  className="w-6 h-6 bg-muted text-muted-foreground rounded-full shadow-sm flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 border border-border"
                   title="Összekötés törlése"
                   aria-label="Delete edge"
                 >
