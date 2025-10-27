@@ -39,7 +39,6 @@ export const FunnelNode = memo(({
 
   // Get the node definition to use its icon
   const nodeDefinition = getNodeDefinition(nodeType);
-  const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
 
   // Determine icon to use (Phosphor Icons)
   let IconComponent: any;
@@ -123,11 +122,11 @@ export const FunnelNode = memo(({
             {data.customIconSvg ? (
               <div 
                 className="w-3.5 h-3.5" 
-                style={{ color: `hsl(${nodeDefinitionColor})` }}
+                style={{ color: 'hsl(var(--color-text-primary))' }}
                 dangerouslySetInnerHTML={{ __html: data.customIconSvg }}
               />
             ) : (
-              IconComponent && <IconComponent size={14} style={{ color: `hsl(${nodeDefinitionColor})` }} />
+              IconComponent && <IconComponent size={14} style={{ color: 'hsl(var(--color-text-primary))' }} />
             )}
           </div>
           {isEditing ? (
