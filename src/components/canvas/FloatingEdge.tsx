@@ -76,11 +76,13 @@ export function FloatingEdge({
   markerEnd,
   source,
   target,
-}: EdgeProps) {
+  selected = false,
+}: EdgeProps & { selected?: boolean }) {
   const [isHovering, setIsHovering] = useState(false);
 
   const onInsertNode = (data as any)?.onInsertNode;
   const onDeleteEdge = (data as any)?.onDeleteEdge;
+  const onEdgeClick = (data as any)?.onEdgeClick;
   const isHighlighted = (data as any)?.isHighlighted || false;
 
   // Use React Flow store to get node positions
@@ -112,76 +114,78 @@ export function FloatingEdge({
     }
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (onDeleteEdge) {
       onDeleteEdge(id);
     }
   };
 
+  const handleEdgeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdgeClick) {
+      onEdgeClick(id);
+    }
+  };
+
   return (
     <>
-      {/* Base line - subtle */}
+      {/* Base line - solid gray, thicker on hover/selected */}
       <path
         id={id}
         d={edgePath}
         markerEnd={markerEnd}
+        className="cursor-pointer"
+        onClick={handleEdgeClick}
         style={{
-          strokeWidth: 2,
-          stroke: 'hsla(var(--color-accent-green-rgb), 0.2)',
+          strokeWidth: isHovering ? 4 : selected ? 3 : 2,
+          stroke: selected 
+            ? '#FF6B35' // Narancssárga ha kijelölt
+            : isHovering 
+              ? 'hsl(var(--color-accent-green))' // Élénk zöld hover-nél
+              : '#3E3E3E', // Alap szín: szürke, solid
           fill: 'none',
-        }}
-      />
-      
-      {/* Particle flow line - Liam ERD style */}
-      <path
-        d={edgePath}
-        style={{
-          strokeWidth: 2,
-          stroke: 'hsl(var(--color-accent-green))',
-          fill: 'none',
-          strokeDasharray: '4 20',
-          animation: `flow ${isHighlighted ? '3s' : '5s'} linear infinite`,
-          opacity: isHighlighted ? 1 : 0.6,
+          transition: 'all 0.2s ease-in-out',
         }}
       />
 
-      {/* Animated particles on hover/highlight */}
-      {(isHovering || isHighlighted) && (
+      {/* Animated particles on hover/selected/highlighted */}
+      {(isHovering || selected || isHighlighted) && (
         <>
           {[0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87].map((offset) => (
             <g key={offset}>
               {/* Glow effect */}
               <circle
-                r={isHighlighted ? 6 : 5}
-                fill="hsl(var(--color-accent-green))"
+                r={selected ? 6 : isHighlighted ? 6 : 5}
+                fill={selected ? '#FF6B35' : 'hsl(var(--color-accent-green))'}
                 opacity={0.3}
                 style={{ filter: 'blur(4px)' }}
               >
                 <animateMotion
-                  dur={isHighlighted ? "1.5s" : "2s"}
+                  dur={selected ? "1.5s" : isHighlighted ? "1.5s" : "2s"}
                   repeatCount="indefinite"
                   keyPoints="0;1"
                   keyTimes="0;1"
                   calcMode="linear"
-                  begin={`${offset * (isHighlighted ? 1.5 : 2)}s`}
+                  begin={`${offset * (selected ? 1.5 : isHighlighted ? 1.5 : 2)}s`}
                 >
                   <mpath href={`#${id}`} />
                 </animateMotion>
               </circle>
               {/* Core particle */}
               <circle
-                r={isHighlighted ? 3 : 2.5}
-                fill="hsl(var(--color-accent-green))"
+                r={selected ? 3 : isHighlighted ? 3 : 2.5}
+                fill={selected ? '#FF6B35' : 'hsl(var(--color-accent-green))'}
                 opacity={1}
                 style={{ willChange: 'transform' }}
               >
                 <animateMotion
-                  dur={isHighlighted ? "1.5s" : "2s"}
+                  dur={selected ? "1.5s" : isHighlighted ? "1.5s" : "2s"}
                   repeatCount="indefinite"
                   keyPoints="0;1"
                   keyTimes="0;1"
                   calcMode="linear"
-                  begin={`${offset * (isHighlighted ? 1.5 : 2)}s`}
+                  begin={`${offset * (selected ? 1.5 : isHighlighted ? 1.5 : 2)}s`}
                 >
                   <mpath href={`#${id}`} />
                 </animateMotion>
@@ -209,13 +213,13 @@ export function FloatingEdge({
             labelPosition={{ x: labelX, y: labelY }}
           >
             <div className="relative">
-              {isHovering && onDeleteEdge && (
+              {(isHovering || selected) && onDeleteEdge && (
                 <button
                   onClick={handleDeleteClick}
-                  className="w-7 h-7 bg-destructive text-destructive-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-200 border-2 border-background"
+                  className="w-8 h-8 bg-destructive text-destructive-foreground rounded-full shadow-lg flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-300 border-2 border-background animate-fade-in-scale"
                   title="Összekötés törlése"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-4 h-4" />
                 </button>
               )}
             </div>

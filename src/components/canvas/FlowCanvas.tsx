@@ -96,6 +96,7 @@ interface FlowCanvasProps {
   onDeleteEdge?: (edgeId: string) => void;
   onSelectionChange?: (nodes: Node[]) => void;
   onInit?: (instance: ReactFlowInstance) => void;
+  onPaneClick?: () => void;
   readonly?: boolean;
 }
 
@@ -110,6 +111,7 @@ export function FlowCanvas({
   onDeleteEdge,
   onSelectionChange,
   onInit,
+  onPaneClick,
   readonly = false,
 }: FlowCanvasProps) {
   const { theme } = useTheme();
@@ -198,6 +200,7 @@ export function FlowCanvas({
         onConnect={readonly ? undefined : onConnect}
         onSelectionChange={handleSelectionChangeCallback}
         onInit={onInit}
+        onPaneClick={onPaneClick}
         isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
