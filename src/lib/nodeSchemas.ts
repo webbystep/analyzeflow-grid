@@ -1,14 +1,13 @@
-import { NodeType, ActionType } from './types/canvas';
+import { NodeType } from './types/canvas';
 
 export interface FieldSchema {
   id: string;
   label: string;
-  type: 'text' | 'textarea' | 'number' | 'select' | 'toggle' | 'actionTypeSelect' | 'delayInput';
+  type: 'text' | 'textarea' | 'number' | 'select' | 'toggle';
   placeholder?: string;
   help?: string;
   required?: boolean;
   options?: { value: string; label: string }[];
-  showWhen?: { field: string; value: any }; // conditional rendering
 }
 
 export interface SectionSchema {
@@ -23,7 +22,7 @@ export interface NodeSchema {
 }
 
 export const nodeSchemas: Record<NodeType, NodeSchema> = {
-  source: {
+  traffic: {
     properties: {
       id: 'properties',
       label: 'Alapadatok',
@@ -37,7 +36,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           help: 'A node megjelenített neve a canvason'
         },
         { 
-          id: 'description', 
+          id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
           placeholder: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
@@ -47,14 +46,14 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
     },
     meta: {
       id: 'meta',
-      label: 'Forrás információk',
+      label: 'Forgalom információk',
       fields: [
         { 
-          id: 'platform', 
-          label: 'Platform', 
+          id: 'sourceName', 
+          label: 'Forrás neve', 
           type: 'text',
           placeholder: 'pl. Facebook Ads, Google Ads, Organikus',
-          help: 'A forgalom forrásának platformja'
+          help: 'A forgalom forrásának neve'
         },
         { 
           id: 'campaignName', 
@@ -74,7 +73,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
     }
   },
   
-  page: {
+  landing: {
     properties: {
       id: 'properties',
       label: 'Alapadatok',
@@ -88,10 +87,10 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           help: 'A node megjelenített neve'
         },
         { 
-          id: 'description', 
+          id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.',
+          placeholder: 'Az oldal, ahol a látogatók először érkeznek. Célja a figyelem megragadása és az érdeklődők konvertálása.',
           help: 'Részletes leírás'
         }
       ]
@@ -108,31 +107,24 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           help: 'Az oldal URL címe'
         },
         { 
-          id: 'goalType', 
-          label: 'Cél típusa', 
-          type: 'select',
-          placeholder: 'Válassz célt',
-          help: 'Az oldal fő célja',
-          options: [
-            { value: 'lead', label: 'Lead generálás' },
-            { value: 'sale', label: 'Értékesítés' },
-            { value: 'registration', label: 'Regisztráció' },
-            { value: 'engagement', label: 'Elköteleződés' },
-            { value: 'other', label: 'Egyéb' }
-          ]
-        },
-        { 
           id: 'headline', 
           label: 'Főcím', 
           type: 'text',
           placeholder: 'Az oldal fő címe',
           help: 'A landing page headline szövege'
+        },
+        { 
+          id: 'cta', 
+          label: 'CTA gomb', 
+          type: 'text',
+          placeholder: 'pl. Regisztrálok most',
+          help: 'Call-to-action gomb szövege'
         }
       ]
     }
   },
   
-  action: {
+  email: {
     properties: {
       id: 'properties',
       label: 'Alapadatok',
@@ -142,89 +134,239 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           label: 'Címke', 
           type: 'text', 
           required: true,
-          placeholder: 'Művelet neve',
-          help: 'A művelet megjelenített neve'
+          placeholder: 'pl. Üdvözlő Email',
+          help: 'Az email kampány neve'
         },
         { 
-          id: 'description', 
+          id: 'customText', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Automatizált vagy logikai lépés a tölcsér folyamatában.',
-          help: 'Művelet leírása'
-        },
-        {
-          id: 'actionType',
-          label: 'Művelet típusa',
-          type: 'actionTypeSelect',
-          required: true,
-          help: 'Válaszd ki a művelet típusát'
+          placeholder: 'Automatizált vagy kampány e-mail, amely a kapcsolatfelvétel után ápolja vagy ösztönzi a leadeket.',
+          help: 'Email leírása'
         }
       ]
     },
     meta: {
       id: 'meta',
-      label: 'Művelet beállítások',
+      label: 'Email adatok',
       fields: [
-        // Email specific fields
         { 
-          id: 'parameters.subject', 
-          label: 'Email tárgy', 
+          id: 'subject', 
+          label: 'Tárgy', 
           type: 'text',
           placeholder: 'Email tárgya',
-          help: 'Az email subject line-ja',
-          showWhen: { field: 'actionType', value: 'email' }
+          help: 'Az email subject line-ja'
         },
         { 
-          id: 'parameters.from', 
+          id: 'sender', 
           label: 'Feladó', 
           type: 'text',
           placeholder: 'pl. info@example.com',
-          help: 'Feladó email címe vagy neve',
-          showWhen: { field: 'actionType', value: 'email' }
+          help: 'Feladó email címe vagy neve'
         },
         { 
-          id: 'parameters.timing', 
+          id: 'timing', 
           label: 'Időzítés', 
           type: 'text',
           placeholder: 'pl. Azonnal, 2 nap múlva',
-          help: 'Mikor kerül kiküldésre',
-          showWhen: { field: 'actionType', value: 'email' }
-        },
-        
-        // Delay specific fields
+          help: 'Mikor kerül kiküldésre'
+        }
+      ]
+    }
+  },
+  
+  offer: {
+    properties: {
+      id: 'properties',
+      label: 'Alapadatok',
+      fields: [
         { 
-          id: 'parameters.delayTime', 
-          label: 'Várakozási idő', 
-          type: 'delayInput',
-          placeholder: '2',
-          help: 'Mennyi ideig várjon a rendszer',
-          showWhen: { field: 'actionType', value: 'delay' }
+          id: 'label', 
+          label: 'Címke', 
+          type: 'text', 
+          required: true,
+          placeholder: 'pl. Ajánlat küldés',
+          help: 'Az ajánlat neve'
         },
-        
-        // Condition specific fields
         { 
-          id: 'parameters.rule', 
-          label: 'Feltétel szabály', 
+          id: 'customText', 
+          label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'pl. Megnyitotta az e-mailt?',
-          help: 'A feltétel leírása',
-          showWhen: { field: 'actionType', value: 'condition' }
+          placeholder: 'Ajánlatküldés vagy promóciós lépés, amely a potenciális ügyfelet döntési helyzetbe hozza.',
+          help: 'Ajánlat leírása'
+        }
+      ]
+    },
+    meta: {
+      id: 'meta',
+      label: 'Ajánlat adatok',
+      fields: [
+        { 
+          id: 'offerType', 
+          label: 'Ajánlat típusa', 
+          type: 'text',
+          placeholder: 'pl. Proposal, Quote, Deal',
+          help: 'Milyen típusú ajánlat'
         },
         { 
-          id: 'parameters.yesLabel', 
-          label: 'IGEN ág címke', 
+          id: 'validUntil', 
+          label: 'Érvényesség', 
           type: 'text',
-          placeholder: 'IGEN',
-          help: 'Az igaz ág címkéje',
-          showWhen: { field: 'actionType', value: 'condition' }
+          placeholder: 'pl. 30 nap',
+          help: 'Meddig érvényes az ajánlat'
         },
         { 
-          id: 'parameters.noLabel', 
-          label: 'NEM ág címke', 
+          id: 'deliveryMethod', 
+          label: 'Kézbesítés módja', 
           type: 'text',
-          placeholder: 'NEM',
-          help: 'A hamis ág címkéje',
-          showWhen: { field: 'actionType', value: 'condition' }
+          placeholder: 'pl. Email, Személyesen',
+          help: 'Hogyan jut el az ajánlat'
+        }
+      ]
+    }
+  },
+  
+  checkout: {
+    properties: {
+      id: 'properties',
+      label: 'Alapadatok',
+      fields: [
+        { 
+          id: 'label', 
+          label: 'Címke', 
+          type: 'text', 
+          required: true,
+          placeholder: 'pl. Pénztár',
+          help: 'A checkout lépés neve'
+        },
+        { 
+          id: 'customText', 
+          label: 'Leírás', 
+          type: 'textarea',
+          placeholder: 'A vásárlási folyamat utolsó lépése. Itt történik a konverzió – rendelés vagy fizetés leadása.',
+          help: 'Checkout részletei'
+        }
+      ]
+    },
+    meta: {
+      id: 'meta',
+      label: 'Pénztár adatok',
+      fields: [
+        { 
+          id: 'paymentMethods', 
+          label: 'Fizetési módok', 
+          type: 'text',
+          placeholder: 'pl. Kártya, PayPal, Átutalás',
+          help: 'Elérhető fizetési lehetőségek'
+        },
+        { 
+          id: 'checkoutType', 
+          label: 'Checkout típusa', 
+          type: 'text',
+          placeholder: 'pl. Egy lépéses, Többlépéses',
+          help: 'A checkout folyamat típusa'
+        },
+        { 
+          id: 'gateway', 
+          label: 'Fizetési kapu', 
+          type: 'text',
+          placeholder: 'pl. Stripe, SimplePay',
+          help: 'Használt fizetési szolgáltató'
+        }
+      ]
+    }
+  },
+  
+  thank_you: {
+    properties: {
+      id: 'properties',
+      label: 'Alapadatok',
+      fields: [
+        { 
+          id: 'label', 
+          label: 'Címke', 
+          type: 'text', 
+          required: true,
+          placeholder: 'pl. Köszönő oldal',
+          help: 'A thank you page neve'
+        },
+        { 
+          id: 'customText', 
+          label: 'Leírás', 
+          type: 'textarea',
+          placeholder: 'Visszajelző oldal sikeres művelet után. Megerősíti a bizalmat és lehetőséget ad upsell-re.',
+          help: 'Thank you page részletei'
+        }
+      ]
+    },
+    meta: {
+      id: 'meta',
+      label: 'Oldal adatok',
+      fields: [
+        { 
+          id: 'confirmationMessage', 
+          label: 'Megerősítő üzenet', 
+          type: 'textarea',
+          placeholder: 'Köszönjük a vásárlást!',
+          help: 'Az oldalon megjelenő üzenet'
+        },
+        { 
+          id: 'nextSteps', 
+          label: 'Következő lépések', 
+          type: 'textarea',
+          placeholder: 'Mit tegyen a felhasználó ezután',
+          help: 'Útmutatás a következő lépésekhez'
+        },
+        { 
+          id: 'upsellOffer', 
+          label: 'Upsell ajánlat', 
+          type: 'text',
+          placeholder: 'További termék ajánlás',
+          help: 'Opcionális további ajánlat'
+        }
+      ]
+    }
+  },
+  
+  custom: {
+    properties: {
+      id: 'properties',
+      label: 'Alapadatok',
+      fields: [
+        { 
+          id: 'label', 
+          label: 'Címke', 
+          type: 'text', 
+          required: true,
+          placeholder: 'Egyedi lépés neve',
+          help: 'A node megjelenített neve'
+        },
+        { 
+          id: 'customText', 
+          label: 'Leírás', 
+          type: 'textarea',
+          placeholder: 'Saját lépés, ami nem illik a standard funnel elemek közé. Használd egyedi célokra.',
+          help: 'Részletes leírás'
+        }
+      ]
+    },
+    meta: {
+      id: 'meta',
+      label: 'További információk',
+      fields: [
+        { 
+          id: 'stepType', 
+          label: 'Lépés típusa', 
+          type: 'text',
+          placeholder: 'pl. Webinárium, Konzultáció',
+          help: 'Milyen típusú lépés ez'
+        },
+        { 
+          id: 'details', 
+          label: 'Részletek', 
+          type: 'textarea',
+          placeholder: 'További részletek...',
+          help: 'Bármilyen egyéb információ'
         }
       ]
     }
@@ -236,23 +378,8 @@ export function getNodeSchema(nodeType: NodeType): NodeSchema | undefined {
 }
 
 // Segédfüggvény alapértelmezett leírás lekéréséhez
-export function getDefaultDescription(nodeType: NodeType, actionType?: ActionType): string {
+export function getDefaultDescription(nodeType: NodeType): string {
   const schema = nodeSchemas[nodeType];
-  const descriptionField = schema?.properties?.fields.find(f => f.id === 'description');
-  
-  // Ha action type van, akkor specifikus leírást adjunk
-  if (nodeType === 'action' && actionType) {
-    switch (actionType) {
-      case 'email':
-        return 'Automatizált vagy kampány e-mail, amely a kapcsolatfelvétel után ápolja vagy ösztönzi a leadeket.';
-      case 'delay':
-        return 'Várakozási idő beiktatása a következő lépés előtt.';
-      case 'condition':
-        return 'Ágaztatás a tölcsérben – ha igaz, YES ág, ha nem, NO ág.';
-      case 'custom':
-        return 'Egyedi művelet vagy lépés a folyamatban.';
-    }
-  }
-  
+  const descriptionField = schema?.properties?.fields.find(f => f.id === 'customText');
   return descriptionField?.placeholder || '';
 }

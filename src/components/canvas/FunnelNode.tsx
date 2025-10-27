@@ -8,14 +8,11 @@ import type { NodeType } from '@/lib/types/canvas';
 
 interface FunnelNodeData {
   label: string;
-  description?: string;
-  customText?: string; // backward compatibility
+  customText?: string;
   icon?: string;
   iconColor?: string;
   customIconSvg?: string;
-  color?: string; // backward compatibility
-  actionType?: string;
-  parameters?: Record<string, any>;
+  color?: string;
   notes?: string;
   tags?: string[];
   customFields?: Record<string, any>;
@@ -39,14 +36,8 @@ export const FunnelNode = memo(({
   const isConnectedHighlighted = (data as any).isConnectedHighlighted || false;
 
   // Get the node definition to use its icon
-  const nodeDefinition = getNodeDefinition(nodeType, data.actionType);
+  const nodeDefinition = getNodeDefinition(nodeType);
   const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
-  
-  // Determine if this is a condition node (needs two outputs)
-  const isConditionNode = nodeType === 'action' && data.actionType === 'condition';
-  
-  // Display text priority: description > customText (backward compatibility)
-  const displayText = data.description || data.customText;
 
   // Determine icon to use
   let IconComponent: any;
@@ -116,33 +107,6 @@ export const FunnelNode = memo(({
         style={{ opacity: 0, pointerEvents: 'auto' }}
       />
       
-      {/* Output handles - two for condition nodes, one for others */}
-      {isConditionNode ? (
-        <>
-          <Handle 
-            type="source" 
-            position={Position.Right} 
-            id={`${id}-yes`}
-            className="!w-3 !h-3 !bg-transparent !border-0" 
-            style={{ opacity: 0, pointerEvents: 'auto', top: '35%' }}
-          />
-          <Handle 
-            type="source" 
-            position={Position.Right} 
-            id={`${id}-no`}
-            className="!w-3 !h-3 !bg-transparent !border-0" 
-            style={{ opacity: 0, pointerEvents: 'auto', top: '65%' }}
-          />
-        </>
-      ) : (
-        <Handle 
-          type="source" 
-          position={Position.Right} 
-          className="!w-3 !h-3 !bg-transparent !border-0" 
-          style={{ opacity: 0, pointerEvents: 'auto' }}
-        />
-      )}
-      
       {/* Header */}
       <div 
         className="relative flex items-center justify-between px-2.5 py-2 border-b"
@@ -207,8 +171,8 @@ export const FunnelNode = memo(({
         </div>
       </div>
       
-      {/* Body - show description or customText if present */}
-      {displayText && (
+      {/* Body - only show customText if present */}
+      {data.customText && (
         <div 
           className="px-3 py-2.5"
           style={{ backgroundColor: 'hsl(var(--color-bg-node-body))' }}
@@ -220,7 +184,7 @@ export const FunnelNode = memo(({
               color: 'hsl(var(--color-text-secondary))'
             }}
           >
-            {displayText}
+            {data.customText}
           </div>
         </div>
       )}

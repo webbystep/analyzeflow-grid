@@ -7,12 +7,8 @@ interface NodeToolbarProps {
 }
 
 export function NodeToolbar({ projectId }: NodeToolbarProps) {
-  const handleDragStart = (event: React.DragEvent, nodeType: NodeType, label: string, actionType?: string) => {
-    event.dataTransfer.setData('application/reactflow', JSON.stringify({ 
-      type: nodeType, 
-      label,
-      actionType 
-    }));
+  const handleDragStart = (event: React.DragEvent, nodeType: NodeType, label: string) => {
+    event.dataTransfer.setData('application/reactflow', JSON.stringify({ type: nodeType, label }));
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -24,16 +20,15 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
       </CardHeader>
       
       <CardContent className="flex-1 overflow-y-auto space-y-2 pt-2">
-        {nodeDefinitions.map((node, index) => {
+        {nodeDefinitions.map((node) => {
           const Icon = node.icon;
           const color = node.color || '215 16% 65%';
-          const uniqueKey = node.actionType ? `${node.type}-${node.actionType}` : `${node.type}-${index}`;
           
           return (
             <div
-              key={uniqueKey}
+              key={node.type}
               draggable
-              onDragStart={(e) => handleDragStart(e, node.type, node.label, node.actionType)}
+              onDragStart={(e) => handleDragStart(e, node.type, node.label)}
               className="flex items-center gap-3 p-3 rounded-lg border cursor-move transition-all group hover:bg-[#383a3b]"
               title={node.description}
               style={{

@@ -105,62 +105,24 @@ export default function Canvas() {
     }
     setProject(projectData);
 
-    // Load nodes with migration
+    // Load nodes
     const {
       data: nodesData,
       error: nodesError
     } = await supabase.from('nodes').select('*').eq('project_id', projectId);
     if (!nodesError && nodesData) {
-      const loadedNodes: Node[] = nodesData.map(node => {
-        // Migration logic for old node types
-        let newType: string = node.type;
-        let actionType: string | undefined;
-        let migratedData = { ...(node.data as Record<string, any> || {}) };
-        
-        // Map old types to new types
-        switch(node.type) {
-          case 'traffic':
-            newType = 'source';
-            break;
-          case 'landing':
-          case 'offer':
-          case 'checkout':
-          case 'thank_you':
-            newType = 'page';
-            break;
-          case 'email':
-            newType = 'action';
-            actionType = 'email';
-            break;
-          case 'custom':
-            newType = 'action';
-            actionType = 'custom';
-            break;
+      const loadedNodes: Node[] = nodesData.map(node => ({
+        id: node.id,
+        type: node.type,
+        position: {
+          x: node.position_x,
+          y: node.position_y
+        },
+        data: {
+          label: node.label || 'Untitled',
+          ...(node.data as Record<string, any> || {})
         }
-        
-        // Migrate customText to description if needed
-        if (migratedData.customText && !migratedData.description) {
-          migratedData.description = migratedData.customText;
-        }
-        
-        // Add actionType if it's an action node
-        if (actionType) {
-          migratedData.actionType = actionType;
-        }
-        
-        return {
-          id: node.id,
-          type: newType,
-          position: {
-            x: node.position_x,
-            y: node.position_y
-          },
-          data: {
-            label: node.label || 'Untitled',
-            ...migratedData
-          }
-        };
-      });
+      }));
       setNodes(loadedNodes);
     }
 
@@ -260,24 +222,8 @@ export default function Canvas() {
     pushHistory(newNodes, edges);
   }, [pushHistory, edges]);
   const handleEdgesChange = useCallback((newEdges: Edge[]) => {
-    // Auto-label edges from condition nodes
-    const edgesWithLabels = newEdges.map(edge => {
-      // Check if this is a new edge from a condition node
-      const sourceNode = nodes.find(n => n.id === edge.source);
-      if (sourceNode?.data?.actionType === 'condition' && !edge.label) {
-        const params = sourceNode.data.parameters as any;
-        // Determine label based on sourceHandle
-        if (edge.sourceHandle === `${edge.source}-yes`) {
-          return { ...edge, label: params?.yesLabel || 'IGEN' };
-        } else if (edge.sourceHandle === `${edge.source}-no`) {
-          return { ...edge, label: params?.noLabel || 'NEM' };
-        }
-      }
-      return edge;
-    });
-    
-    setEdges(edgesWithLabels);
-    pushHistory(nodes, edgesWithLabels);
+    setEdges(newEdges);
+    pushHistory(nodes, newEdges);
   }, [pushHistory, nodes]);
   const handleNodeClick = useCallback((node: Node) => {
     setSelectedNode(node);
@@ -299,29 +245,7 @@ export default function Canvas() {
         ...updates
       }
     } : current);
-    
-    // If this is a condition node and yesLabel/noLabel changed, update edge labels
-    const updatedNode = nodes.find(n => n.id === nodeId);
-    if (updatedNode?.data?.actionType === 'condition' && updates.parameters) {
-      const params = updates.parameters as any;
-      const yesLabel = params?.yesLabel;
-      const noLabel = params?.noLabel;
-      
-      if (yesLabel !== undefined || noLabel !== undefined) {
-        setEdges(edgs => edgs.map(edge => {
-          if (edge.source === nodeId) {
-            // Check which handle this edge is connected to
-            if (edge.sourceHandle === `${nodeId}-yes` && yesLabel !== undefined) {
-              return { ...edge, label: yesLabel };
-            } else if (edge.sourceHandle === `${nodeId}-no` && noLabel !== undefined) {
-              return { ...edge, label: noLabel };
-            }
-          }
-          return edge;
-        }));
-      }
-    }
-  }, [nodes]);
+  }, []);
   const handleLabelChange = useCallback((nodeId: string, newLabel: string) => {
     handleUpdateNode(nodeId, {
       label: newLabel
@@ -498,9 +422,12 @@ export default function Canvas() {
   }, [toast]);
   const handleAddNodeFromContext = useCallback((type: string, x = 100, y = 100) => {
     const labels: Record<string, string> = {
-      source: 'Forrás',
-      page: 'Oldal',
-      action: 'Művelet'
+      traffic: 'Traffic Source',
+      email: 'Email Campaign',
+      landing: 'Landing Page',
+      checkout: 'Checkout',
+      thankyou: 'Thank You',
+      condition: 'Condition'
     };
     const newNode: Node = {
       id: crypto.randomUUID(),
@@ -511,7 +438,7 @@ export default function Canvas() {
       },
       data: {
         label: labels[type] || 'New Node',
-        description: getDefaultDescription(type as CanvasNodeType),
+        customText: getDefaultDescription(type as CanvasNodeType),
         visits: 1000,
         conversionRate: 10
       }
@@ -586,8 +513,8 @@ export default function Canvas() {
         y: position.y - 40 // Node height / 2
       },
       data: {
-        label: `Új ${type}`,
-        description: getDefaultDescription(type as CanvasNodeType),
+        label: `New ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+        customText: getDefaultDescription(type as CanvasNodeType),
         visits: 1000,
         conversionRate: 10
       }
@@ -692,8 +619,7 @@ export default function Canvas() {
     if (!type) return;
     const {
       type: nodeType,
-      label,
-      actionType
+      label
     } = JSON.parse(type);
 
     // Calculate exact position where mouse is
@@ -702,31 +628,16 @@ export default function Canvas() {
       // Node width/2
       y: event.clientY - reactFlowBounds.top - 40 // Node height/2
     };
-    
-    const nodeData: any = {
-      label,
-      description: getDefaultDescription(nodeType as CanvasNodeType, actionType),
-      visits: 1000,
-      conversionRate: 10
-    };
-    
-    // Add actionType for action nodes
-    if (nodeType === 'action' && actionType) {
-      nodeData.actionType = actionType;
-      
-      // Initialize parameters based on action type
-      if (actionType === 'delay') {
-        nodeData.parameters = { delayTime: '2 nap' };
-      } else if (actionType === 'condition') {
-        nodeData.parameters = { yesLabel: 'IGEN', noLabel: 'NEM', rule: '' };
-      }
-    }
-    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type: nodeType,
       position,
-      data: nodeData
+      data: {
+        label,
+        customText: getDefaultDescription(nodeType as CanvasNodeType),
+        visits: 1000,
+        conversionRate: 10
+      }
     };
     setNodes(nds => [...nds, newNode]);
   }, []);
