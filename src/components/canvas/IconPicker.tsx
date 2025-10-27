@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import * as LucideIcons from 'lucide-react';
+import { icons } from 'lucide-react';
 import { Search } from 'lucide-react';
 
 interface IconPickerProps {
@@ -11,8 +11,8 @@ interface IconPickerProps {
 }
 
 // Get list of all Lucide icon names
-const LUCIDE_ICON_NAMES = Object.keys(LucideIcons).filter(
-  (key) => key !== 'default' && key !== 'createLucideIcon' && typeof (LucideIcons as any)[key] === 'function'
+const LUCIDE_ICON_NAMES = Object.keys(icons).filter(
+  (key) => !['createLucideIcon', 'default'].includes(key)
 );
 
 export function IconPicker({
@@ -27,7 +27,7 @@ export function IconPicker({
     ).slice(0, 100); // Limit to 100 for performance
   }, [search]);
 
-  const CurrentIconComponent = (LucideIcons as any)[currentIcon] || LucideIcons.Box;
+  const CurrentIconComponent = icons[currentIcon as keyof typeof icons] || icons.Box;
 
   return (
     <div className="space-y-4">
@@ -58,7 +58,7 @@ export function IconPicker({
       <ScrollArea className="h-[300px] border rounded-lg p-2">
         <div className="grid grid-cols-6 gap-2">
           {filteredIcons.map((iconName) => {
-            const IconComponent = (LucideIcons as any)[iconName];
+            const IconComponent = icons[iconName as keyof typeof icons];
             const isSelected = iconName === currentIcon;
             
             return (

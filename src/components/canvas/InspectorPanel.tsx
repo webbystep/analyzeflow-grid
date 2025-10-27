@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { X, Save, TrendingUp } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { X, Save, TrendingUp, HelpCircle } from 'lucide-react';
 import { Node } from '@xyflow/react';
 import { toast } from 'sonner';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
@@ -124,7 +125,19 @@ export function InspectorPanel({
 
           {/* Ikon választása */}
           <div className="space-y-2 border-t pt-4">
-            <Label className="text-sm font-medium">Ikon választása</Label>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium">Kiválasztott ikon</Label>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button type="button" className="inline-flex">
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ez az ikon jelenik meg a node-on</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <IconPicker
               currentIcon={formData.icon || 'Rocket'}
               onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
