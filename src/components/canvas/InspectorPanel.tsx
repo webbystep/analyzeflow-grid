@@ -33,30 +33,50 @@ export function InspectorPanel({
     }
   }, [selectedNode]);
   const handleFieldChange = (fieldId: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [fieldId]: value
-    }));
+    // Handle nested parameters (e.g., parameters.yesLabel)
+    if (fieldId.startsWith('parameters.')) {
+      const paramKey = fieldId.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        parameters: {
+          ...prev.parameters,
+          [paramKey]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [fieldId]: value
+      }));
+    }
     setHasChanges(true);
   };
   const handleSave = () => {
     if (!selectedNode || !schema) return;
     const updates: any = {
       label: formData.label,
-      customText: formData.customText,
+      description: formData.description,
+      customText: formData.customText, // backward compat
       icon: formData.icon,
       iconColor: formData.iconColor,
-      customIconSvg: formData.customIconSvg
+      customIconSvg: formData.customIconSvg,
+      actionType: formData.actionType,
+      parameters: formData.parameters
     };
 
     // Collect meta fields
     if (schema.meta) {
       schema.meta.fields.forEach(field => {
-        if (formData[field.id] !== undefined) {
-          updates[field.id] = formData[field.id];
+        const fieldId = field.id;
+        // Skip parameters.* fields as they're already handled
+        if (!fieldId.startsWith('parameters.')) {
+          if (formData[fieldId] !== undefined) {
+            updates[fieldId] = formData[fieldId];
+          }
         }
       });
     }
+    
     onUpdateNode(selectedNode.id, updates);
     toast.success('Node frissítve');
     setHasChanges(false);
@@ -119,9 +139,44 @@ export function InspectorPanel({
         <div className="space-y-4">
           {/* Alapadatok */}
           <div className="space-y-4">
-            
-            {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
+            {schema?.properties?.fields.map(field => {
+              const fieldValue = field.id.startsWith('parameters.') 
+                ? formData.parameters?.[field.id.split('.')[1]]
+                : formData[field.id];
+              
+              return (
+                <DynamicFieldRenderer 
+                  key={field.id} 
+                  field={field} 
+                  value={fieldValue}
+                  onChange={value => handleFieldChange(field.id, value)}
+                  currentActionType={formData.actionType}
+                />
+              );
+            })}
           </div>
+          
+          {/* Meta mezők */}
+          {schema?.meta && (
+            <div className="space-y-4 pt-4 border-t">
+              <h3 className="font-semibold text-sm">{schema.meta.label}</h3>
+              {schema.meta.fields.map(field => {
+                const fieldValue = field.id.startsWith('parameters.') 
+                  ? formData.parameters?.[field.id.split('.')[1]]
+                  : formData[field.id];
+                
+                return (
+                  <DynamicFieldRenderer 
+                    key={field.id} 
+                    field={field} 
+                    value={fieldValue}
+                    onChange={value => handleFieldChange(field.id, value)}
+                    currentActionType={formData.actionType}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </CardContent>
 

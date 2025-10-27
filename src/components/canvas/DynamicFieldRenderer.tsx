@@ -6,16 +6,58 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { HelpCircle } from 'lucide-react';
 import { FieldSchema } from '@/lib/nodeSchemas';
+import { ActionType } from '@/lib/types/canvas';
 
 interface DynamicFieldRendererProps {
   field: FieldSchema;
   value: any;
   onChange: (value: any) => void;
+  currentActionType?: ActionType; // for conditional rendering
 }
 
-export function DynamicFieldRenderer({ field, value, onChange }: DynamicFieldRendererProps) {
+export function DynamicFieldRenderer({ field, value, onChange, currentActionType }: DynamicFieldRendererProps) {
+  // Check if field should be shown based on showWhen condition
+  if (field.showWhen) {
+    if (field.showWhen.field === 'actionType' && currentActionType !== field.showWhen.value) {
+      return null;
+    }
+  }
+  
   const renderField = () => {
     switch (field.type) {
+      case 'actionTypeSelect':
+        return (
+          <Select value={value || 'custom'} onValueChange={onChange}>
+            <SelectTrigger id={field.id} style={{ backgroundColor: '#2f3031' }}>
+              <SelectValue placeholder="Válassz típust" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="email">Email</SelectItem>
+              <SelectItem value="delay">Késleltetés</SelectItem>
+              <SelectItem value="condition">Feltétel</SelectItem>
+              <SelectItem value="custom">Egyedi</SelectItem>
+            </SelectContent>
+          </Select>
+        );
+      
+      case 'delayInput':
+        return (
+          <div className="flex gap-2">
+            <Input
+              id={field.id}
+              type="text"
+              value={value || ''}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={field.placeholder}
+              style={{ backgroundColor: '#2f3031' }}
+              className="flex-1"
+            />
+            <span className="text-sm text-muted-foreground flex items-center whitespace-nowrap">
+              (pl. "2 nap", "1 óra")
+            </span>
+          </div>
+        );
+      
       case 'text':
         return (
           <Input

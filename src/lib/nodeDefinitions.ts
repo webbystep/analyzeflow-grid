@@ -1,15 +1,14 @@
-import { NodeType, NodeCategory } from './types/canvas';
+import { NodeType } from './types/canvas';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Rocket, Mail, FileText, ShoppingCart, PartyPopper, MessageSquare, Box,
-  Target, Send, DollarSign
+  Rocket, FileText, Zap, Clock, GitBranch
 } from 'lucide-react';
 
-export const nodeCategories: NodeCategory[] = [
+export const nodeCategories = [
   {
     id: 'core',
     name: 'Alap Node-ok',
-    description: '7 rugalmas node típus minden funnel lépéshez',
+    description: '5 rugalmas node típus minden funnel lépéshez',
     color: '215 16% 65%',
     icon: 'Box'
   }
@@ -22,73 +21,65 @@ export interface NodeDefinition {
   description: string;
   category: string;
   color?: string;
+  actionType?: string; // for action nodes
 }
 
+// 5 funkcionális node definíció
 export const nodeDefinitions: NodeDefinition[] = [
   {
-    type: 'traffic',
-    label: 'Forgalom',
+    type: 'source',
+    label: 'Forrás',
     icon: Rocket,
-    description: 'Hirdetések, organikus forgalom, marketing kampányok',
+    description: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
     category: 'core',
-    color: 'var(--node-traffic)'
+    color: 'var(--node-source)'
   },
   {
-    type: 'landing',
-    label: 'Landoló oldal',
-    icon: Target,
-    description: 'Értékesítési oldal, űrlap, regisztráció',
+    type: 'page',
+    label: 'Oldal',
+    icon: FileText,
+    description: 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.',
     category: 'core',
-    color: 'var(--node-landing)'
+    color: 'var(--node-page)'
   },
   {
-    type: 'email',
-    label: 'Email',
-    icon: Send,
-    description: 'Email kampány, automatizáció, hírlevél',
+    type: 'action',
+    label: 'Művelet',
+    icon: Zap,
+    description: 'Automatizált vagy logikai lépés a tölcsér folyamatában.',
     category: 'core',
-    color: 'var(--node-email)'
+    color: 'var(--node-action)',
+    actionType: 'custom'
   },
   {
-    type: 'offer',
-    label: 'Ajánlat',
-    icon: MessageSquare,
-    description: 'Ajánlatküldés, proposal, deal',
+    type: 'action',
+    label: 'Késleltetés',
+    icon: Clock,
+    description: 'Várakozási idő beiktatása a következő lépés előtt.',
     category: 'core',
-    color: 'var(--node-offer)'
+    color: 'var(--node-action)',
+    actionType: 'delay'
   },
   {
-    type: 'checkout',
-    label: 'Pénztár',
-    icon: DollarSign,
-    description: 'Fizetés, vásárlás, rendelés',
+    type: 'action',
+    label: 'Feltétel',
+    icon: GitBranch,
+    description: 'Ágaztatás a tölcsérben – ha igaz, YES ág, ha nem, NO ág.',
     category: 'core',
-    color: 'var(--node-checkout)'
-  },
-  {
-    type: 'thank_you',
-    label: 'Köszönő oldal',
-    icon: PartyPopper,
-    description: 'Megerősítés, sikeres vásárlás',
-    category: 'core',
-    color: 'var(--node-thank_you)'
-  },
-  {
-    type: 'custom',
-    label: 'Egyedi',
-    icon: Box,
-    description: 'Saját lépés, bármilyen más folyamat',
-    category: 'core',
-    color: 'var(--node-custom)'
+    color: 'var(--node-action)',
+    actionType: 'condition'
   }
 ];
 
 // Segédfüggvény node definíció lekérdezésére
-export function getNodeDefinition(type: NodeType): NodeDefinition | undefined {
-  return nodeDefinitions.find(n => n.type === type);
+export function getNodeDefinition(type: NodeType, actionType?: string): NodeDefinition | undefined {
+  if (type === 'action' && actionType) {
+    return nodeDefinitions.find(n => n.type === 'action' && n.actionType === actionType);
+  }
+  return nodeDefinitions.find(n => n.type === type && !n.actionType);
 }
 
 // Segédfüggvény kategória lekérdezésére
-export function getNodeCategory(categoryId: string): NodeCategory | undefined {
+export function getNodeCategory(categoryId: string) {
   return nodeCategories.find(c => c.id === categoryId);
 }
