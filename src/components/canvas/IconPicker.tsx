@@ -34,7 +34,7 @@ const PHOSPHOR_ICON_NAMES = [
 ];
 
 export function IconPicker({
-  currentIcon = 'Box',
+  currentIcon = 'Question',
   onIconSelect
 }: IconPickerProps) {
   const [search, setSearch] = useState('');

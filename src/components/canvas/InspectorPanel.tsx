@@ -71,14 +71,25 @@ export function InspectorPanel({
       </Card>;
   }
   const nodeDefinition = getNodeDefinition(selectedNode.type as NodeType);
-  const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
+
+  // Helper function to get icon name from node definition
+  const getIconNameFromDefinition = (nodeDefinition: any): string => {
+    if (!nodeDefinition?.icon) return 'Question';
+    // Find the Phosphor component name
+    for (const [name, component] of Object.entries(Phosphor)) {
+      if (component === nodeDefinition.icon) {
+        return name;
+      }
+    }
+    return 'Question';
+  };
 
   // Pontosan ugyanaz a logika, mint a FunnelNode-ban (Phosphor Icons)
   const getDisplayIcon = () => {
     // Ha van custom SVG, azt használjuk
     if (formData.customIconSvg) {
       return <div className="h-5 w-5" style={{
-        color: `hsl(${nodeDefinitionColor})`
+        color: 'hsl(var(--color-text-primary))'
       }} dangerouslySetInnerHTML={{
         __html: formData.customIconSvg
       }} />;
@@ -88,14 +99,14 @@ export function InspectorPanel({
     if (formData.icon && (Phosphor as any)[formData.icon]) {
       const IconComponent = (Phosphor as any)[formData.icon];
       return <IconComponent size={20} style={{
-        color: `hsl(${nodeDefinitionColor})`
+        color: 'hsl(var(--color-text-primary))'
       }} />;
     }
 
     // Alapértelmezett node típus ikon
     const Icon = nodeDefinition?.icon;
     return Icon ? <Icon size={20} style={{
-      color: `hsl(${nodeDefinitionColor})`
+      color: 'hsl(var(--color-text-primary))'
     }} /> : null;
   };
   return <Card className="w-80 flex flex-col shadow-xl border-t-0 border-b-0 rounded-none h-full bg-card text-card-foreground" style={{
@@ -138,7 +149,7 @@ export function InspectorPanel({
               </Tooltip>
             </div>
             <IconPicker
-              currentIcon={formData.icon || 'MegaphoneSimple'}
+              currentIcon={formData.icon || getIconNameFromDefinition(nodeDefinition)}
               onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
             />
           </div>
