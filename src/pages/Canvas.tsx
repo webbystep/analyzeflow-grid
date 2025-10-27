@@ -42,7 +42,6 @@ export default function Canvas() {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-  const [selectedEdge, setSelectedEdge] = useState<string | null>(null);
   const [showShare, setShowShare] = useState(false);
   const [showInsertDialog, setShowInsertDialog] = useState(false);
   const [pendingInsertData, setPendingInsertData] = useState<{
@@ -595,7 +594,6 @@ export default function Canvas() {
 
     const updatedEdges = edges.filter(e => e.id !== edgeId);
     setEdges(updatedEdges);
-    setSelectedEdge(null);
     pushHistory(nodes, updatedEdges);
     
     toast({
@@ -618,16 +616,6 @@ export default function Canvas() {
       ),
     });
   }, [edges, nodes, pushHistory, toast]);
-
-  const handleEdgeClick = useCallback((edgeId: string) => {
-    setSelectedEdge(edgeId);
-    setSelectedNode(null);
-    setSelectedNodes([]);
-  }, []);
-
-  const handlePaneClick = useCallback(() => {
-    setSelectedEdge(null);
-  }, []);
   const handleReactFlowInit = useCallback((instance: ReactFlowInstance) => {
     reactFlowInstance.current = instance;
   }, []);
@@ -647,13 +635,6 @@ export default function Canvas() {
       const target = e.target as HTMLElement;
       const isEditable = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
       if (isEditable) return;
-
-      // Delete edge if selected (Delete or Backspace)
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEdge) {
-        e.preventDefault();
-        handleDeleteEdge(selectedEdge);
-        return;
-      }
 
       // Undo
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
@@ -687,12 +668,11 @@ export default function Canvas() {
       if (e.key === 'Escape') {
         setSelectedNodes([]);
         setSelectedNode(null);
-        setSelectedEdge(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedNode, selectedNodes, selectedEdge, handleDeleteSelected, handleBulkDelete, handleBulkDuplicate, handleUndo, handleRedo, handleDuplicateNode, handleDeleteEdge]);
+  }, [selectedNode, selectedNodes, handleDeleteSelected, handleBulkDelete, handleBulkDuplicate, handleUndo, handleRedo, handleDuplicateNode]);
   const handleDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     const reactFlowBounds = canvasRef.current?.getBoundingClientRect();
@@ -788,7 +768,6 @@ export default function Canvas() {
             }
           }))} initialEdges={edges.map(edge => ({
             ...edge,
-            selected: edge.id === selectedEdge,
             data: {
               ...edge.data,
               isHighlighted: highlightedElements.edges.has(edge.id),
@@ -797,10 +776,9 @@ export default function Canvas() {
                 target: 'N'
               },
               onInsertNode: handleInsertNodeBetweenEdges,
-              onDeleteEdge: handleDeleteEdge,
-              onEdgeClick: handleEdgeClick
+              onDeleteEdge: handleDeleteEdge
             }
-          }))} onNodesChange={handleNodesChange} onEdgesChange={handleEdgesChange} onNodeClick={handleNodeClick} onInsertNode={handleInsertNodeBetweenEdges} onDeleteEdge={handleDeleteEdge} onSelectionChange={handleSelectionChange} onInit={handleReactFlowInit} onPaneClick={handlePaneClick} />
+          }))} onNodesChange={handleNodesChange} onEdgesChange={handleEdgesChange} onNodeClick={handleNodeClick} onInsertNode={handleInsertNodeBetweenEdges} onDeleteEdge={handleDeleteEdge} onSelectionChange={handleSelectionChange} onInit={handleReactFlowInit} />
           </div>
         </CanvasContextMenu>
 

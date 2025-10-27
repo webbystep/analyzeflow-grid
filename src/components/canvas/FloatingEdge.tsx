@@ -76,13 +76,11 @@ export function FloatingEdge({
   markerEnd,
   source,
   target,
-  selected = false,
-}: EdgeProps & { selected?: boolean }) {
+}: EdgeProps) {
   const [isHovering, setIsHovering] = useState(false);
 
   const onInsertNode = (data as any)?.onInsertNode;
   const onDeleteEdge = (data as any)?.onDeleteEdge;
-  const onEdgeClick = (data as any)?.onEdgeClick;
   const isHighlighted = (data as any)?.isHighlighted || false;
 
   // Use React Flow store to get node positions
@@ -121,71 +119,60 @@ export function FloatingEdge({
     }
   };
 
-  const handleEdgeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onEdgeClick) {
-      onEdgeClick(id);
-    }
-  };
-
   return (
     <>
-      {/* Base line - solid gray, thicker on hover/selected */}
+      {/* Base line - solid gray, thicker on hover */}
       <path
         id={id}
         d={edgePath}
         markerEnd={markerEnd}
-        className="cursor-pointer"
-        onClick={handleEdgeClick}
         style={{
-          strokeWidth: isHovering ? 4 : selected ? 3 : 2,
-          stroke: selected 
-            ? '#FF6B35' // Narancssárga ha kijelölt
-            : isHovering 
-              ? 'hsl(var(--color-accent-green))' // Élénk zöld hover-nél
-              : '#3E3E3E', // Alap szín: szürke, solid
+          strokeWidth: isHovering ? 4 : 2,
+          stroke: isHovering 
+            ? 'hsl(var(--color-accent-green))' // Élénk zöld hover-nél
+            : '#3E3E3E', // Alap szín: szürke, solid
           fill: 'none',
           transition: 'all 0.2s ease-in-out',
         }}
       />
 
-      {/* Animated particles on hover/selected/highlighted */}
-      {(isHovering || selected || isHighlighted) && (
+      {/* Animated particles on hover/highlighted */}
+      {(isHovering || isHighlighted) && (
         <>
           {[0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87].map((offset) => (
             <g key={offset}>
               {/* Glow effect */}
               <circle
-                r={selected ? 6 : isHighlighted ? 6 : 5}
-                fill={selected ? '#FF6B35' : 'hsl(var(--color-accent-green))'}
+                r={isHighlighted ? 6 : 5}
+                fill="hsl(var(--color-accent-green))"
                 opacity={0.3}
                 style={{ filter: 'blur(4px)' }}
               >
                 <animateMotion
-                  dur={selected ? "1.5s" : isHighlighted ? "1.5s" : "2s"}
+                  dur={isHighlighted ? "1.5s" : "2s"}
                   repeatCount="indefinite"
                   keyPoints="0;1"
                   keyTimes="0;1"
                   calcMode="linear"
-                  begin={`${offset * (selected ? 1.5 : isHighlighted ? 1.5 : 2)}s`}
+                  begin={`${offset * (isHighlighted ? 1.5 : 2)}s`}
                 >
                   <mpath href={`#${id}`} />
                 </animateMotion>
               </circle>
               {/* Core particle */}
               <circle
-                r={selected ? 3 : isHighlighted ? 3 : 2.5}
-                fill={selected ? '#FF6B35' : 'hsl(var(--color-accent-green))'}
+                r={isHighlighted ? 3 : 2.5}
+                fill="hsl(var(--color-accent-green))"
                 opacity={1}
                 style={{ willChange: 'transform' }}
               >
                 <animateMotion
-                  dur={selected ? "1.5s" : isHighlighted ? "1.5s" : "2s"}
+                  dur={isHighlighted ? "1.5s" : "2s"}
                   repeatCount="indefinite"
                   keyPoints="0;1"
                   keyTimes="0;1"
                   calcMode="linear"
-                  begin={`${offset * (selected ? 1.5 : isHighlighted ? 1.5 : 2)}s`}
+                  begin={`${offset * (isHighlighted ? 1.5 : 2)}s`}
                 >
                   <mpath href={`#${id}`} />
                 </animateMotion>
@@ -213,7 +200,7 @@ export function FloatingEdge({
             labelPosition={{ x: labelX, y: labelY }}
           >
             <div className="relative">
-              {(isHovering || selected) && onDeleteEdge && (
+              {isHovering && onDeleteEdge && (
                 <button
                   onClick={handleDeleteClick}
                   className="w-6 h-6 bg-muted text-muted-foreground rounded-full shadow-sm flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 border border-border animate-fade-in"
