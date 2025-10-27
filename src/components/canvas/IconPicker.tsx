@@ -12,7 +12,7 @@ interface IconPickerProps {
 // Curated list of Phosphor icon names for the picker
 const PHOSPHOR_ICON_NAMES = [
   // Source / Campaign
-  'MegaphoneSimple', 'ShareNetwork', 'TrendUp', 'ChartLineUp', 'Broadcast',
+  'MegaphoneSimple', 'ShareNetwork', 'TrendUp', 'ChartLineUp',
   // Page / Web / Landing
   'Monitor', 'Browser', 'FileText', 'Article', 'Devices',
   // Action / Automation / Email
@@ -20,9 +20,9 @@ const PHOSPHOR_ICON_NAMES = [
   // Delay
   'Clock', 'Hourglass', 'Timer',
   // Condition / Branch
-  'GitFork', 'ArrowsSplit', 'FlowArrow', 'Path',
+  'GitFork', 'ArrowsSplit', 'Path',
   // Data / Measurement
-  'ChartLine', 'Graph', 'Target', 'ChartBar', 'ChartPie',
+  'ChartLine', 'Target', 'ChartBar', 'ChartPie',
   // Gift / Offer
   'Gift', 'Sparkle', 'Tag', 'Percent',
   // Shopping / Checkout
@@ -30,7 +30,7 @@ const PHOSPHOR_ICON_NAMES = [
   // Success / Thank You
   'CheckCircle', 'Confetti', 'Smiley', 'Star',
   // Custom / Other
-  'Cube', 'Question', 'Dots', 'Database', 'Users', 'User'
+  'Cube', 'Question', 'DotsThree', 'Database', 'Users', 'User'
 ];
 
 export function IconPicker({
@@ -78,6 +78,12 @@ export function IconPicker({
           {filteredIcons.map((iconName) => {
             const IconComponent = (Phosphor as any)[iconName];
             const isSelected = iconName === currentIcon;
+            
+            // Skip if icon doesn't exist
+            if (!IconComponent) {
+              console.warn(`Icon ${iconName} not found in Phosphor Icons`);
+              return null;
+            }
             
             return (
               <button
