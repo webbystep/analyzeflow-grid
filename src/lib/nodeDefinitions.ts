@@ -24,7 +24,7 @@ export const nodeDefinitions: NodeDefinition[] = [
   {
     type: 'source',
     label: 'Forrás',
-    icon: Phosphor.MegaphoneSimple,
+    icon: Phosphor.Rocket,
     description: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
     category: 'core',
     color: '210 100% 60%' // vibrant blue
