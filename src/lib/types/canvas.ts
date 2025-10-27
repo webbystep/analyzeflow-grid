@@ -15,7 +15,7 @@ export interface NodeData {
   description?: string; // Primary description field
   customText?: string; // Backward compatibility
   platform?: string; // Platform metadata (e.g., "Facebook Ads")
-  icon?: string; // Lucide icon name
+  icon?: string; // Phosphor icon name OR "simple:BrandName" for brand icons (e.g., "simple:Facebook")
   iconColor?: string; // Custom color for icon
   customIconSvg?: string; // Custom SVG override
   color?: string;

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NodeType } from '@/lib/types/canvas';
 import { nodeDefinitions } from '@/lib/nodeDefinitions';
+import * as SimpleIcons from 'react-icons/si';
 
 interface NodeToolbarProps {
   projectId: string;

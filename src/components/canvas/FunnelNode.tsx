@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { ConnectionHandle } from './ConnectionHandle';
 import * as Phosphor from '@phosphor-icons/react';
+import * as SimpleIcons from 'react-icons/si';
 import type { NodeType } from '@/lib/types/canvas';
 
 interface FunnelNodeData {
@@ -40,11 +41,16 @@ export const FunnelNode = memo(({
   // Get the node definition to use its icon
   const nodeDefinition = getNodeDefinition(nodeType);
 
-  // Determine icon to use (Phosphor Icons)
+  // Determine icon to use (Phosphor Icons + Simple Icons for brands)
   let IconComponent: any;
   if (data.customIconSvg) {
     IconComponent = null; // Will render SVG directly
+  } else if (data.icon?.startsWith('simple:')) {
+    // Brand icon from Simple Icons
+    const iconName = data.icon.replace('simple:', '');
+    IconComponent = (SimpleIcons as any)[`Si${iconName}`] || Phosphor.Question;
   } else if (data.icon && (Phosphor as any)[data.icon]) {
+    // UI icon from Phosphor Icons
     IconComponent = (Phosphor as any)[data.icon];
   } else {
     // Use the icon from nodeDefinition instead of the old nodeIcons mapping

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import * as Phosphor from '@phosphor-icons/react';
+import * as SimpleIcons from 'react-icons/si';
 import { Node } from '@xyflow/react';
 import { toast } from 'sonner';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
@@ -84,7 +85,7 @@ export function InspectorPanel({
     return 'Question';
   };
 
-  // Pontosan ugyanaz a logika, mint a FunnelNode-ban (Phosphor Icons)
+  // Pontosan ugyanaz a logika, mint a FunnelNode-ban (Phosphor Icons + Simple Icons)
   const getDisplayIcon = () => {
     // Ha van custom SVG, azt használjuk
     if (formData.customIconSvg) {
@@ -93,6 +94,17 @@ export function InspectorPanel({
       }} dangerouslySetInnerHTML={{
         __html: formData.customIconSvg
       }} />;
+    }
+
+    // Ha van brand ikon kiválasztva (Simple Icons)
+    if (formData.icon?.startsWith('simple:')) {
+      const iconName = formData.icon.replace('simple:', '');
+      const IconComponent = (SimpleIcons as any)[`Si${iconName}`];
+      if (IconComponent) {
+        return <IconComponent size={20} style={{
+          color: 'hsl(var(--color-text-primary))'
+        }} />;
+      }
     }
 
     // Ha van egyéni ikon kiválasztva (Phosphor)
