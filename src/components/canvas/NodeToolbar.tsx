@@ -22,7 +22,6 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
       <CardContent className="flex-1 overflow-y-auto space-y-2 pt-2">
         {nodeDefinitions.map((node) => {
           const Icon = node.icon;
-          const color = node.color || '215 16% 65%';
           
           return (
             <div
@@ -32,21 +31,14 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
               className="flex items-center gap-3 p-3 rounded-lg border cursor-move transition-all group hover:bg-[#383a3b]"
               title={node.description}
               style={{
-                borderColor: '#383a3b',
-                backgroundColor: `hsl(${color} / 0.05)`
+                borderColor: '#383a3b'
               }}
             >
-              <div
-                className="p-2 rounded-md flex-shrink-0"
-                style={{ backgroundColor: `hsl(${color} / 0.15)` }}
-              >
-                <Icon
-                  size={20}
-                  style={{ color: `hsl(${color})` }}
-                />
+              <div className="p-2 rounded-md flex-shrink-0 bg-muted">
+                <Icon size={20} className="text-muted-foreground" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-sm" style={{ color: `hsl(${color})` }}>
+                <div className="font-semibold text-sm">
                   {node.label}
                 </div>
                 <div className="text-xs text-muted-foreground truncate">
