@@ -41,7 +41,7 @@ export function NodeToolbar({ projectId }: NodeToolbarProps) {
                 style={{ backgroundColor: `hsl(${color} / 0.15)` }}
               >
                 <Icon
-                  className="w-5 h-5"
+                  size={20}
                   style={{ color: `hsl(${color})` }}
                 />
               </div>

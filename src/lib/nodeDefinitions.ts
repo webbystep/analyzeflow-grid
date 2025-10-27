@@ -1,9 +1,5 @@
 import { NodeType, NodeCategory } from './types/canvas';
-import type { LucideIcon } from 'lucide-react';
-import {
-  Rocket, Mail, FileText, ShoppingCart, PartyPopper, MessageSquare, Box,
-  Target, Send, DollarSign
-} from 'lucide-react';
+import * as Phosphor from '@phosphor-icons/react';
 
 export const nodeCategories: NodeCategory[] = [
   {
@@ -11,14 +7,14 @@ export const nodeCategories: NodeCategory[] = [
     name: 'Alap Node-ok',
     description: '7 rugalmas node típus minden funnel lépéshez',
     color: '215 16% 65%',
-    icon: 'Box'
+    icon: 'Cube'
   }
 ];
 
 export interface NodeDefinition {
   type: NodeType;
   label: string;
-  icon: LucideIcon;
+  icon: any; // Phosphor icon component
   description: string;
   category: string;
   color?: string;
@@ -28,58 +24,58 @@ export const nodeDefinitions: NodeDefinition[] = [
   {
     type: 'source',
     label: 'Forrás',
-    icon: Rocket,
+    icon: Phosphor.MegaphoneSimple,
     description: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
     category: 'core',
-    color: 'var(--node-source)'
+    color: '210 100% 60%' // vibrant blue
   },
   {
     type: 'landing',
-    label: 'Landoló oldal',
-    icon: Target,
-    description: 'Értékesítési oldal, űrlap, regisztráció',
+    label: 'Oldal',
+    icon: Phosphor.Monitor,
+    description: 'Landing oldalak, tartalmak és üzenetek, amelyek megjelenítenek valamit a látogató számára.',
     category: 'core',
-    color: 'var(--node-landing)'
+    color: '150 70% 50%' // vibrant green
   },
   {
     type: 'email',
-    label: 'Email',
-    icon: Send,
-    description: 'Email kampány, automatizáció, hírlevél',
+    label: 'E-mail',
+    icon: Phosphor.Envelope,
+    description: 'Email kampányok, automatikus üzenetek és követő sorozatok.',
     category: 'core',
-    color: 'var(--node-email)'
+    color: '280 65% 60%' // vibrant purple
   },
   {
     type: 'offer',
     label: 'Ajánlat',
-    icon: MessageSquare,
-    description: 'Ajánlatküldés, proposal, deal',
+    icon: Phosphor.Gift,
+    description: 'Konkrét ajánlatok, leadmágnesek és bónuszok, amelyeket felkínálsz.',
     category: 'core',
-    color: 'var(--node-offer)'
+    color: '30 90% 55%' // vibrant orange
   },
   {
     type: 'checkout',
     label: 'Pénztár',
-    icon: DollarSign,
-    description: 'Fizetés, vásárlás, rendelés',
+    icon: Phosphor.ShoppingCart,
+    description: 'Fizetési pontok, kosár oldalak és rendelési folyamatok.',
     category: 'core',
-    color: 'var(--node-checkout)'
+    color: '340 75% 55%' // vibrant red
   },
   {
     type: 'thank_you',
-    label: 'Köszönő oldal',
-    icon: PartyPopper,
-    description: 'Megerősítés, sikeres vásárlás',
+    label: 'Köszönőoldal',
+    icon: Phosphor.CheckCircle,
+    description: 'Sikeresen teljesített lépések és megerősítő oldalak.',
     category: 'core',
-    color: 'var(--node-thank_you)'
+    color: '170 60% 50%' // vibrant teal
   },
   {
     type: 'custom',
-    label: 'Egyedi',
-    icon: Box,
-    description: 'Saját lépés, bármilyen más folyamat',
+    label: 'Egyéni',
+    icon: Phosphor.Lightning,
+    description: 'Bármilyen egyedi lépés, folyamat vagy node, ami nem tartozik a fenti kategóriákba.',
     category: 'core',
-    color: 'var(--node-custom)'
+    color: '215 16% 65%' // neutral gray
   }
 ];
 

@@ -2,18 +2,36 @@ import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { icons } from 'lucide-react';
-import { Search } from 'lucide-react';
+import * as Phosphor from '@phosphor-icons/react';
 
 interface IconPickerProps {
   currentIcon?: string;
   onIconSelect: (iconName: string) => void;
 }
 
-// Get list of all Lucide icon names
-const LUCIDE_ICON_NAMES = Object.keys(icons).filter(
-  (key) => !['createLucideIcon', 'default'].includes(key)
-);
+// Curated list of Phosphor icon names for the picker
+const PHOSPHOR_ICON_NAMES = [
+  // Source / Campaign
+  'MegaphoneSimple', 'ShareNetwork', 'TrendUp', 'ChartLineUp', 'Broadcast',
+  // Page / Web / Landing
+  'Monitor', 'Browser', 'FileText', 'Article', 'Devices',
+  // Action / Automation / Email
+  'Envelope', 'Lightning', 'Robot', 'GearSix', 'Gear', 'PaperPlaneRight',
+  // Delay
+  'Clock', 'Hourglass', 'Timer',
+  // Condition / Branch
+  'GitFork', 'ArrowsSplit', 'FlowArrow', 'Path',
+  // Data / Measurement
+  'ChartLine', 'Graph', 'Target', 'ChartBar', 'ChartPie',
+  // Gift / Offer
+  'Gift', 'Sparkle', 'Tag', 'Percent',
+  // Shopping / Checkout
+  'ShoppingCart', 'CreditCard', 'Money',
+  // Success / Thank You
+  'CheckCircle', 'Confetti', 'Smiley', 'Star',
+  // Custom / Other
+  'Cube', 'Question', 'Dots', 'Database', 'Users', 'User'
+];
 
 export function IconPicker({
   currentIcon = 'Box',
@@ -22,21 +40,21 @@ export function IconPicker({
   const [search, setSearch] = useState('');
 
   const filteredIcons = useMemo(() => {
-    return LUCIDE_ICON_NAMES.filter((name) =>
+    return PHOSPHOR_ICON_NAMES.filter((name) =>
       name.toLowerCase().includes(search.toLowerCase())
-    ).slice(0, 100); // Limit to 100 for performance
+    );
   }, [search]);
 
-  const CurrentIconComponent = icons[currentIcon as keyof typeof icons] || icons.Box;
+  const CurrentIconComponent = (Phosphor as any)[currentIcon] || Phosphor.Question;
 
   return (
     <div className="space-y-4">
       {/* Current icon preview */}
       <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/30">
-        <CurrentIconComponent className="w-6 h-6" />
+        <CurrentIconComponent size={24} />
         <div>
           <p className="text-sm font-medium">{currentIcon}</p>
-          <p className="text-xs text-muted-foreground">Lucide ikon</p>
+          <p className="text-xs text-muted-foreground">Phosphor ikon</p>
         </div>
       </div>
 
@@ -44,11 +62,11 @@ export function IconPicker({
       <div className="space-y-2">
         <Label>Ikon keresése</Label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Phosphor.MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Pl. home, user, rocket..."
+            placeholder="Pl. megaphone, monitor, envelope..."
             className="pl-10"
           />
         </div>
@@ -58,7 +76,7 @@ export function IconPicker({
       <ScrollArea className="h-[300px] border rounded-lg p-2">
         <div className="grid grid-cols-6 gap-2">
           {filteredIcons.map((iconName) => {
-            const IconComponent = icons[iconName as keyof typeof icons];
+            const IconComponent = (Phosphor as any)[iconName];
             const isSelected = iconName === currentIcon;
             
             return (
@@ -71,7 +89,7 @@ export function IconPicker({
                 }`}
                 title={iconName}
               >
-                <IconComponent className="w-5 h-5" />
+                <IconComponent size={20} />
               </button>
             );
           })}

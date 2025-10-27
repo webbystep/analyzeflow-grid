@@ -3,7 +3,7 @@ import { Handle, Position } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { ConnectionHandle } from './ConnectionHandle';
-import * as LucideIcons from 'lucide-react';
+import * as Phosphor from '@phosphor-icons/react';
 import type { NodeType } from '@/lib/types/canvas';
 
 interface FunnelNodeData {
@@ -41,15 +41,15 @@ export const FunnelNode = memo(({
   const nodeDefinition = getNodeDefinition(nodeType);
   const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
 
-  // Determine icon to use
+  // Determine icon to use (Phosphor Icons)
   let IconComponent: any;
   if (data.customIconSvg) {
     IconComponent = null; // Will render SVG directly
-  } else if (data.icon && (LucideIcons as any)[data.icon]) {
-    IconComponent = (LucideIcons as any)[data.icon];
+  } else if (data.icon && (Phosphor as any)[data.icon]) {
+    IconComponent = (Phosphor as any)[data.icon];
   } else {
     // Use the icon from nodeDefinition instead of the old nodeIcons mapping
-    IconComponent = nodeDefinition?.icon || null;
+    IconComponent = nodeDefinition?.icon || Phosphor.Question;
   }
 
   const iconColor = data.iconColor || 'white';
@@ -127,7 +127,7 @@ export const FunnelNode = memo(({
                 dangerouslySetInnerHTML={{ __html: data.customIconSvg }}
               />
             ) : (
-              IconComponent && <IconComponent className="w-3.5 h-3.5" style={{ color: `hsl(${nodeDefinitionColor})` }} />
+              IconComponent && <IconComponent size={14} style={{ color: `hsl(${nodeDefinitionColor})` }} />
             )}
           </div>
           {isEditing ? (

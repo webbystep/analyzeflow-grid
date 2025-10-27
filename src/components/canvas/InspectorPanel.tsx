@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { X, Save, TrendingUp, HelpCircle } from 'lucide-react';
+import * as Phosphor from '@phosphor-icons/react';
 import { Node } from '@xyflow/react';
 import { toast } from 'sonner';
 import { DynamicFieldRenderer } from './DynamicFieldRenderer';
@@ -13,7 +13,6 @@ import type { NodeType } from '@/lib/types/canvas';
 import { getNodeSchema } from '@/lib/nodeSchemas';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { cn } from '@/lib/utils';
-import * as LucideIcons from 'lucide-react';
 interface InspectorPanelProps {
   selectedNode: Node | null;
   onUpdateNode: (nodeId: string, updates: Partial<Node['data']>) => void;
@@ -65,7 +64,7 @@ export function InspectorPanel({
     return <Card className="flex h-full w-80 flex-col rounded-none border-l bg-card text-card-foreground">
         <div className="flex flex-1 items-center justify-center p-6 text-center text-muted-foreground">
           <div>
-            <TrendingUp className="mx-auto mb-3 h-12 w-12 opacity-50" />
+            <Phosphor.TrendUp size={48} className="mx-auto mb-3 opacity-50" />
             <p className="text-sm">Válassz egy node-ot a szerkesztéshez</p>
           </div>
         </div>
@@ -74,7 +73,7 @@ export function InspectorPanel({
   const nodeDefinition = getNodeDefinition(selectedNode.type as NodeType);
   const nodeDefinitionColor = nodeDefinition?.color || '215 16% 65%';
 
-  // Pontosan ugyanaz a logika, mint a FunnelNode-ban
+  // Pontosan ugyanaz a logika, mint a FunnelNode-ban (Phosphor Icons)
   const getDisplayIcon = () => {
     // Ha van custom SVG, azt használjuk
     if (formData.customIconSvg) {
@@ -85,17 +84,17 @@ export function InspectorPanel({
       }} />;
     }
 
-    // Ha van egyéni ikon kiválasztva
-    if (formData.icon && formData.icon in LucideIcons) {
-      const IconComponent = (LucideIcons as any)[formData.icon];
-      return <IconComponent className="h-5 w-5" style={{
+    // Ha van egyéni ikon kiválasztva (Phosphor)
+    if (formData.icon && (Phosphor as any)[formData.icon]) {
+      const IconComponent = (Phosphor as any)[formData.icon];
+      return <IconComponent size={20} style={{
         color: `hsl(${nodeDefinitionColor})`
       }} />;
     }
 
     // Alapértelmezett node típus ikon
     const Icon = nodeDefinition?.icon;
-    return Icon ? <Icon className="h-5 w-5" style={{
+    return Icon ? <Icon size={20} style={{
       color: `hsl(${nodeDefinitionColor})`
     }} /> : null;
   };
@@ -111,7 +110,7 @@ export function InspectorPanel({
           
         </div>
         <Button variant="ghost" size="sm" onClick={onClose} className="h-6 w-6 p-0">
-          <X className="h-4 w-4" />
+          <Phosphor.X size={16} />
         </Button>
       </CardHeader>
 
@@ -130,7 +129,7 @@ export function InspectorPanel({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button type="button" className="inline-flex">
-                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                    <Phosphor.Question size={16} className="text-muted-foreground" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -139,7 +138,7 @@ export function InspectorPanel({
               </Tooltip>
             </div>
             <IconPicker
-              currentIcon={formData.icon || 'Rocket'}
+              currentIcon={formData.icon || 'MegaphoneSimple'}
               onIconSelect={(iconName) => handleFieldChange('icon', iconName)}
             />
           </div>
@@ -151,7 +150,7 @@ export function InspectorPanel({
       backgroundColor: '#222526'
     }}>
         <Button onClick={handleSave} className={cn("w-full transition-colors header-btn-primary", !hasChanges && "opacity-50 cursor-not-allowed")} disabled={!hasChanges}>
-          <Save className="mr-2 h-4 w-4" />
+          <Phosphor.FloppyDisk size={16} className="mr-2" />
           Változások mentése
         </Button>
       </div>
