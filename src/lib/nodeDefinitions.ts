@@ -26,12 +26,12 @@ export interface NodeDefinition {
 
 export const nodeDefinitions: NodeDefinition[] = [
   {
-    type: 'traffic',
-    label: 'Forgalom',
+    type: 'source',
+    label: 'Forrás',
     icon: Rocket,
-    description: 'Hirdetések, organikus forgalom, marketing kampányok',
+    description: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
     category: 'core',
-    color: 'var(--node-traffic)'
+    color: 'var(--node-source)'
   },
   {
     type: 'landing',

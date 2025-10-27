@@ -8,7 +8,9 @@ import type { NodeType } from '@/lib/types/canvas';
 
 interface FunnelNodeData {
   label: string;
+  description?: string;
   customText?: string;
+  platform?: string;
   icon?: string;
   iconColor?: string;
   customIconSvg?: string;
@@ -171,20 +173,20 @@ export const FunnelNode = memo(({
         </div>
       </div>
       
-      {/* Body - only show customText if present */}
-      {data.customText && (
+      {/* Body - show description (preferred) or customText (backward compat) */}
+      {(data.description || data.customText) && (
         <div 
           className="px-3 py-2.5"
           style={{ backgroundColor: 'hsl(var(--color-bg-node-body))' }}
         >
           <div 
-            className="text-xs leading-snug italic border-l-2 pl-2 break-words"
+            className="text-xs leading-snug italic border-l-2 pl-2 break-words line-clamp-2"
             style={{
               borderColor: `hsl(var(--color-accent-green))`,
               color: 'hsl(var(--color-text-secondary))'
             }}
           >
-            {data.customText}
+            {data.description || data.customText}
           </div>
         </div>
       )}

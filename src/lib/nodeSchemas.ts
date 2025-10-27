@@ -22,7 +22,7 @@ export interface NodeSchema {
 }
 
 export const nodeSchemas: Record<NodeType, NodeSchema> = {
-  traffic: {
+  source: {
     properties: {
       id: 'properties',
       label: 'Alapadatok',
@@ -36,7 +36,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           help: 'A node megjelenített neve a canvason'
         },
         { 
-          id: 'customText', 
+          id: 'description', 
           label: 'Leírás', 
           type: 'textarea',
           placeholder: 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.',
@@ -46,28 +46,14 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
     },
     meta: {
       id: 'meta',
-      label: 'Forgalom információk',
+      label: 'Forrás információk',
       fields: [
         { 
-          id: 'sourceName', 
-          label: 'Forrás neve', 
+          id: 'platform', 
+          label: 'Platform', 
           type: 'text',
-          placeholder: 'pl. Facebook Ads, Google Ads, Organikus',
-          help: 'A forgalom forrásának neve'
-        },
-        { 
-          id: 'campaignName', 
-          label: 'Kampány neve', 
-          type: 'text',
-          placeholder: 'pl. Q1 Promóció',
-          help: 'Kampány vagy projekt neve'
-        },
-        { 
-          id: 'targetAudience', 
-          label: 'Célközönség', 
-          type: 'text',
-          placeholder: 'pl. 25-45 éves nők',
-          help: 'A célzott közönség leírása'
+          placeholder: 'Pl. Facebook Ads, Google Ads, Partner ajánlás',
+          help: 'A forgalom forrásának platformja'
         }
       ]
     }

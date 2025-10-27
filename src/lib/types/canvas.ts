@@ -1,6 +1,6 @@
 // Simplified node types - 7 core types
 export type NodeType = 
-  'traffic' | 'landing' | 'email' | 'offer' | 'checkout' | 'thank_you' | 'custom';
+  'source' | 'landing' | 'email' | 'offer' | 'checkout' | 'thank_you' | 'custom';
 
 export interface NodeCategory {
   id: string;
@@ -12,7 +12,9 @@ export interface NodeCategory {
 
 export interface NodeData {
   label: string;
-  customText?: string;
+  description?: string; // Primary description field
+  customText?: string; // Backward compatibility
+  platform?: string; // Platform metadata (e.g., "Facebook Ads")
   icon?: string; // Lucide icon name
   iconColor?: string; // Custom color for icon
   customIconSvg?: string; // Custom SVG override

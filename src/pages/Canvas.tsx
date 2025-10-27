@@ -111,18 +111,42 @@ export default function Canvas() {
       error: nodesError
     } = await supabase.from('nodes').select('*').eq('project_id', projectId);
     if (!nodesError && nodesData) {
-      const loadedNodes: Node[] = nodesData.map(node => ({
-        id: node.id,
-        type: node.type,
-        position: {
-          x: node.position_x,
-          y: node.position_y
-        },
-        data: {
-          label: node.label || 'Untitled',
-          ...(node.data as Record<string, any> || {})
+      const loadedNodes: Node[] = nodesData.map(node => {
+        // Migration: Convert old 'traffic' nodes to 'source'
+        const nodeType = node.type === 'traffic' ? 'source' : node.type;
+        const nodeData = node.data as Record<string, any> || {};
+        
+        // Migration: If converting from traffic to source
+        if (node.type === 'traffic') {
+          return {
+            id: node.id,
+            type: nodeType,
+            position: {
+              x: node.position_x,
+              y: node.position_y
+            },
+            data: {
+              label: node.label || 'Forrás',
+              description: nodeData.description || nodeData.customText,
+              platform: nodeData.sourceName || nodeData.platform || '',
+              ...nodeData
+            }
+          };
         }
-      }));
+        
+        return {
+          id: node.id,
+          type: nodeType,
+          position: {
+            x: node.position_x,
+            y: node.position_y
+          },
+          data: {
+            label: node.label || 'Untitled',
+            ...nodeData
+          }
+        };
+      });
       setNodes(loadedNodes);
     }
 
@@ -152,7 +176,7 @@ export default function Canvas() {
         const nodesToUpsert = nodes.map(node => ({
           id: node.id,
           project_id: projectId,
-          type: node.type || 'traffic',
+          type: node.type || 'source',
           position_x: node.position.x,
           position_y: node.position.y,
           label: (node.data as any)?.label || 'Untitled',
@@ -422,13 +446,29 @@ export default function Canvas() {
   }, [toast]);
   const handleAddNodeFromContext = useCallback((type: string, x = 100, y = 100) => {
     const labels: Record<string, string> = {
-      traffic: 'Traffic Source',
+      source: 'Forrás',
       email: 'Email Campaign',
       landing: 'Landing Page',
       checkout: 'Checkout',
       thankyou: 'Thank You',
       condition: 'Condition'
     };
+    
+    const nodeData: any = {
+      label: labels[type] || 'New Node',
+      visits: 1000,
+      conversionRate: 10
+    };
+    
+    // Add type-specific defaults
+    if (type === 'source') {
+      nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
+      nodeData.platform = '';
+      nodeData.icon = 'Rocket';
+    } else {
+      nodeData.customText = getDefaultDescription(type as CanvasNodeType);
+    }
+    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type,
@@ -436,12 +476,7 @@ export default function Canvas() {
         x,
         y
       },
-      data: {
-        label: labels[type] || 'New Node',
-        customText: getDefaultDescription(type as CanvasNodeType),
-        visits: 1000,
-        conversionRate: 10
-      }
+      data: nodeData
     };
     setNodes(nds => [...nds, newNode]);
   }, []);
@@ -504,6 +539,21 @@ export default function Canvas() {
     if (!edge) return;
 
     // Create new node at edge midpoint
+    const nodeData: any = {
+      label: `New ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+      visits: 1000,
+      conversionRate: 10
+    };
+    
+    // Add type-specific defaults
+    if (type === 'source') {
+      nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
+      nodeData.platform = '';
+      nodeData.icon = 'Rocket';
+    } else {
+      nodeData.customText = getDefaultDescription(type as CanvasNodeType);
+    }
+    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type,
@@ -512,12 +562,7 @@ export default function Canvas() {
         // Node width / 2
         y: position.y - 40 // Node height / 2
       },
-      data: {
-        label: `New ${type.charAt(0).toUpperCase() + type.slice(1)}`,
-        customText: getDefaultDescription(type as CanvasNodeType),
-        visits: 1000,
-        conversionRate: 10
-      }
+      data: nodeData
     };
 
     // Remove original edge and create two new ones
@@ -628,16 +673,26 @@ export default function Canvas() {
       // Node width/2
       y: event.clientY - reactFlowBounds.top - 40 // Node height/2
     };
+    const nodeData: any = {
+      label,
+      visits: 1000,
+      conversionRate: 10
+    };
+    
+    // Add type-specific defaults
+    if (nodeType === 'source') {
+      nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
+      nodeData.platform = '';
+      nodeData.icon = 'Rocket';
+    } else {
+      nodeData.customText = getDefaultDescription(nodeType as CanvasNodeType);
+    }
+    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type: nodeType,
       position,
-      data: {
-        label,
-        customText: getDefaultDescription(nodeType as CanvasNodeType),
-        visits: 1000,
-        conversionRate: 10
-      }
+      data: nodeData
     };
     setNodes(nds => [...nds, newNode]);
   }, []);

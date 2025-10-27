@@ -43,6 +43,7 @@ export function InspectorPanel({
     if (!selectedNode || !schema) return;
     const updates: any = {
       label: formData.label,
+      description: formData.description,
       customText: formData.customText,
       icon: formData.icon,
       iconColor: formData.iconColor,
