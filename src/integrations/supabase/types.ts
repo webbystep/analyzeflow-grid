@@ -364,6 +364,12 @@ export type Database = {
           token: string
           workspace_id: string
         }
+        SetofOptions: {
+          from: "*"
+          to: "workspace_invitations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_workspace: {
         Args: { _name: string }
@@ -373,6 +379,12 @@ export type Database = {
           name: string
           owner_id: string
           updated_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "workspaces"
+          isOneToOne: true
+          isSetofReturn: false
         }
       }
       has_workspace_role: {
@@ -385,6 +397,10 @@ export type Database = {
       is_workspace_member: {
         Args: { workspace_uuid: string }
         Returns: boolean
+      }
+      set_config: {
+        Args: { parameter: string; value: string }
+        Returns: undefined
       }
     }
     Enums: {

@@ -53,6 +53,12 @@ export default function GuestCanvas() {
 
         setValidToken(true);
 
+        // Set guest token in session for RLS policies
+        await supabase.rpc('set_config', {
+          parameter: 'app.guest_token',
+          value: token
+        });
+
         // Load project
         const { data: projectData } = await supabase
           .from('projects')
@@ -96,6 +102,7 @@ export default function GuestCanvas() {
               id: edge.id,
               source: edge.source_id,
               target: edge.target_id,
+              type: 'floating',
               label: edge.label || undefined,
               data: typeof edge.data === 'object' && edge.data !== null ? edge.data as any : undefined,
             }))

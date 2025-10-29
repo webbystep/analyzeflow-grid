@@ -160,6 +160,7 @@ export default function Canvas() {
         id: edge.id,
         source: edge.source_id,
         target: edge.target_id,
+        type: 'floating',
         label: edge.label || '',
         data: edge.data as Record<string, any> || {}
       }));
