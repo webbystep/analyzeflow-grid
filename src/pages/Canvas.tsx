@@ -116,7 +116,7 @@ export default function Canvas() {
         // Migration: Convert old 'traffic' nodes to 'source'
         const nodeType = node.type === 'traffic' ? 'source' : node.type;
         const nodeData = node.data as Record<string, any> || {};
-        
+
         // Migration: If converting from traffic to source
         if (node.type === 'traffic') {
           return {
@@ -134,7 +134,6 @@ export default function Canvas() {
             }
           };
         }
-        
         return {
           id: node.id,
           type: nodeType,
@@ -219,25 +218,26 @@ export default function Canvas() {
             project_id: projectId,
             source_id: edge.source,
             target_id: edge.target,
-            label: (edge.label as string) || '',
-            data: (edge.data || {}) as any,
+            label: edge.label as string || '',
+            data: (edge.data || {}) as any
           };
         });
-
         normalizedEdgeIds = edgesToUpsert.map(e => e.id);
         await supabase.from('edges').upsert(edgesToUpsert);
 
         // If any ids changed, reflect them in local state to keep parity with DB
         if (idMap.size > 0) {
-          setEdges(prev => prev.map(e => (idMap.has(e.id) ? { ...e, id: idMap.get(e.id)! } : e)));
+          setEdges(prev => prev.map(e => idMap.has(e.id) ? {
+            ...e,
+            id: idMap.get(e.id)!
+          } : e));
         }
       }
 
       // Delete edges that no longer exist (compare against normalized ids we just saved)
-      const { data: existingEdges } = await supabase
-        .from('edges')
-        .select('id')
-        .eq('project_id', projectId);
+      const {
+        data: existingEdges
+      } = await supabase.from('edges').select('id').eq('project_id', projectId);
       if (existingEdges) {
         const keepIds = new Set(normalizedEdgeIds.length > 0 ? normalizedEdgeIds : edges.map(e => e.id));
         const edgesToDelete = existingEdges.filter(e => !keepIds.has(e.id)).map(e => e.id);
@@ -473,13 +473,12 @@ export default function Canvas() {
       thankyou: 'Thank You',
       condition: 'Condition'
     };
-    
     const nodeData: any = {
       label: labels[type] || 'New Node',
       visits: 1000,
       conversionRate: 10
     };
-    
+
     // Add type-specific defaults
     if (type === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
@@ -487,7 +486,6 @@ export default function Canvas() {
     } else {
       nodeData.customText = getDefaultDescription(type as CanvasNodeType);
     }
-    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type,
@@ -530,16 +528,14 @@ export default function Canvas() {
   }, [nodes, toast]);
   const handleAutoLayout = useCallback(() => {
     if (nodes.length === 0) return;
-    
+
     // Simple hierarchical layout
     const NODE_SPACING_X = 250;
     const NODE_SPACING_Y = 150;
-    
+
     // Find source nodes (nodes with no incoming edges)
-    const sourceNodes = nodes.filter(node => 
-      !edges.some(edge => edge.target === node.id)
-    );
-    
+    const sourceNodes = nodes.filter(node => !edges.some(edge => edge.target === node.id));
+
     // Build adjacency list for BFS
     const adjacencyList = new Map<string, string[]>();
     nodes.forEach(node => adjacencyList.set(node.id, []));
@@ -548,30 +544,39 @@ export default function Canvas() {
       targets.push(edge.target);
       adjacencyList.set(edge.source, targets);
     });
-    
+
     // BFS to assign levels
     const levels = new Map<string, number>();
-    const queue: Array<{ id: string; level: number }> = [];
+    const queue: Array<{
+      id: string;
+      level: number;
+    }> = [];
     const visited = new Set<string>();
-    
     sourceNodes.forEach(node => {
-      queue.push({ id: node.id, level: 0 });
+      queue.push({
+        id: node.id,
+        level: 0
+      });
       visited.add(node.id);
     });
-    
     while (queue.length > 0) {
-      const { id, level } = queue.shift()!;
+      const {
+        id,
+        level
+      } = queue.shift()!;
       levels.set(id, level);
-      
       const targets = adjacencyList.get(id) || [];
       targets.forEach(targetId => {
         if (!visited.has(targetId)) {
           visited.add(targetId);
-          queue.push({ id: targetId, level: level + 1 });
+          queue.push({
+            id: targetId,
+            level: level + 1
+          });
         }
       });
     }
-    
+
     // Organize nodes by level
     const nodesByLevel = new Map<number, string[]>();
     levels.forEach((level, nodeId) => {
@@ -580,13 +585,12 @@ export default function Canvas() {
       }
       nodesByLevel.get(level)!.push(nodeId);
     });
-    
+
     // Position nodes
     const updatedNodes = nodes.map(node => {
       const level = levels.get(node.id) ?? 0;
       const nodesInLevel = nodesByLevel.get(level) || [];
       const indexInLevel = nodesInLevel.indexOf(node.id);
-      
       return {
         ...node,
         position: {
@@ -595,7 +599,6 @@ export default function Canvas() {
         }
       };
     });
-    
     setNodes(updatedNodes);
     pushHistory(updatedNodes, edges);
     toast({
@@ -603,107 +606,111 @@ export default function Canvas() {
       description: 'A node-ok hierarchikusan lettek elrendezve.'
     });
   }, [nodes, edges, toast, pushHistory]);
-
   const handleDagreLayout = useCallback((direction: 'TB' | 'LR' = 'TB') => {
     if (nodes.length === 0) return;
-    
+
     // Dynamic import for dagre
-    import('@dagrejs/dagre').then(({ default: dagre }) => {
+    import('@dagrejs/dagre').then(({
+      default: dagre
+    }) => {
       const dagreGraph = new dagre.graphlib.Graph();
       dagreGraph.setDefaultEdgeLabel(() => ({}));
-      dagreGraph.setGraph({ rankdir: direction, nodesep: 100, ranksep: 150 });
-
+      dagreGraph.setGraph({
+        rankdir: direction,
+        nodesep: 100,
+        ranksep: 150
+      });
       const nodeWidth = 220;
       const nodeHeight = 120;
-
       nodes.forEach(node => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+        dagreGraph.setNode(node.id, {
+          width: nodeWidth,
+          height: nodeHeight
+        });
       });
-
       edges.forEach(edge => {
         dagreGraph.setEdge(edge.source, edge.target);
       });
-
       dagre.layout(dagreGraph);
-
       const layoutedNodes = nodes.map(node => {
         const nodeWithPosition = dagreGraph.node(node.id);
         return {
           ...node,
           position: {
             x: nodeWithPosition.x - nodeWidth / 2,
-            y: nodeWithPosition.y - nodeHeight / 2,
+            y: nodeWithPosition.y - nodeHeight / 2
           },
           sourcePosition: direction === 'LR' ? 'right' : 'bottom',
-          targetPosition: direction === 'LR' ? 'left' : 'top',
+          targetPosition: direction === 'LR' ? 'left' : 'top'
         };
       });
-
       setNodes(layoutedNodes as any);
       pushHistory(layoutedNodes as any, edges);
-      reactFlowInstance.current?.fitView({ padding: 0.2 });
+      reactFlowInstance.current?.fitView({
+        padding: 0.2
+      });
       toast({
         title: 'Node-ok rendezve',
         description: `Dagre ${direction === 'TB' ? 'függőleges' : 'vízszintes'} elrendezés alkalmazva.`
       });
     });
   }, [nodes, edges, toast, pushHistory, reactFlowInstance]);
-
   const handleGridLayout = useCallback(() => {
     if (nodes.length === 0) return;
-    
     const columns = Math.ceil(Math.sqrt(nodes.length));
-    const spacing = { x: 300, y: 200 };
-
+    const spacing = {
+      x: 300,
+      y: 200
+    };
     const layoutedNodes = nodes.map((node, index) => {
       const row = Math.floor(index / columns);
       const col = index % columns;
-      
       return {
         ...node,
         position: {
           x: col * spacing.x,
-          y: row * spacing.y,
-        },
+          y: row * spacing.y
+        }
       };
     });
-
     setNodes(layoutedNodes);
     pushHistory(layoutedNodes, edges);
-    reactFlowInstance.current?.fitView({ padding: 0.2 });
+    reactFlowInstance.current?.fitView({
+      padding: 0.2
+    });
     toast({
       title: 'Node-ok rendezve',
       description: 'Rács elrendezés alkalmazva.'
     });
   }, [nodes, edges, toast, pushHistory, reactFlowInstance]);
-
   const handleCircularLayout = useCallback(() => {
     if (nodes.length === 0) return;
-    
     const radius = Math.max(300, nodes.length * 40);
-    const center = { x: 0, y: 0 };
-    const angleStep = (2 * Math.PI) / nodes.length;
-
+    const center = {
+      x: 0,
+      y: 0
+    };
+    const angleStep = 2 * Math.PI / nodes.length;
     const layoutedNodes = nodes.map((node, index) => {
       const angle = index * angleStep - Math.PI / 2; // Start from top
       return {
         ...node,
         position: {
           x: center.x + radius * Math.cos(angle),
-          y: center.y + radius * Math.sin(angle),
-        },
+          y: center.y + radius * Math.sin(angle)
+        }
       };
     });
-
     setNodes(layoutedNodes);
     pushHistory(layoutedNodes, edges);
-    reactFlowInstance.current?.fitView({ padding: 0.2 });
+    reactFlowInstance.current?.fitView({
+      padding: 0.2
+    });
     toast({
       title: 'Node-ok rendezve',
       description: 'Kör alakú elrendezés alkalmazva.'
     });
   }, [nodes, edges, toast, pushHistory, reactFlowInstance]);
-
   const handleClearCanvas = useCallback(() => {
     if (confirm('Biztosan törölni szeretnéd az összes node-ot?')) {
       setNodes([]);
@@ -739,7 +746,7 @@ export default function Canvas() {
       visits: 1000,
       conversionRate: 10
     };
-    
+
     // Add type-specific defaults
     if (type === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
@@ -747,7 +754,6 @@ export default function Canvas() {
     } else {
       nodeData.customText = getDefaultDescription(type as CanvasNodeType);
     }
-    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type,
@@ -787,29 +793,21 @@ export default function Canvas() {
   const handleDeleteEdge = useCallback((edgeId: string) => {
     const edgeToDelete = edges.find(e => e.id === edgeId);
     if (!edgeToDelete) return;
-
     const updatedEdges = edges.filter(e => e.id !== edgeId);
     setEdges(updatedEdges);
     pushHistory(nodes, updatedEdges);
-    
     toast({
       title: 'Összekötés törölve',
       description: 'Az összekötés sikeresen törölve.',
-      action: (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setEdges((eds) => [...eds, edgeToDelete]);
-            toast({
-              title: 'Visszavonva',
-              description: 'Az összekötés visszaállítva.'
-            });
-          }}
-        >
+      action: <Button variant="outline" size="sm" onClick={() => {
+        setEdges(eds => [...eds, edgeToDelete]);
+        toast({
+          title: 'Visszavonva',
+          description: 'Az összekötés visszaállítva.'
+        });
+      }}>
           Visszavonás
         </Button>
-      ),
     });
   }, [edges, nodes, pushHistory, toast]);
   const handleReactFlowInit = useCallback((instance: ReactFlowInstance) => {
@@ -891,7 +889,7 @@ export default function Canvas() {
       visits: 1000,
       conversionRate: 10
     };
-    
+
     // Add type-specific defaults
     if (nodeType === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
@@ -899,7 +897,6 @@ export default function Canvas() {
     } else {
       nodeData.customText = getDefaultDescription(nodeType as CanvasNodeType);
     }
-    
     const newNode: Node = {
       id: crypto.randomUUID(),
       type: nodeType,
@@ -948,27 +945,12 @@ export default function Canvas() {
           <button className="header-btn-secondary" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <button 
-            className="header-btn-secondary" 
-            onClick={() => setIsPanelOpen(!isPanelOpen)}
-            title={isPanelOpen ? 'Panel bezárása' : 'Panel megnyitása'}
-          >
-            {isPanelOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
-          </button>
+          
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-            <CanvasContextMenu 
-              onClearCanvas={handleClearCanvas} 
-              onFitView={handleFitView} 
-              onAutoLayout={handleAutoLayout}
-              onDagreLayoutTB={() => handleDagreLayout('TB')}
-              onDagreLayoutLR={() => handleDagreLayout('LR')}
-              onGridLayout={handleGridLayout}
-              onCircularLayout={handleCircularLayout}
-              hasNodes={nodes.length > 0}
-            >
+            <CanvasContextMenu onClearCanvas={handleClearCanvas} onFitView={handleFitView} onAutoLayout={handleAutoLayout} onDagreLayoutTB={() => handleDagreLayout('TB')} onDagreLayoutLR={() => handleDagreLayout('LR')} onGridLayout={handleGridLayout} onCircularLayout={handleCircularLayout} hasNodes={nodes.length > 0}>
           <div ref={canvasRef} className="flex-1" onDrop={handleDrop} onDragOver={handleDragOver}>
             <FlowCanvas projectId={projectId!} initialNodes={nodes.map(node => ({
             ...node,
@@ -1017,15 +999,9 @@ export default function Canvas() {
           </div>
         </CanvasContextMenu>
 
-        {selectedNode && (
-          <div 
-            className={`border-l transition-all duration-300 ease-in-out ${
-              isPanelOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 absolute right-0 pointer-events-none'
-            }`}
-          >
+        {selectedNode && <div className={`border-l transition-all duration-300 ease-in-out ${isPanelOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 absolute right-0 pointer-events-none'}`}>
             <InspectorPanel selectedNode={selectedNode} onUpdateNode={handleUpdateNode} onClose={() => setSelectedNode(null)} />
-          </div>
-        )}
+          </div>}
       </div>
 
       {project && <ShareDialog open={showShare} onOpenChange={setShowShare} workspaceId={project.workspace_id} projectId={projectId!} projectName={project.name} nodes={nodes} edges={edges} canvasRef={canvasRef} />}
