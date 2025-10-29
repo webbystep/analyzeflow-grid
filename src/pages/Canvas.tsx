@@ -6,7 +6,7 @@ import { FlowCanvas } from '@/components/canvas/FlowCanvas';
 import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun, PanelRightOpen, PanelRightClose } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, PanelRightOpen, PanelRightClose } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
@@ -32,10 +32,6 @@ export default function Canvas() {
   const {
     toast
   } = useToast();
-  const {
-    theme,
-    setTheme
-  } = useTheme();
   const [loading, setLoading] = useState(true);
   const [project, setProject] = useState<any>(null);
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -941,9 +937,6 @@ export default function Canvas() {
           <button className="header-btn-primary" onClick={() => setShowShare(true)}>
             <Share2 className="h-4 w-4 mr-2" />
             Megosztás
-          </button>
-          <button className="header-btn-secondary" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           
         </div>

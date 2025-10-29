@@ -19,7 +19,7 @@ import {
   ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useTheme } from 'next-themes';
+
 import { FunnelNode } from './FunnelNode';
 import { TableNode } from './TableNode';
 import { NodeToolbar } from './NodeToolbar';
@@ -114,7 +114,6 @@ export function FlowCanvas({
   onPaneClick,
   readonly = false,
 }: FlowCanvasProps) {
-  const { theme } = useTheme();
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
   const [isToolbarOpen, setIsToolbarOpen] = useState(true);
@@ -224,7 +223,7 @@ export function FlowCanvas({
         fitView
         deleteKeyCode={null}
         className="bg-background"
-        colorMode={theme === 'dark' ? 'dark' : 'light'}
+        colorMode="dark"
         proOptions={{ hideAttribution: true }}
       >
         <Background 
