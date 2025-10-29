@@ -72,7 +72,7 @@ export function CanvasContextMenu({
               <Maximize2 className="mr-2 h-4 w-4" />
               Összes node illesztése
             </ContextMenuItem>
-            <ContextMenuItem onClick={onClearCanvas} className="text-destructive focus:text-destructive">
+            <ContextMenuItem onClick={onClearCanvas}>
               <Eraser className="mr-2 h-4 w-4" />
               Canvas törlése
             </ContextMenuItem>
