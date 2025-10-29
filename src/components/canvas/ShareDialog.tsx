@@ -435,7 +435,10 @@ export const ShareDialog = ({ open, onOpenChange, workspaceId, projectId, projec
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Bárki aki megkapja ezt a linket, megtekintheti a projektet (szerkesztés nélkül).
+                Bárki aki megkapja ezt a linket, megtekintheti a projektet <strong>bejelentkezés nélkül</strong> (csak olvasási jogosultság).
+              </p>
+              <p className="text-xs text-yellow-600 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded border border-yellow-200 dark:border-yellow-800">
+                ⚠️ <strong>Fontos:</strong> Ne oszd meg a böngésző címsorában látható linket! Az normál projektlink, ami bejelentkezést igényel. Másold ki ezt a speciális guest linket a fenti mezőből.
               </p>
             </div>
           </TabsContent>
