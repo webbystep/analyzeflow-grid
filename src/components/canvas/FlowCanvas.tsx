@@ -31,7 +31,7 @@ const nodeTypes = {
   source: FunnelNode,        // Forrás node típus
   traffic: FunnelNode,       // Backward compatibility
   email: FunnelNode,
-  landing: FunnelNode,
+  page: FunnelNode,          // Oldal node típus
   checkout: FunnelNode,
   thankyou: FunnelNode,
   condition: FunnelNode,
