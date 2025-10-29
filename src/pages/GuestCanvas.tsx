@@ -53,30 +53,35 @@ export default function GuestCanvas() {
 
         setValidToken(true);
 
-        // Set guest token in session for RLS policies
-        await supabase.rpc('set_config', {
-          parameter: 'app.guest_token',
-          value: token
-        });
+        // Load project using RPC with token validation
+        const { data: projectData, error: projectError } = await supabase
+          .rpc('get_guest_project', {
+            _project_id: projectId,
+            _token: token
+          });
 
-        // Load project
-        const { data: projectData } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('id', projectId)
-          .single();
+        if (projectError || !projectData || projectData.length === 0) {
+          toast({
+            title: 'Hiba',
+            description: 'Nem sikerült betölteni a projektet.',
+            variant: 'destructive',
+          });
+          navigate('/');
+          return;
+        }
 
-        setProject(projectData);
+        setProject(projectData[0]);
 
-        // Load nodes
-        const { data: nodesData } = await supabase
-          .from('nodes')
-          .select('*')
-          .eq('project_id', projectId);
+        // Load nodes using RPC
+        const { data: nodesData, error: nodesError } = await supabase
+          .rpc('get_guest_nodes', {
+            _project_id: projectId,
+            _token: token
+          });
 
-        if (nodesData) {
+        if (!nodesError && nodesData) {
           setNodes(
-            nodesData.map((node) => ({
+            nodesData.map((node: any) => ({
               id: node.id,
               type: node.type as any,
               position: { x: node.position_x, y: node.position_y },
@@ -90,15 +95,16 @@ export default function GuestCanvas() {
           );
         }
 
-        // Load edges
-        const { data: edgesData } = await supabase
-          .from('edges')
-          .select('*')
-          .eq('project_id', projectId);
+        // Load edges using RPC
+        const { data: edgesData, error: edgesError } = await supabase
+          .rpc('get_guest_edges', {
+            _project_id: projectId,
+            _token: token
+          });
 
-        if (edgesData) {
+        if (!edgesError && edgesData) {
           setEdges(
-            edgesData.map((edge) => ({
+            edgesData.map((edge: any) => ({
               id: edge.id,
               source: edge.source_id,
               target: edge.target_id,

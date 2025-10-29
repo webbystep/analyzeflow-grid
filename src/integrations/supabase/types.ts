@@ -387,6 +387,55 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_guest_edges: {
+        Args: { _project_id: string; _token: string }
+        Returns: {
+          created_at: string | null
+          data: Json | null
+          id: string
+          label: string | null
+          project_id: string
+          source_id: string
+          target_id: string
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "edges"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_guest_nodes: {
+        Args: { _project_id: string; _token: string }
+        Returns: {
+          color: string | null
+          created_at: string | null
+          data: Json | null
+          icon: string | null
+          id: string
+          label: string | null
+          position_x: number
+          position_y: number
+          project_id: string
+          type: string
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "nodes"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_guest_project: {
+        Args: { _project_id: string; _token: string }
+        Returns: {
+          description: string
+          id: string
+          name: string
+        }[]
+      }
       has_workspace_role: {
         Args: {
           required_role: Database["public"]["Enums"]["workspace_role"]

@@ -202,14 +202,21 @@ export default function Canvas() {
 
       // Upsert edges (insert or update)
       if (edges.length > 0) {
-        const edgesToUpsert = edges.map(edge => ({
-          id: edge.id,
-          project_id: projectId,
-          source_id: edge.source,
-          target_id: edge.target,
-          label: edge.label as string || '',
-          data: (edge.data || {}) as any
-        }));
+        const edgesToUpsert = edges.map(edge => {
+          // Generate valid UUID for edge if needed
+          let edgeId = edge.id;
+          if (!edgeId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+            edgeId = crypto.randomUUID();
+          }
+          return {
+            id: edgeId,
+            project_id: projectId,
+            source_id: edge.source,
+            target_id: edge.target,
+            label: edge.label as string || '',
+            data: (edge.data || {}) as any
+          };
+        });
         await supabase.from('edges').upsert(edgesToUpsert);
       }
 
