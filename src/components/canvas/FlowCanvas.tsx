@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ReactFlow,
   Node,
@@ -117,6 +117,7 @@ export function FlowCanvas({
   const { theme } = useTheme();
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
+  const [isToolbarOpen, setIsToolbarOpen] = useState(true);
 
   // Sync internal state when parent props change
   useEffect(() => {
@@ -235,7 +236,11 @@ export function FlowCanvas({
         {!readonly && projectId && (
           <Panel position="top-left" className="p-0 m-0 z-50" style={{ top: 0, left: 0, bottom: 0 }}>
             <div className="h-full">
-              <NodeToolbar projectId={projectId} />
+              <NodeToolbar 
+                projectId={projectId} 
+                isOpen={isToolbarOpen}
+                onToggle={() => setIsToolbarOpen(!isToolbarOpen)}
+              />
             </div>
           </Panel>
         )}
