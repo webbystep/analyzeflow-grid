@@ -83,6 +83,7 @@ const nodeTypes = {
 
 const edgeTypes = {
   default: FloatingEdge,
+  floating: FloatingEdge,
 };
 
 interface FlowCanvasProps {

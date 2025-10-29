@@ -895,8 +895,13 @@ export default function Canvas() {
     if (nodeType === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
       nodeData.platform = '';
+    } else if (nodeType === 'page') {
+      nodeData.description = 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.';
+      nodeData.icon = 'Browser';
+      nodeData.url = '';
+      nodeData.goalType = '';
     } else {
-      nodeData.customText = getDefaultDescription(nodeType as CanvasNodeType);
+      nodeData.description = getDefaultDescription(nodeType as CanvasNodeType);
     }
     const newNode: Node = {
       id: crypto.randomUUID(),

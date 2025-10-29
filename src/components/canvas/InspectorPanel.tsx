@@ -138,12 +138,33 @@ export function InspectorPanel({
       </CardHeader>
 
       <CardContent className="flex-1 overflow-y-auto p-4 pb-24">
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Alapadatok */}
           <div className="space-y-4">
-            
-            {schema?.properties?.fields.map(field => <DynamicFieldRenderer key={field.id} field={field} value={formData[field.id]} onChange={value => handleFieldChange(field.id, value)} />)}
+            {schema?.properties?.fields.map(field => (
+              <DynamicFieldRenderer
+                key={field.id}
+                field={field}
+                value={formData[field.id]}
+                onChange={value => handleFieldChange(field.id, value)}
+              />
+            ))}
           </div>
+
+          {/* Meta / További mezők */}
+          {schema?.meta?.fields?.length ? (
+            <div className="space-y-4 border-t pt-4">
+              <Label className="text-sm font-medium">{schema.meta.label || 'További adatok'}</Label>
+              {schema.meta.fields.map(field => (
+                <DynamicFieldRenderer
+                  key={field.id}
+                  field={field}
+                  value={formData[field.id]}
+                  onChange={value => handleFieldChange(field.id, value)}
+                />
+              ))}
+            </div>
+          ) : null}
 
           {/* Ikon választása */}
           <div className="space-y-2 border-t pt-4">

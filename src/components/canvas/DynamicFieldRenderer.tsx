@@ -66,7 +66,7 @@ export function DynamicFieldRenderer({ field, value, onChange }: DynamicFieldRen
             <SelectTrigger id={field.id} style={{ backgroundColor: '#2f3031' }}>
               <SelectValue placeholder={field.placeholder} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-[60]" style={{ backgroundColor: '#2f3031' }}>
               {field.options?.map(opt => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
