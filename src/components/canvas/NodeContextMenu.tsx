@@ -5,18 +5,20 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Copy } from 'lucide-react';
 
 interface NodeContextMenuProps {
   children: React.ReactNode;
   node: Node | null;
   onDelete: () => void;
+  onDuplicate: () => void;
 }
 
 export function NodeContextMenu({
   children,
   node,
   onDelete,
+  onDuplicate,
 }: NodeContextMenuProps) {
   if (!node) {
     return <>{children}</>;
@@ -28,9 +30,13 @@ export function NodeContextMenu({
         {children}
       </ContextMenuTrigger>
       <ContextMenuContent className="w-48">
+        <ContextMenuItem onClick={onDuplicate}>
+          <Copy className="mr-2 h-4 w-4" />
+          Duplikálás
+        </ContextMenuItem>
         <ContextMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
           <Trash2 className="mr-2 h-4 w-4" />
-          Node törlése
+          Törlés
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

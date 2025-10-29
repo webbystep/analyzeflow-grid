@@ -3,6 +3,7 @@ import { Handle, Position } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import { getNodeDefinition } from '@/lib/nodeDefinitions';
 import { ConnectionHandle } from './ConnectionHandle';
+import { NodeContextMenu } from './NodeContextMenu';
 import * as Phosphor from '@phosphor-icons/react';
 import * as SimpleIcons from 'react-icons/si';
 import type { NodeType } from '@/lib/types/canvas';
@@ -19,6 +20,8 @@ interface FunnelNodeData {
   notes?: string;
   tags?: string[];
   customFields?: Record<string, any>;
+  onDeleteNode?: (nodeId: string) => void;
+  onDuplicateNode?: (nodeId: string) => void;
 }
 
 export const FunnelNode = memo(({
@@ -60,35 +63,48 @@ export const FunnelNode = memo(({
   const iconColor = data.iconColor || 'white';
   const nodeColor = data.color || `var(--node-${nodeType})`;
   
+  const handleDelete = () => {
+    data.onDeleteNode?.(id);
+  };
+
+  const handleDuplicate = () => {
+    data.onDuplicateNode?.(id);
+  };
+
   return (
-    <motion.div 
-      initial={{ scale: 0.95, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1, y: isHovered ? -1 : 0 }}
-      transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        (data as any).onNodeHover?.(id);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        (data as any).onNodeHover?.(null);
-      }}
-      className={`rounded-lg w-[240px] overflow-hidden relative z-10 transition-all duration-200 border ${
-        selected || isConnectedHighlighted ? 'is-active' : ''
-      }`}
-      style={{
-        backgroundColor: 'hsl(var(--color-node-bg))',
-        borderColor: selected || isConnectedHighlighted
-          ? `hsl(var(--color-accent-green))` 
-          : `hsl(var(--color-node-border))`,
-        boxShadow: selected || isConnectedHighlighted
-          ? `var(--shadow-glow-strong)` 
-          : isHovered
-          ? `var(--shadow-glow)`
-          : 'none',
-        willChange: 'transform, box-shadow'
-      }}
+    <NodeContextMenu
+      node={{ id, data, type, position: { x: 0, y: 0 } } as any}
+      onDelete={handleDelete}
+      onDuplicate={handleDuplicate}
     >
+      <motion.div 
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1, y: isHovered ? -1 : 0 }}
+        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+        onMouseEnter={() => {
+          setIsHovered(true);
+          (data as any).onNodeHover?.(id);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          (data as any).onNodeHover?.(null);
+        }}
+        className={`rounded-lg w-[240px] overflow-hidden relative z-10 transition-all duration-200 border ${
+          selected || isConnectedHighlighted ? 'is-active' : ''
+        }`}
+        style={{
+          backgroundColor: 'hsl(var(--color-node-bg))',
+          borderColor: selected || isConnectedHighlighted
+            ? `hsl(var(--color-accent-green))` 
+            : `hsl(var(--color-node-border))`,
+          boxShadow: selected || isConnectedHighlighted
+            ? `var(--shadow-glow-strong)` 
+            : isHovered
+            ? `var(--shadow-glow)`
+            : 'none',
+          willChange: 'transform, box-shadow'
+        }}
+      >
       <Handle 
         type="target" 
         position={Position.Top} 
@@ -195,7 +211,8 @@ export const FunnelNode = memo(({
           </div>
         </div>
       )}
-    </motion.div>
+      </motion.div>
+    </NodeContextMenu>
   );
 });
 

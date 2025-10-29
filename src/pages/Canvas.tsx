@@ -527,6 +527,82 @@ export default function Canvas() {
       description: `A node-ok ${direction === 'left' ? 'balra' : direction === 'right' ? 'jobbra' : 'középre'} lettek igazítva.`
     });
   }, [nodes, toast]);
+  const handleAutoLayout = useCallback(() => {
+    if (nodes.length === 0) return;
+    
+    // Simple hierarchical layout
+    const NODE_SPACING_X = 250;
+    const NODE_SPACING_Y = 150;
+    
+    // Find source nodes (nodes with no incoming edges)
+    const sourceNodes = nodes.filter(node => 
+      !edges.some(edge => edge.target === node.id)
+    );
+    
+    // Build adjacency list for BFS
+    const adjacencyList = new Map<string, string[]>();
+    nodes.forEach(node => adjacencyList.set(node.id, []));
+    edges.forEach(edge => {
+      const targets = adjacencyList.get(edge.source) || [];
+      targets.push(edge.target);
+      adjacencyList.set(edge.source, targets);
+    });
+    
+    // BFS to assign levels
+    const levels = new Map<string, number>();
+    const queue: Array<{ id: string; level: number }> = [];
+    const visited = new Set<string>();
+    
+    sourceNodes.forEach(node => {
+      queue.push({ id: node.id, level: 0 });
+      visited.add(node.id);
+    });
+    
+    while (queue.length > 0) {
+      const { id, level } = queue.shift()!;
+      levels.set(id, level);
+      
+      const targets = adjacencyList.get(id) || [];
+      targets.forEach(targetId => {
+        if (!visited.has(targetId)) {
+          visited.add(targetId);
+          queue.push({ id: targetId, level: level + 1 });
+        }
+      });
+    }
+    
+    // Organize nodes by level
+    const nodesByLevel = new Map<number, string[]>();
+    levels.forEach((level, nodeId) => {
+      if (!nodesByLevel.has(level)) {
+        nodesByLevel.set(level, []);
+      }
+      nodesByLevel.get(level)!.push(nodeId);
+    });
+    
+    // Position nodes
+    const updatedNodes = nodes.map(node => {
+      const level = levels.get(node.id) ?? 0;
+      const nodesInLevel = nodesByLevel.get(level) || [];
+      const indexInLevel = nodesInLevel.indexOf(node.id);
+      
+      return {
+        ...node,
+        position: {
+          x: level * NODE_SPACING_X,
+          y: indexInLevel * NODE_SPACING_Y
+        }
+      };
+    });
+    
+    setNodes(updatedNodes);
+    pushHistory(updatedNodes, edges);
+    toast({
+      title: 'Node-ok rendezve',
+      description: 'A node-ok hierarchikusan lettek elrendezve.'
+    });
+  }, [nodes, edges, toast, pushHistory]);
+
   const handleClearCanvas = useCallback(() => {
     if (confirm('Biztosan törölni szeretnéd az összes node-ot?')) {
       setNodes([]);
@@ -775,7 +851,7 @@ export default function Canvas() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-            <CanvasContextMenu onClearCanvas={handleClearCanvas} onFitView={handleFitView} hasNodes={nodes.length > 0}>
+            <CanvasContextMenu onClearCanvas={handleClearCanvas} onFitView={handleFitView} onAutoLayout={handleAutoLayout} hasNodes={nodes.length > 0}>
           <div ref={canvasRef} className="flex-1" onDrop={handleDrop} onDragOver={handleDragOver}>
             <FlowCanvas projectId={projectId!} initialNodes={nodes.map(node => ({
             ...node,
@@ -783,6 +859,29 @@ export default function Canvas() {
               ...node.data,
               onNodeHover: handleNodeHover,
               onLabelChange: handleLabelChange,
+              onDeleteNode: (nodeId: string) => {
+                const updatedNodes = nodes.filter(n => n.id !== nodeId);
+                const updatedEdges = edges.filter(e => e.source !== nodeId && e.target !== nodeId);
+                setNodes(updatedNodes);
+                setEdges(updatedEdges);
+                pushHistory(updatedNodes, updatedEdges);
+              },
+              onDuplicateNode: (nodeId: string) => {
+                const node = nodes.find(n => n.id === nodeId);
+                if (node) {
+                  const newNode = {
+                    ...node,
+                    id: crypto.randomUUID(),
+                    position: {
+                      x: node.position.x + 20,
+                      y: node.position.y + 20
+                    }
+                  };
+                  const updatedNodes = [...nodes, newNode];
+                  setNodes(updatedNodes);
+                  pushHistory(updatedNodes, edges);
+                }
+              },
               isConnectedHighlighted: highlightedElements.nodes.has(node.id)
             }
           }))} initialEdges={edges.map(edge => ({
