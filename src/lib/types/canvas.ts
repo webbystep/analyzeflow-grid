@@ -1,6 +1,6 @@
 // Simplified node types - 7 core types
 export type NodeType = 
-  'source' | 'landing' | 'email' | 'offer' | 'checkout' | 'thank_you' | 'custom';
+  'source' | 'page' | 'email' | 'offer' | 'checkout' | 'thank_you' | 'custom';
 
 export interface NodeCategory {
   id: string;

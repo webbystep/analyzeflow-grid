@@ -59,7 +59,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
     }
   },
   
-  landing: {
+  page: {
     properties: {
       id: 'properties',
       label: 'Alapadatok',
@@ -69,15 +69,15 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           label: 'Címke', 
           type: 'text', 
           required: true,
-          placeholder: 'pl. Landing Page',
-          help: 'A node megjelenített neve'
+          placeholder: 'Oldal',
+          help: 'A node megjelenített neve (pl. Landing Page, Checkout, Thank You)'
         },
         { 
-          id: 'customText', 
+          id: 'description', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Az oldal, ahol a látogatók először érkeznek. Célja a figyelem megragadása és az érdeklődők konvertálása.',
-          help: 'Részletes leírás'
+          placeholder: 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.',
+          help: 'Részletes leírás az oldal céljáról és funkciójáról'
         }
       ]
     },
@@ -89,22 +89,24 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           id: 'url', 
           label: 'URL', 
           type: 'text',
-          placeholder: 'https://example.com/landing',
-          help: 'Az oldal URL címe'
+          placeholder: 'https://példa.hu/landing',
+          help: 'Az oldal URL címe (opcionális, későbbi analitikához hasznos)',
+          required: false
         },
         { 
-          id: 'headline', 
-          label: 'Főcím', 
-          type: 'text',
-          placeholder: 'Az oldal fő címe',
-          help: 'A landing page headline szövege'
-        },
-        { 
-          id: 'cta', 
-          label: 'CTA gomb', 
-          type: 'text',
-          placeholder: 'pl. Regisztrálok most',
-          help: 'Call-to-action gomb szövege'
+          id: 'goalType', 
+          label: 'Cél', 
+          type: 'select',
+          placeholder: 'Válassz célt...',
+          help: 'Mi az oldal célja? (Nem kötelező, csak címkézéshez)',
+          required: false,
+          options: [
+            { value: 'lead', label: 'Ügyfélszerzés / Lead' },
+            { value: 'checkout', label: 'Vásárlás / Fizetés' },
+            { value: 'thankyou', label: 'Köszönő oldal / megerősítés' },
+            { value: 'upsell', label: 'Upsell / ráadás ajánlat' },
+            { value: 'custom', label: 'Egyéb / custom' }
+          ]
         }
       ]
     }

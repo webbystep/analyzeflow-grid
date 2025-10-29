@@ -30,10 +30,10 @@ export const nodeDefinitions: NodeDefinition[] = [
     color: '210 100% 60%' // vibrant blue
   },
   {
-    type: 'landing',
+    type: 'page',
     label: 'Oldal',
-    icon: Phosphor.Monitor,
-    description: 'Landing oldalak, tartalmak és üzenetek, amelyek megjelenítenek valamit a látogató számára.',
+    icon: Phosphor.Browser,
+    description: 'Oldal vagy felület a tölcsérben (pl. landoló oldal, ajánlat oldal, checkout, köszönő oldal).',
     category: 'core',
     color: '150 70% 50%' // vibrant green
   },
