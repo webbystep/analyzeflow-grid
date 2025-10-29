@@ -43,7 +43,7 @@ export function NodeToolbar({ projectId, isOpen, onToggle }: NodeToolbarProps) {
         </Button>
       </CardHeader>
       
-      <CardContent className={`flex-1 overflow-y-auto space-y-2 pt-2 ${isOpen ? '' : 'px-1'}`}>
+      <CardContent className={`flex-1 overflow-y-auto space-y-2 pt-6 ${isOpen ? '' : 'px-1'}`}>
         {nodeDefinitions.map((node) => {
           const Icon = node.icon;
           
