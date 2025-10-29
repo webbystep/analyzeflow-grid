@@ -34,7 +34,7 @@ export function NodeContextMenu({
           <Copy className="mr-2 h-4 w-4" />
           Duplikálás
         </ContextMenuItem>
-        <ContextMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+        <ContextMenuItem onClick={onDelete}>
           <Trash2 className="mr-2 h-4 w-4" />
           Törlés
         </ContextMenuItem>
