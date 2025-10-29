@@ -60,7 +60,7 @@ export default function Canvas() {
     edges: new Set()
   });
   const canvasRef = useRef<HTMLDivElement>(null);
-  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance>(null as any);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -603,6 +603,106 @@ export default function Canvas() {
     });
   }, [nodes, edges, toast, pushHistory]);
 
+  const handleDagreLayout = useCallback((direction: 'TB' | 'LR' = 'TB') => {
+    if (nodes.length === 0) return;
+    
+    // Dynamic import for dagre
+    import('@dagrejs/dagre').then(({ default: dagre }) => {
+      const dagreGraph = new dagre.graphlib.Graph();
+      dagreGraph.setDefaultEdgeLabel(() => ({}));
+      dagreGraph.setGraph({ rankdir: direction, nodesep: 100, ranksep: 150 });
+
+      const nodeWidth = 220;
+      const nodeHeight = 120;
+
+      nodes.forEach(node => {
+        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+      });
+
+      edges.forEach(edge => {
+        dagreGraph.setEdge(edge.source, edge.target);
+      });
+
+      dagre.layout(dagreGraph);
+
+      const layoutedNodes = nodes.map(node => {
+        const nodeWithPosition = dagreGraph.node(node.id);
+        return {
+          ...node,
+          position: {
+            x: nodeWithPosition.x - nodeWidth / 2,
+            y: nodeWithPosition.y - nodeHeight / 2,
+          },
+          sourcePosition: direction === 'LR' ? 'right' : 'bottom',
+          targetPosition: direction === 'LR' ? 'left' : 'top',
+        };
+      });
+
+      setNodes(layoutedNodes as any);
+      pushHistory(layoutedNodes as any, edges);
+      reactFlowInstance.current?.fitView({ padding: 0.2 });
+      toast({
+        title: 'Node-ok rendezve',
+        description: `Dagre ${direction === 'TB' ? 'függőleges' : 'vízszintes'} elrendezés alkalmazva.`
+      });
+    });
+  }, [nodes, edges, toast, pushHistory, reactFlowInstance]);
+
+  const handleGridLayout = useCallback(() => {
+    if (nodes.length === 0) return;
+    
+    const columns = Math.ceil(Math.sqrt(nodes.length));
+    const spacing = { x: 300, y: 200 };
+
+    const layoutedNodes = nodes.map((node, index) => {
+      const row = Math.floor(index / columns);
+      const col = index % columns;
+      
+      return {
+        ...node,
+        position: {
+          x: col * spacing.x,
+          y: row * spacing.y,
+        },
+      };
+    });
+
+    setNodes(layoutedNodes);
+    pushHistory(layoutedNodes, edges);
+    reactFlowInstance.current?.fitView({ padding: 0.2 });
+    toast({
+      title: 'Node-ok rendezve',
+      description: 'Rács elrendezés alkalmazva.'
+    });
+  }, [nodes, edges, toast, pushHistory, reactFlowInstance]);
+
+  const handleCircularLayout = useCallback(() => {
+    if (nodes.length === 0) return;
+    
+    const radius = Math.max(300, nodes.length * 40);
+    const center = { x: 0, y: 0 };
+    const angleStep = (2 * Math.PI) / nodes.length;
+
+    const layoutedNodes = nodes.map((node, index) => {
+      const angle = index * angleStep - Math.PI / 2; // Start from top
+      return {
+        ...node,
+        position: {
+          x: center.x + radius * Math.cos(angle),
+          y: center.y + radius * Math.sin(angle),
+        },
+      };
+    });
+
+    setNodes(layoutedNodes);
+    pushHistory(layoutedNodes, edges);
+    reactFlowInstance.current?.fitView({ padding: 0.2 });
+    toast({
+      title: 'Node-ok rendezve',
+      description: 'Kör alakú elrendezés alkalmazva.'
+    });
+  }, [nodes, edges, toast, pushHistory, reactFlowInstance]);
+
   const handleClearCanvas = useCallback(() => {
     if (confirm('Biztosan törölni szeretnéd az összes node-ot?')) {
       setNodes([]);
@@ -851,7 +951,16 @@ export default function Canvas() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-            <CanvasContextMenu onClearCanvas={handleClearCanvas} onFitView={handleFitView} onAutoLayout={handleAutoLayout} hasNodes={nodes.length > 0}>
+            <CanvasContextMenu 
+              onClearCanvas={handleClearCanvas} 
+              onFitView={handleFitView} 
+              onAutoLayout={handleAutoLayout}
+              onDagreLayoutTB={() => handleDagreLayout('TB')}
+              onDagreLayoutLR={() => handleDagreLayout('LR')}
+              onGridLayout={handleGridLayout}
+              onCircularLayout={handleCircularLayout}
+              hasNodes={nodes.length > 0}
+            >
           <div ref={canvasRef} className="flex-1" onDrop={handleDrop} onDragOver={handleDragOver}>
             <FlowCanvas projectId={projectId!} initialNodes={nodes.map(node => ({
             ...node,
