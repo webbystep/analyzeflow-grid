@@ -110,7 +110,7 @@ export default function Canvas() {
     if (!nodesError && nodesData) {
       const loadedNodes: Node[] = nodesData.map(node => {
         // Migration: Convert old 'traffic' nodes to 'source'
-        const nodeType = node.type === 'traffic' ? 'source' : node.type;
+        const nodeType = node.type === 'traffic' ? 'source' : (node.type === 'landing' ? 'page' : node.type);
         const nodeData = node.data as Record<string, any> || {};
 
         // Migration: If converting from traffic to source
@@ -130,6 +130,27 @@ export default function Canvas() {
             }
           };
         }
+
+        // Migration: If converting from landing to page
+        if (node.type === 'landing') {
+          return {
+            id: node.id,
+            type: nodeType,
+            position: {
+              x: node.position_x,
+              y: node.position_y
+            },
+            data: {
+              label: node.label || 'Oldal',
+              description: nodeData.description || nodeData.customText || 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.',
+              icon: nodeData.icon || 'Browser',
+              url: nodeData.url || '',
+              goalType: nodeData.goalType || '',
+              ...nodeData
+            }
+          };
+        }
+
         return {
           id: node.id,
           type: nodeType,
