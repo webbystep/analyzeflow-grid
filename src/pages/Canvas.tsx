@@ -6,7 +6,7 @@ import { FlowCanvas } from '@/components/canvas/FlowCanvas';
 import { InspectorPanel } from '@/components/canvas/InspectorPanel';
 import { ProjectCollaborators } from '@/components/canvas/ProjectCollaborators';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun } from 'lucide-react';
+import { Loader2, ArrowLeft, Save, Info, Trash2, Download, Share2, Undo2, Redo2, Moon, Sun, PanelRightOpen, PanelRightClose } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import { Node, Edge, ReactFlowInstance } from '@xyflow/react';
@@ -52,6 +52,7 @@ export default function Canvas() {
     };
   } | null>(null);
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [highlightedElements, setHighlightedElements] = useState<{
     nodes: Set<string>;
     edges: Set<string>;
@@ -947,6 +948,13 @@ export default function Canvas() {
           <button className="header-btn-secondary" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+          <button 
+            className="header-btn-secondary" 
+            onClick={() => setIsPanelOpen(!isPanelOpen)}
+            title={isPanelOpen ? 'Panel bezárása' : 'Panel megnyitása'}
+          >
+            {isPanelOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
+          </button>
         </div>
       </header>
 
@@ -1009,9 +1017,15 @@ export default function Canvas() {
           </div>
         </CanvasContextMenu>
 
-        {selectedNode && <div className="border-l">
+        {selectedNode && (
+          <div 
+            className={`border-l transition-all duration-300 ease-in-out ${
+              isPanelOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 absolute right-0 pointer-events-none'
+            }`}
+          >
             <InspectorPanel selectedNode={selectedNode} onUpdateNode={handleUpdateNode} onClose={() => setSelectedNode(null)} />
-          </div>}
+          </div>
+        )}
       </div>
 
       {project && <ShareDialog open={showShare} onOpenChange={setShowShare} workspaceId={project.workspace_id} projectId={projectId!} projectName={project.name} nodes={nodes} edges={edges} canvasRef={canvasRef} />}
