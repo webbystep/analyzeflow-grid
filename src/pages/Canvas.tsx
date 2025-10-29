@@ -464,7 +464,7 @@ export default function Canvas() {
     const labels: Record<string, string> = {
       source: 'Forrás',
       email: 'Email Campaign',
-      landing: 'Landing Page',
+      page: 'Oldal',
       checkout: 'Checkout',
       thankyou: 'Thank You',
       condition: 'Condition'
@@ -479,8 +479,13 @@ export default function Canvas() {
     if (type === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
       nodeData.platform = '';
+    } else if (type === 'page') {
+      nodeData.description = 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.';
+      nodeData.icon = 'Browser';
+      nodeData.url = '';
+      nodeData.goalType = '';
     } else {
-      nodeData.customText = getDefaultDescription(type as CanvasNodeType);
+      nodeData.description = getDefaultDescription(type as CanvasNodeType);
     }
     const newNode: Node = {
       id: crypto.randomUUID(),
