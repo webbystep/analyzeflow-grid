@@ -201,34 +201,45 @@ export default function Canvas() {
       }
 
       // Upsert edges (insert or update)
+      let normalizedEdgeIds: string[] = [];
       if (edges.length > 0) {
+        const idMap = new Map<string, string>();
         const edgesToUpsert = edges.map(edge => {
-          // Generate valid UUID for edge if needed
+          // Ensure valid, stable UUID for edge id
           let edgeId = edge.id;
-          if (!edgeId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-            edgeId = crypto.randomUUID();
+          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(edgeId);
+          if (!isUuid) {
+            const newId = crypto.randomUUID();
+            idMap.set(edgeId, newId);
+            edgeId = newId;
           }
           return {
             id: edgeId,
             project_id: projectId,
             source_id: edge.source,
             target_id: edge.target,
-            label: edge.label as string || '',
-            data: (edge.data || {}) as any
+            label: (edge.label as string) || '',
+            data: (edge.data || {}) as any,
           };
         });
+
+        normalizedEdgeIds = edgesToUpsert.map(e => e.id);
         await supabase.from('edges').upsert(edgesToUpsert);
+
+        // If any ids changed, reflect them in local state to keep parity with DB
+        if (idMap.size > 0) {
+          setEdges(prev => prev.map(e => (idMap.has(e.id) ? { ...e, id: idMap.get(e.id)! } : e)));
+        }
       }
 
-      // Get current edge IDs
-      const currentEdgeIds = new Set(edges.map(e => e.id));
-
-      // Delete edges that no longer exist
-      const {
-        data: existingEdges
-      } = await supabase.from('edges').select('id').eq('project_id', projectId);
+      // Delete edges that no longer exist (compare against normalized ids we just saved)
+      const { data: existingEdges } = await supabase
+        .from('edges')
+        .select('id')
+        .eq('project_id', projectId);
       if (existingEdges) {
-        const edgesToDelete = existingEdges.filter(e => !currentEdgeIds.has(e.id)).map(e => e.id);
+        const keepIds = new Set(normalizedEdgeIds.length > 0 ? normalizedEdgeIds : edges.map(e => e.id));
+        const edgesToDelete = existingEdges.filter(e => !keepIds.has(e.id)).map(e => e.id);
         if (edgesToDelete.length > 0) {
           await supabase.from('edges').delete().in('id', edgesToDelete);
         }
