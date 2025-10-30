@@ -30,7 +30,8 @@ const nodeTypes = {
   // Core nodes
   source: FunnelNode,        // Forrás node típus
   traffic: FunnelNode,       // Backward compatibility
-  email: FunnelNode,
+  action: FunnelNode,
+  email: FunnelNode,         // Backward compatibility
   page: FunnelNode,          // Oldal node típus
   checkout: FunnelNode,
   thankyou: FunnelNode,
