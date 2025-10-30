@@ -109,8 +109,10 @@ export default function Canvas() {
     } = await supabase.from('nodes').select('*').eq('project_id', projectId);
     if (!nodesError && nodesData) {
       const loadedNodes: Node[] = nodesData.map(node => {
-        // Migration: Convert old 'traffic' nodes to 'source'
-        const nodeType = node.type === 'traffic' ? 'source' : (node.type === 'landing' ? 'page' : node.type);
+        // Migration: Convert old node types
+        const nodeType = node.type === 'traffic' ? 'source' : 
+                         (node.type === 'landing' ? 'page' : 
+                         (node.type === 'email' ? 'action' : node.type));
         const nodeData = node.data as Record<string, any> || {};
 
         // Migration: If converting from traffic to source
@@ -146,6 +148,25 @@ export default function Canvas() {
               icon: nodeData.icon || 'Browser',
               url: nodeData.url || '',
               goalType: nodeData.goalType || '',
+              ...nodeData
+            }
+          };
+        }
+
+        // Migration: If converting from email to action
+        if (node.type === 'email') {
+          return {
+            id: node.id,
+            type: nodeType,
+            position: {
+              x: node.position_x,
+              y: node.position_y
+            },
+            data: {
+              label: node.label || 'Művelet',
+              description: nodeData.description || nodeData.customText || 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés vagy egyedi akció.',
+              icon: nodeData.icon || 'Lightning',
+              actionType: nodeData.actionType || 'email',
               ...nodeData
             }
           };
@@ -484,7 +505,7 @@ export default function Canvas() {
   const handleAddNodeFromContext = useCallback((type: string, x = 100, y = 100) => {
     const labels: Record<string, string> = {
       source: 'Forrás',
-      email: 'Email Campaign',
+      action: 'Művelet',
       page: 'Oldal',
       checkout: 'Checkout',
       thankyou: 'Thank You',
@@ -499,12 +520,17 @@ export default function Canvas() {
     // Add type-specific defaults
     if (type === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
+      nodeData.icon = 'Rocket';
       nodeData.platform = '';
     } else if (type === 'page') {
       nodeData.description = 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.';
       nodeData.icon = 'Browser';
       nodeData.url = '';
       nodeData.goalType = '';
+    } else if (type === 'action') {
+      nodeData.description = 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés vagy egyedi akció.';
+      nodeData.icon = 'Lightning';
+      nodeData.actionType = 'custom';
     } else {
       nodeData.description = getDefaultDescription(type as CanvasNodeType);
     }
@@ -772,7 +798,17 @@ export default function Canvas() {
     // Add type-specific defaults
     if (type === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
+      nodeData.icon = 'Rocket';
       nodeData.platform = '';
+    } else if (type === 'page') {
+      nodeData.description = 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.';
+      nodeData.icon = 'Browser';
+      nodeData.url = '';
+      nodeData.goalType = '';
+    } else if (type === 'action') {
+      nodeData.description = 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés vagy egyedi akció.';
+      nodeData.icon = 'Lightning';
+      nodeData.actionType = 'custom';
     } else {
       nodeData.customText = getDefaultDescription(type as CanvasNodeType);
     }
@@ -915,12 +951,17 @@ export default function Canvas() {
     // Add type-specific defaults
     if (nodeType === 'source') {
       nodeData.description = 'Hirdetések, kampányok és források, amelyek a látogatókat a tölcsér elejére irányítják.';
+      nodeData.icon = 'Rocket';
       nodeData.platform = '';
     } else if (nodeType === 'page') {
       nodeData.description = 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.';
       nodeData.icon = 'Browser';
       nodeData.url = '';
       nodeData.goalType = '';
+    } else if (nodeType === 'action') {
+      nodeData.description = 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés vagy egyedi akció.';
+      nodeData.icon = 'Lightning';
+      nodeData.actionType = 'custom';
     } else {
       nodeData.description = getDefaultDescription(nodeType as CanvasNodeType);
     }

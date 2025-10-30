@@ -112,7 +112,7 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
     }
   },
   
-  email: {
+  action: {
     properties: {
       id: 'properties',
       label: 'Alapadatok',
@@ -122,42 +122,35 @@ export const nodeSchemas: Record<NodeType, NodeSchema> = {
           label: 'Címke', 
           type: 'text', 
           required: true,
-          placeholder: 'pl. Üdvözlő Email',
-          help: 'Az email kampány neve'
+          placeholder: 'Művelet',
+          help: 'A művelet megjelenített neve (pl. Email küldés, Webhook hívás)'
         },
         { 
-          id: 'customText', 
+          id: 'description', 
           label: 'Leírás', 
           type: 'textarea',
-          placeholder: 'Automatizált vagy kampány e-mail, amely a kapcsolatfelvétel után ápolja vagy ösztönzi a leadeket.',
-          help: 'Email leírása'
+          placeholder: 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés vagy egyedi akció.',
+          help: 'Részletes leírás a művelet céljáról'
         }
       ]
     },
     meta: {
       id: 'meta',
-      label: 'Email adatok',
+      label: 'Művelet információk',
       fields: [
         { 
-          id: 'subject', 
-          label: 'Tárgy', 
-          type: 'text',
-          placeholder: 'Email tárgya',
-          help: 'Az email subject line-ja'
-        },
-        { 
-          id: 'sender', 
-          label: 'Feladó', 
-          type: 'text',
-          placeholder: 'pl. info@example.com',
-          help: 'Feladó email címe vagy neve'
-        },
-        { 
-          id: 'timing', 
-          label: 'Időzítés', 
-          type: 'text',
-          placeholder: 'pl. Azonnal, 2 nap múlva',
-          help: 'Mikor kerül kiküldésre'
+          id: 'actionType', 
+          label: 'Művelet típusa', 
+          type: 'select',
+          placeholder: 'Válassz művelet típust...',
+          help: 'Milyen típusú művelet ez?',
+          required: false,
+          options: [
+            { value: 'email', label: 'E-mail küldés' },
+            { value: 'crm', label: 'CRM bejegyzés létrehozása / frissítés' },
+            { value: 'webhook', label: 'Webhook hívás' },
+            { value: 'custom', label: 'Egyedi művelet' }
+          ]
         }
       ]
     }

@@ -38,10 +38,10 @@ export const nodeDefinitions: NodeDefinition[] = [
     color: '150 70% 50%' // vibrant green
   },
   {
-    type: 'email',
-    label: 'E-mail',
-    icon: Phosphor.Envelope,
-    description: 'Email kampányok, automatikus üzenetek és követő sorozatok.',
+    type: 'action',
+    label: 'Művelet',
+    icon: Phosphor.Lightning,
+    description: 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés, webhook vagy egyedi akció.',
     category: 'core',
     color: '280 65% 60%' // vibrant purple
   },
