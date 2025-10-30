@@ -954,7 +954,7 @@ export default function Canvas() {
       nodeData.icon = 'Rocket';
       nodeData.platform = '';
     } else if (nodeType === 'page') {
-      nodeData.description = 'Az oldal, ahol a látogatók érkeznek vagy továbblépnek a tölcsérben.';
+      nodeData.description = 'Oldal vagy felület a tölcsérben (pl. landoló oldal, ajánlat oldal, checkout, köszönő oldal).';
       nodeData.icon = 'Browser';
       nodeData.url = '';
       nodeData.goalType = '';
