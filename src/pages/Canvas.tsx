@@ -959,7 +959,7 @@ export default function Canvas() {
       nodeData.url = '';
       nodeData.goalType = '';
     } else if (nodeType === 'action') {
-      nodeData.description = 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés vagy egyedi akció.';
+      nodeData.description = 'Automatizált vagy manuális lépés a tölcsérben, például e-mail küldés, webhook vagy egyedi akció.';
       nodeData.icon = 'Lightning';
       nodeData.actionType = 'custom';
     } else {
