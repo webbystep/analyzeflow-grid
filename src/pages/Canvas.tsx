@@ -56,8 +56,8 @@ export default function Canvas() {
     nodes: new Set(),
     edges: new Set()
   });
-  const canvasRef = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useRef<ReactFlowInstance>(null as any);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const [debouncedNodes] = useDebounce(nodes, 1000);
   const [debouncedEdges] = useDebounce(edges, 1000);
   const [saving, setSaving] = useState(false);
@@ -927,8 +927,8 @@ export default function Canvas() {
   }, [selectedNode, selectedNodes, handleDeleteSelected, handleBulkDelete, handleBulkDuplicate, handleUndo, handleRedo, handleDuplicateNode]);
   const handleDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
-    const reactFlowBounds = canvasRef.current?.getBoundingClientRect();
-    if (!reactFlowBounds) return;
+    if (!reactFlowInstance.current) return;
+    
     const type = event.dataTransfer.getData('application/reactflow');
     if (!type) return;
     const {
@@ -936,12 +936,11 @@ export default function Canvas() {
       label
     } = JSON.parse(type);
 
-    // Calculate exact position where mouse is
-    const position = {
-      x: event.clientX - reactFlowBounds.left - 90,
-      // Node width/2
-      y: event.clientY - reactFlowBounds.top - 40 // Node height/2
-    };
+    // Use ReactFlow's screenToFlowPosition for accurate positioning
+    const position = reactFlowInstance.current.screenToFlowPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
     const nodeData: any = {
       label,
       visits: 1000,
