@@ -212,7 +212,7 @@ export function FlowCanvas({
         selectionMode={SelectionMode.Partial}
         multiSelectionKeyCode={['Meta', 'Control']}
         panOnDrag={[1]}  // Only left mouse button (1) for panning, allow right-click (2) for context menu
-        selectNodesOnDrag={false}
+        selectNodesOnDrag={true}
         connectionMode={ConnectionMode.Strict}
         connectionRadius={40}
         snapToGrid={true}
