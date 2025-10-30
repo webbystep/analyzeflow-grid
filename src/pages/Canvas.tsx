@@ -1045,6 +1045,10 @@ export default function Canvas() {
                   pushHistory(updatedNodes, edges);
                 }
               },
+              selectedNodes: selectedNodes,
+              onBulkDelete: handleBulkDelete,
+              onBulkDuplicate: handleBulkDuplicate,
+              onAlign: handleBulkAlign,
               isConnectedHighlighted: highlightedElements.nodes.has(node.id)
             }
           }))} initialEdges={edges.map(edge => ({

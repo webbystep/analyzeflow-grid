@@ -22,6 +22,10 @@ interface FunnelNodeData {
   customFields?: Record<string, any>;
   onDeleteNode?: (nodeId: string) => void;
   onDuplicateNode?: (nodeId: string) => void;
+  selectedNodes?: any[];
+  onBulkDelete?: () => void;
+  onBulkDuplicate?: () => void;
+  onAlign?: (direction: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom') => void;
 }
 
 export const FunnelNode = memo(({
@@ -64,18 +68,28 @@ export const FunnelNode = memo(({
   const nodeColor = data.color || `var(--node-${nodeType})`;
   
   const handleDelete = () => {
-    data.onDeleteNode?.(id);
+    if (data.selectedNodes && data.selectedNodes.length > 0 && data.selectedNodes.some(n => n.id === id)) {
+      data.onBulkDelete?.();
+    } else {
+      data.onDeleteNode?.(id);
+    }
   };
 
   const handleDuplicate = () => {
-    data.onDuplicateNode?.(id);
+    if (data.selectedNodes && data.selectedNodes.length > 0 && data.selectedNodes.some(n => n.id === id)) {
+      data.onBulkDuplicate?.();
+    } else {
+      data.onDuplicateNode?.(id);
+    }
   };
 
   return (
     <NodeContextMenu
       node={{ id, data, type, position: { x: 0, y: 0 } } as any}
+      selectedNodes={data.selectedNodes}
       onDelete={handleDelete}
       onDuplicate={handleDuplicate}
+      onAlign={data.onAlign}
     >
       <motion.div 
         initial={{ scale: 0.95, opacity: 0 }}
